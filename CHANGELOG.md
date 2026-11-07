@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0.1] - 2026-11-07
+
+Zwischenversion des Forks fds2610 auf Basis von 1.12.0.
+
 ### Added
 - **Vertragsnummer**: Neues optionales Freitextfeld über der Kategorie, z. B. für Policen- oder Kundennummern. Die Vertragsnummer wird in der Seitenleisten-Suche und in der globalen Nextcloud-Suche gefunden
 - **Versicherungsangaben**: Bei Verträgen der Kategorie „Versicherung“ lassen sich unter der Kategorie Personen (Versicherungsnehmer, abgesicherte, begünstigte oder mitversicherte Person, Beitragszahler, Sonstige) und Versicherungsleistungen erfassen. Personen sind entweder Nextcloud-Benutzer (Suche beim Tippen, Anzeige als Chip) oder frei eingegebene Namen; weitere Zeilen kommen über das grüne Plus hinzu. Backup und Kontoumzug nehmen die Angaben mit
