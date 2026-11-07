@@ -432,7 +432,27 @@
 		"Frist / Ende in": "Frist / Ende in",
 		"Monatskosten ab": "Monatskosten ab",
 		"Ungültiger Betrag": "Ungültiger Betrag",
-		"Frist / Ende in {days} Tagen": "Frist / Ende in {days} Tagen"
+		"Frist / Ende in {days} Tagen": "Frist / Ende in {days} Tagen",
+		"Vertragsnummer": "Vertragsnummer",
+		"Optional, z.B. Policen- oder Kundennummer": "Optional, z.B. Policen- oder Kundennummer",
+		"Personen": "Personen",
+		"Personentyp": "Personentyp",
+		"Benutzer entfernen": "Benutzer entfernen",
+		"Name oder Benutzer suchen...": "Name oder Benutzer suchen...",
+		"Name oder Benutzer": "Name oder Benutzer",
+		"Weitere Person hinzufügen": "Weitere Person hinzufügen",
+		"Person entfernen": "Person entfernen",
+		"Versicherungsleistungen": "Versicherungsleistungen",
+		"z.B. Glasbruch bis 1.000 €": "z.B. Glasbruch bis 1.000 €",
+		"Versicherungsleistung": "Versicherungsleistung",
+		"Weitere Leistung hinzufügen": "Weitere Leistung hinzufügen",
+		"Leistung entfernen": "Leistung entfernen",
+		"Versicherungsnehmer": "Versicherungsnehmer",
+		"Abgesicherte Person": "Abgesicherte Person",
+		"Begünstigte Person": "Begünstigte Person",
+		"Mitversicherte Person": "Mitversicherte Person",
+		"Beitragszahler": "Beitragszahler",
+		"Sonstige": "Sonstige"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

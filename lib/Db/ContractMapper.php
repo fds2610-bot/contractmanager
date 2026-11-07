@@ -371,7 +371,7 @@ class ContractMapper extends QBMapper {
     }
 
     /**
-     * Search contracts by name or vendor
+     * Search contracts by name, vendor, contract number or responsible user
      *
      * Respects visibility rules:
      * - Admin sees all contracts
@@ -392,6 +392,7 @@ class ContractMapper extends QBMapper {
                 $qb->expr()->orX(
                     $qb->expr()->iLike('name', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('vendor', $qb->createNamedParameter($searchPattern)),
+                    $qb->expr()->iLike('contract_number', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('responsible_user', $qb->createNamedParameter($searchPattern))
                 )
             );

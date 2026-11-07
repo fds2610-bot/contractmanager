@@ -6,6 +6,7 @@ namespace OCA\ContractManager\Db;
 
 use DateTime;
 use JsonSerializable;
+use OCA\ContractManager\Service\InsuranceData;
 use OCP\AppFramework\Db\Entity;
 
 /**
@@ -70,6 +71,12 @@ use OCP\AppFramework\Db\Entity;
  * @method int getIsPrivate()
  * @method DateTime|null getDeletedAt()
  * @method string getAmountType()
+ * @method string|null getContractNumber()
+ * @method void setContractNumber(?string $contractNumber)
+ * @method string|null getInsurancePersons()
+ * @method void setInsurancePersons(?string $insurancePersons)
+ * @method string|null getInsuranceBenefits()
+ * @method void setInsuranceBenefits(?string $insuranceBenefits)
  * @method void setAmountType(string $amountType)
  */
 class Contract extends Entity implements JsonSerializable {
@@ -97,6 +104,11 @@ class Contract extends Entity implements JsonSerializable {
     protected string $name = '';
     protected string $vendor = '';
     protected ?string $vendorContactUid = null;
+    protected ?string $contractNumber = null;
+    /** JSON list of {type, name, userId} */
+    protected ?string $insurancePersons = null;
+    /** JSON list of strings */
+    protected ?string $insuranceBenefits = null;
     protected string $status = self::STATUS_ACTIVE;
     protected ?int $categoryId = null;
     protected ?DateTime $startDate = null;
@@ -243,6 +255,9 @@ class Contract extends Entity implements JsonSerializable {
             'name' => $this->name,
             'vendor' => $this->vendor,
             'vendorContactUid' => $this->vendorContactUid,
+            'contractNumber' => $this->contractNumber,
+            'insurancePersons' => InsuranceData::decode($this->insurancePersons),
+            'insuranceBenefits' => InsuranceData::decode($this->insuranceBenefits),
             'status' => $this->status,
             'categoryId' => $this->categoryId,
             'startDate' => $this->startDate?->format('Y-m-d'),

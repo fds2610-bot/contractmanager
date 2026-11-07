@@ -124,6 +124,16 @@
 						</p>
 					</div>
 
+					<label class="cm-field">
+						<span>{{ t('contractmanager', 'Vertragsnummer') }}</span>
+						<input v-model="form.contractNumber"
+							class="cm-input"
+							maxlength="255"
+							data-test="contract-number"
+							:disabled="readOnly"
+							:placeholder="t('contractmanager', 'Optional, z.B. Policen- oder Kundennummer')">
+					</label>
+
 					<div class="cm-field-row">
 						<label class="cm-field">
 							<span>{{ t('contractmanager', 'Kategorie') }}</span>
@@ -145,6 +155,11 @@
 							</select>
 						</label>
 					</div>
+
+					<InsuranceDetails v-if="isInsurance"
+						v-model:persons="form.insurancePersons"
+						v-model:benefits="form.insuranceBenefits"
+						:read-only="readOnly" />
 
 					<div v-if="hasCustomFields" class="cm-field-row cm-field-row--custom">
 						<label v-if="customFieldLabels.customFieldLabel1" class="cm-field">
@@ -619,6 +634,8 @@ import ExtractionService from '../services/ExtractionService'
 import SettingsService from '../services/SettingsService'
 import ContactService from '../services/ContactService'
 import VendorContactCard from './VendorContactCard.vue'
+import InsuranceDetails from './InsuranceDetails.vue'
+import { isInsuranceCategoryName, personsForForm, benefitsForForm, personsForApi, benefitsForApi } from '../utils/insurance'
 
 export default {
 	name: 'ContractForm',
@@ -637,6 +654,7 @@ export default {
 		LockOpenVariantIcon,
 		FileSearchIcon,
 		VendorContactCard,
+		InsuranceDetails,
 	},
 	props: {
 		show: {
@@ -843,6 +861,12 @@ export default {
 			const amount = parseFloat(this.form.cost)
 			if (!Number.isFinite(amount)) return '—'
 			return new Intl.NumberFormat(getCanonicalLocale(), { style: 'currency', currency: this.form.currency || 'EUR' }).format(amount)
+		},
+		// Personen und Leistungen gibt es nur bei Versicherungen
+		isInsurance() {
+			if (this.form.categoryId == null) return false
+			const category = this.allCategories.find(c => c.id === this.form.categoryId)
+			return isInsuranceCategoryName(category?.name)
 		},
 		categoryOptions() {
 			return [
@@ -1113,6 +1137,9 @@ export default {
 				customField1: '',
 				customField2: '',
 				customField3: '',
+				contractNumber: '',
+				insurancePersons: personsForForm(null),
+				insuranceBenefits: benefitsForForm(null),
 			}
 		},
 		formatDateDisplay(date) {
@@ -1178,6 +1205,9 @@ export default {
 				customField1: contract.customField1 || '',
 				customField2: contract.customField2 || '',
 				customField3: contract.customField3 || '',
+				contractNumber: contract.contractNumber || '',
+				insurancePersons: personsForForm(contract.insurancePersons),
+				insuranceBenefits: benefitsForForm(contract.insuranceBenefits),
 			}
 		},
 		formToPayload() {
@@ -1221,6 +1251,10 @@ export default {
 				customField1: this.form.customField1.trim() || null,
 				customField2: this.form.customField2.trim() || null,
 				customField3: this.form.customField3.trim() || null,
+				contractNumber: this.form.contractNumber.trim() || null,
+				// Wechselt die Kategorie weg von Versicherung, fallen die Angaben weg
+				insurancePersons: this.isInsurance ? personsForApi(this.form.insurancePersons) : null,
+				insuranceBenefits: this.isInsurance ? benefitsForApi(this.form.insuranceBenefits) : null,
 			}
 		},
 		formatDateForApi(date) {
