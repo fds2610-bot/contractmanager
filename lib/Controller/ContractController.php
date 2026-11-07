@@ -276,6 +276,9 @@ class ContractController extends Controller {
 		?string $responsibleUser = null,
 		string $cancellationDeadlineType = 'normal',
 		?string $vendorContactUid = null,
+		?string $contractNumber = null,
+		?array $insurancePersons = null,
+		?array $insuranceBenefits = null,
 	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l->t('Nicht angemeldet')], Http::STATUS_UNAUTHORIZED);
@@ -326,6 +329,9 @@ class ContractController extends Controller {
 				$responsibleUser,
 				$cancellationDeadlineType,
 				$vendorContactUid,
+				$contractNumber,
+				$insurancePersons,
+				$insuranceBenefits,
 			);
 
 			return new JSONResponse($contract, Http::STATUS_CREATED);
@@ -367,6 +373,9 @@ class ContractController extends Controller {
 		?string $responsibleUser = null,
 		string $cancellationDeadlineType = 'normal',
 		?string $vendorContactUid = null,
+		?string $contractNumber = null,
+		?array $insurancePersons = null,
+		?array $insuranceBenefits = null,
 	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l->t('Nicht angemeldet')], Http::STATUS_UNAUTHORIZED);
@@ -421,6 +430,9 @@ class ContractController extends Controller {
 				$responsibleUser,
 				$cancellationDeadlineType,
 				$vendorContactUid,
+				$contractNumber,
+				$insurancePersons,
+				$insuranceBenefits,
 			);
 
 			return new JSONResponse($updatedContract);

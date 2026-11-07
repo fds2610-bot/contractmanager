@@ -516,6 +516,7 @@ export default {
 						|| (c.customField1 || '').toLowerCase().includes(query)
 						|| (c.customField2 || '').toLowerCase().includes(query)
 						|| (c.customField3 || '').toLowerCase().includes(query)
+						|| (c.contractNumber || '').toLowerCase().includes(query)
 						|| (c.responsibleUser || '').toLowerCase().includes(query)
 				})
 			}

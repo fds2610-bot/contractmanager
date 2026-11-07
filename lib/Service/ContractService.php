@@ -356,6 +356,9 @@ class ContractService {
         ?string $responsibleUser = null,
         string $cancellationDeadlineType = Contract::DEADLINE_TYPE_NORMAL,
         ?string $vendorContactUid = null,
+        ?string $contractNumber = null,
+        ?array $insurancePersons = null,
+        ?array $insuranceBenefits = null,
     ): Contract {
         $contract = new Contract();
         $contract->setName($name);
@@ -387,6 +390,9 @@ class ContractService {
         $contract->setAmountType(in_array($amountType, [Contract::AMOUNT_TYPE_BRUTTO, Contract::AMOUNT_TYPE_NETTO], true) ? $amountType : Contract::AMOUNT_TYPE_NETTO);
         $contract->setResponsibleUser($responsibleUser !== null && $responsibleUser !== '' ? $responsibleUser : null);
         $contract->setVendorContactUid($this->normalizeContactUid($vendorContactUid));
+        $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
+        $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
+        $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
         $contract->setCreatedBy($userId);
         $contract->setCreatedAt(new DateTime());
         $contract->setUpdatedAt(new DateTime());
@@ -430,6 +436,9 @@ class ContractService {
         ?string $responsibleUser = null,
         string $cancellationDeadlineType = Contract::DEADLINE_TYPE_NORMAL,
         ?string $vendorContactUid = null,
+        ?string $contractNumber = null,
+        ?array $insurancePersons = null,
+        ?array $insuranceBenefits = null,
     ): Contract {
         try {
             $contract = $this->mapper->find($id);
@@ -466,6 +475,9 @@ class ContractService {
         $contract->setNotes($notes);
         $contract->setResponsibleUser($responsibleUser !== null && $responsibleUser !== '' ? $responsibleUser : null);
         $contract->setVendorContactUid($this->normalizeContactUid($vendorContactUid));
+        $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
+        $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
+        $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
         if ($isPrivate !== null) {
             $contract->setIsPrivate($isPrivate);
         }

@@ -1,6 +1,7 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import ContractService, { type Permissions } from '../services/ContractService'
+import type { InsurancePerson } from '../utils/insurance'
 
 export type ContractStatus = 'active' | 'cancelled' | 'ended'
 export type ContractType = 'fixed' | 'auto_renewal'
@@ -42,6 +43,9 @@ export interface Contract {
 	customField1?: string | null
 	customField2?: string | null
 	customField3?: string | null
+	contractNumber?: string | null
+	insurancePersons?: InsurancePerson[]
+	insuranceBenefits?: string[]
 	archived?: boolean
 	isPrivate?: boolean
 	deletedAt?: string | null
