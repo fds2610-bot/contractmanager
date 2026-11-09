@@ -31,6 +31,7 @@ class SettingsService {
 	private const KEY_SORT_BY = 'sort_by';
 	private const KEY_SORT_DIRECTION = 'sort_direction';
 	private const KEY_FILTERS = 'filters';
+	private const KEY_DEFAULT_ADDRESSBOOK = 'default_addressbook';
 	private const KEY_DEFAULT_AMOUNT_TYPE = 'default_amount_type';
 
 	private const KEY_CUSTOM_FIELD_LABEL_PREFIX = 'custom_field_label_';
@@ -185,6 +186,19 @@ class SettingsService {
 	 * Get the user contracts are handed over to when their owner's account is
 	 * deleted (#299). Empty means no automatic handover happens.
 	 */
+	/**
+	 * Name of the address book that is preselected when a contact is created
+	 * from the contract form (fds2610/contractmanager#3). Address books belong
+	 * to each user, so this is a name, matched per user; '' = first writable.
+	 */
+	public function getDefaultAddressBook(): string {
+		return $this->config->getAppValue(Application::APP_ID, self::KEY_DEFAULT_ADDRESSBOOK, '');
+	}
+
+	public function setDefaultAddressBook(string $name): void {
+		$this->config->setAppValue(Application::APP_ID, self::KEY_DEFAULT_ADDRESSBOOK, mb_substr(trim($name), 0, 255));
+	}
+
 	public function getDeletionSuccessor(): string {
 		return $this->config->getAppValue(
 			Application::APP_ID,

@@ -114,4 +114,65 @@ class ContactServiceTest extends TestCase {
 
 		$this->assertNull($this->service()->resolve('abc'));
 	}
+
+	private function writableBook(string $key, string $uri, string $name, int $permissions = 31): IAddressBook {
+		$book = $this->book($key, $uri);
+		$book->method('getDisplayName')->willReturn($name);
+		$book->method('getPermissions')->willReturn($permissions);
+		return $book;
+	}
+
+	public function testWritableAddressBooksPreselectByNameOrFirst(): void {
+		$this->books = [
+			$this->writableBook('1', 'contacts', 'Kontakte'),
+			$this->writableBook('2', 'readonly-shared_by_x', 'Nur lesen', 1),
+			$this->writableBook('3', 'vertraege', 'Verträge'),
+			$this->book('4', 'system', true),
+		];
+		$this->assertSame([
+			['key' => '1', 'name' => 'Kontakte', 'default' => false],
+			['key' => '3', 'name' => 'Verträge', 'default' => true],
+		], $this->service()->writableAddressBooks('verträge'));
+		$this->assertTrue($this->service()->writableAddressBooks('gibt es nicht')[0]['default']);
+		$this->assertTrue($this->service()->writableAddressBooks('')[0]['default']);
+	}
+
+	public function testCreateBuildsVcardPropertiesAndReturnsResolvedContact(): void {
+		$book = $this->writableBook('7', 'contacts', 'Kontakte');
+		$this->books = [$book];
+		$book->expects($this->once())->method('createOrUpdate')
+			->with($this->callback(function (array $p): bool {
+				$this->assertSame('Anna Agent', $p['FN']);
+				$this->assertSame([['value' => ['Agent', 'Anna', '', '', '']]], $p['N']);
+				$this->assertSame([['value' => ['Rhion', 'Vertrieb']]], $p['ORG']);
+				$this->assertSame([['value' => '0711 1', 'type' => 'WORK'], ['value' => '0170 2', 'type' => 'CELL']], $p['TEL']);
+				$this->assertSame([['value' => 'a@rhion.de', 'type' => 'HOME']], $p['EMAIL']);
+				$this->assertSame([['value' => ['', '', 'Weg 1', 'Ort', '', '12345', 'DE'], 'type' => 'WORK']], $p['ADR']);
+				$this->assertSame('19800102', $p['BDAY']);
+				$this->assertArrayNotHasKey('URL', $p);
+				return true;
+			}))
+			->willReturn(['UID' => 'new-1']);
+		$this->contacts->method('search')->willReturn([['UID' => 'new-1', 'FN' => 'Anna Agent', 'addressbook-key' => '7']]);
+
+		$contact = $this->service()->create('7', [
+			'firstName' => ' Anna ', 'lastName' => 'Agent', 'organization' => 'Rhion', 'department' => 'Vertrieb',
+			'phones' => [['type' => 'work', 'value' => '0711 1'], ['type' => 'cell', 'value' => '0170 2'], ['type' => 'HOME', 'value' => ' ']],
+			'emails' => [['type' => 'bogus', 'value' => 'a@rhion.de']],
+			'addresses' => [['type' => 'WORK', 'street' => 'Weg 1', 'postalCode' => '12345', 'city' => 'Ort', 'country' => 'DE'], ['type' => 'HOME']],
+			'birthday' => '1980-01-02', 'url' => '',
+		]);
+		$this->assertSame('new-1', $contact['uid']);
+	}
+
+	public function testCreateNeedsNameOrOrganizationAndWritableBook(): void {
+		$this->books = [$this->writableBook('7', 'contacts', 'Kontakte'), $this->writableBook('8', 'ro', 'RO', 1)];
+		try {
+			$this->service()->create('7', ['firstName' => ' ']);
+			$this->fail('expected ValidationException');
+		} catch (\OCA\NcVertragswerk\Service\ValidationException) {
+		}
+		$this->expectException(\OCA\NcVertragswerk\Service\NotFoundException::class);
+		$this->service()->create('8', ['firstName' => 'X']);
+	}
 }

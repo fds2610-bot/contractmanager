@@ -271,6 +271,7 @@ class SettingsController extends Controller {
 			'reminderLink' => $this->getReminderLinkDiagnostics(),
 			'deletionSuccessor' => $this->settingsService->getDeletionSuccessor(),
 			'deletionSuccessorDisplayName' => $this->getDeletionSuccessorDisplayName(),
+			'defaultAddressBook' => $this->settingsService->getDefaultAddressBook(),
 		]);
 	}
 
@@ -348,7 +349,12 @@ class SettingsController extends Controller {
 		?string $aiApiUrl = null,
 		?string $aiModel = null,
 		?string $deletionSuccessor = null,
+		?string $defaultAddressBook = null,
 	): JSONResponse {
+		if ($defaultAddressBook !== null) {
+			$this->settingsService->setDefaultAddressBook($defaultAddressBook);
+		}
+
 		if ($reminderDays1 !== null) {
 			$this->settingsService->setReminderDays1($reminderDays1);
 		}
@@ -421,6 +427,7 @@ class SettingsController extends Controller {
 			'reminderLink' => $this->getReminderLinkDiagnostics(),
 			'deletionSuccessor' => $this->settingsService->getDeletionSuccessor(),
 			'deletionSuccessorDisplayName' => $this->getDeletionSuccessorDisplayName(),
+			'defaultAddressBook' => $this->settingsService->getDefaultAddressBook(),
 		]);
 	}
 

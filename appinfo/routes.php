@@ -33,6 +33,8 @@ return [
         ['name' => 'contact#status', 'url' => '/api/contacts/status', 'verb' => 'GET'],
         ['name' => 'contact#search', 'url' => '/api/contacts/search', 'verb' => 'GET'],
         ['name' => 'contact#resolve', 'url' => '/api/contacts/resolve', 'verb' => 'GET'],
+        ['name' => 'contact#addressBooks', 'url' => '/api/contacts/addressbooks', 'verb' => 'GET'],
+        ['name' => 'contact#create', 'url' => '/api/contacts', 'verb' => 'POST'],
 
         // Category API routes
         ['name' => 'category#index', 'url' => '/api/categories', 'verb' => 'GET'],

@@ -549,6 +549,26 @@
 								{{ t('nc_vertragswerk', 'Denk daran, den Eintrag anzupassen, wenn diese Person selbst das Unternehmen verlässt.') }}
 							</p>
 						</div>
+
+						<!-- Standard-Adressbuch für neue Kontakte (#3) -->
+						<div class="settings-item">
+							<label class="settings-label" for="default-addressbook">{{ t('nc_vertragswerk', 'Standard-Adressbuch für neu angelegte Kontakte') }}</label>
+							<p class="settings-description">
+								{{ t('nc_vertragswerk', 'Wird beim Anlegen eines Kontakts aus dem Vertragsformular vorausgewählt und kann dort geändert werden. Gilt für alle Benutzer über den Namen des Adressbuchs; wer keines mit diesem Namen hat, bekommt sein erstes verfügbares.') }}
+							</p>
+							<select id="default-addressbook"
+								v-model="adminSettings.defaultAddressBook"
+								class="settings-select"
+								data-test="default-addressbook"
+								@change="saveAdminField('defaultAddressBook', adminSettings.defaultAddressBook)">
+								<option value="">
+									{{ t('nc_vertragswerk', 'Erstes verfügbares Adressbuch') }}
+								</option>
+								<option v-for="name in addressBookNames" :key="name" :value="name">
+									{{ name }}
+								</option>
+							</select>
+						</div>
 					</div>
 
 					<!-- Custom Fields Settings -->
@@ -794,6 +814,7 @@ import { mapState, mapActions } from 'pinia'
 import { getCanonicalLocale, translatePlural as n } from '@nextcloud/l10n'
 import { useCategoriesStore } from '../store/categories'
 import { useContractsStore } from '../store/contracts'
+import ContactService from '../services/ContactService'
 import AreaSettings from '../components/AreaSettings.vue'
 import ShapeIcon from 'vue-material-design-icons/Shape.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -907,9 +928,12 @@ export default {
 				aiApiUrl: '',
 				aiModel: '',
 				deletionSuccessor: '',
+				defaultAddressBook: '',
 			},
 			// Object form of adminSettings.deletionSuccessor for the NcSelect.
 			deletionSuccessorOption: null,
+			// Namen der eigenen Adressbücher für die Auswahl oben (#3)
+			ownAddressBookNames: [],
 			reminderLink: null,
 			reminderLinkExpanded: false,
 			permissionSettings: {
@@ -933,6 +957,12 @@ export default {
 		}
 	},
 	computed: {
+		addressBookNames() {
+			const names = [...this.ownAddressBookNames]
+			const current = this.adminSettings.defaultAddressBook
+			if (current && !names.includes(current)) names.push(current)
+			return names
+		},
 		...mapState(useCategoriesStore, {
 			categories: 'allCategories',
 		}),
@@ -1004,6 +1034,7 @@ export default {
 		if (this.$isAdmin) {
 			await this.loadAdminSettings()
 			await this.loadPermissionSettings()
+			this.loadAddressBookNames()
 			await this.performSearch('')
 		}
 	},
@@ -1031,6 +1062,14 @@ export default {
 		// especially the AI credentials — untouched. The AI block keeps its own
 		// deliberate save (saveAiSettings) because it only makes sense as a
 		// complete, validated set. (#151)
+		async loadAddressBookNames() {
+			try {
+				this.ownAddressBookNames = (await ContactService.addressBooks()).map(b => b.name)
+			} catch (e) {
+				this.ownAddressBookNames = []
+			}
+		},
+
 		async saveAdminField(field, value) {
 			try {
 				await SettingsService.updateAdminSettings({ [field]: value })
@@ -1296,6 +1335,7 @@ export default {
 					aiApiUrl: settings.aiApiUrl || '',
 					aiModel: settings.aiModel || '',
 					deletionSuccessor: settings.deletionSuccessor || '',
+					defaultAddressBook: settings.defaultAddressBook || '',
 				}
 				this.deletionSuccessorOption = settings.deletionSuccessor
 					? {
@@ -1867,6 +1907,18 @@ export default {
 	.custom-field-label {
 		margin-top: 8px;
 	}
+}
+
+.settings-select {
+	min-width: 260px;
+	max-width: 100%;
+	min-height: 36px;
+	padding: 6px 10px;
+	border: 1px solid var(--color-border-dark, var(--color-border));
+	border-radius: var(--border-radius, 8px);
+	background-color: var(--color-main-background);
+	color: var(--color-main-text);
+	font: inherit;
 }
 
 .settings-actions {

@@ -7,6 +7,7 @@
 	     sichtbare Identitaet liefert der Zusammenfassungs-Kopf. -->
 	<NcModal v-if="show"
 		:show="show"
+		:additional-trap-elements="extraTrapElements"
 		label-id="contract-form-title"
 		size="large"
 		@close="$emit('close')">
@@ -98,24 +99,41 @@
 
 					<div v-if="showContactField" class="cm-field">
 						<span>{{ t('nc_vertragswerk', 'Kontakt im Adressbuch') }}</span>
-						<NcSelect v-if="!readOnly && contactsAvailable"
-							v-model="contactSelection"
-							class="cm-select"
-							:options="contactResults"
-							:loading="contactSearching"
-							:filterable="false"
-							:placeholder="t('nc_vertragswerk', 'Kontakt suchen...')"
-							label="name"
-							track-by="uid"
-							:clearable="true"
-							@search="onContactSearch">
-							<template #option="option">
-								<span class="contact-option">
-									{{ option.name }}
-									<small v-if="contactSubline(option)">{{ contactSubline(option) }}</small>
-								</span>
-							</template>
-						</NcSelect>
+						<div v-if="!readOnly && contactsAvailable" class="contact-picker">
+							<NcSelect v-model="contactSelection"
+								class="cm-select"
+								:options="contactResults"
+								:loading="contactSearching"
+								:filterable="false"
+								:placeholder="t('nc_vertragswerk', 'Kontakt suchen...')"
+								label="name"
+								track-by="uid"
+								:clearable="true"
+								input-id="contract-contact"
+								@search="onContactSearch">
+								<template #option="option">
+									<span class="contact-option">
+										{{ option.name }}
+										<small v-if="contactSubline(option)">{{ contactSubline(option) }}</small>
+									</span>
+								</template>
+							</NcSelect>
+							<!-- Kontakt direkt anlegen (fds2610/contractmanager#3) -->
+							<button type="button"
+								class="contact-add"
+								:aria-label="t('nc_vertragswerk', 'Neuen Kontakt anlegen')"
+								:title="t('nc_vertragswerk', 'Neuen Kontakt anlegen')"
+								data-test="contact-add"
+								@click="showNewContact = true">
+								<PlusCircleIcon :size="26" />
+							</button>
+						</div>
+						<NewContactDialog v-if="showNewContact"
+							:organization="form.vendor"
+							return-focus="#contract-contact"
+							@ready="el => extraTrapElements = [el]"
+							@close="closeNewContact"
+							@created="onContactCreated" />
 						<VendorContactCard v-if="form.vendorContactUid"
 							:contact="linkedContact"
 							:loading="contactResolving" />
@@ -675,6 +693,8 @@ import ContractService from '../services/ContractService'
 import ExtractionService from '../services/ExtractionService'
 import SettingsService from '../services/SettingsService'
 import ContactService from '../services/ContactService'
+import NewContactDialog from './NewContactDialog.vue'
+import PlusCircleIcon from 'vue-material-design-icons/PlusCircle.vue'
 import VendorContactCard from './VendorContactCard.vue'
 import InsuranceDetails from './InsuranceDetails.vue'
 import { isInsuranceCategoryName, personsForForm, benefitsForForm, personsForApi, benefitsForApi } from '../utils/insurance'
@@ -682,6 +702,8 @@ import { isInsuranceCategoryName, personsForForm, benefitsForForm, personsForApi
 export default {
 	name: 'ContractForm',
 	components: {
+		NewContactDialog,
+		PlusCircleIcon,
 		NcModal,
 		NcButton,
 		NcSelect,
@@ -744,6 +766,10 @@ export default {
 			contactResults: [],
 			contactSearching: false,
 			linkedContact: null,
+			showNewContact: false,
+			// The nested „Neuer Kontakt“ modal sits outside this one in the DOM;
+			// without this the focus trap here pulls the focus back (#3).
+			extraTrapElements: [],
 			contactResolving: false,
 		}
 	},
@@ -1101,6 +1127,21 @@ export default {
 			} finally {
 				this.responsibleSearching = false
 			}
+		},
+		// Neuer Kontakt (#3): zuordnen und Dialog schließen
+		onContactCreated(contact) {
+			this.contactResults = [{ uid: contact.uid, name: contact.name, organization: contact.organization, email: contact.emails[0] || '' }]
+			this.form.vendorContactUid = contact.uid
+			this.linkedContact = contact
+			if (!this.form.vendor.trim()) {
+				this.form.vendor = contact.organization || contact.name
+			}
+			this.closeNewContact()
+		},
+		// NcModal returns the focus to #contract-contact (return-focus)
+		closeNewContact() {
+			this.showNewContact = false
+			this.extraTrapElements = []
 		},
 		async onContactSearch(query) {
 			try {
@@ -1487,6 +1528,35 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.contact-picker {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+
+	.cm-select { flex: 1 1 auto; min-width: 0; }
+}
+
+// Grüner Plus-Button wie bei den Versicherungsangaben
+.contact-add {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	min-height: 0;
+	padding: 0;
+	margin: 0;
+	border: none;
+	border-radius: 50%;
+	background: transparent;
+	color: var(--color-element-success, #099f05);
+	cursor: pointer;
+
+	&:hover,
+	&:focus-visible { background: var(--color-background-hover); }
+}
+
 .contract-form {
 	padding: 4px 22px 0;
 	max-height: min(90vh, calc(100vh - 120px));

@@ -26,7 +26,7 @@ class ContactControllerTest extends TestCase {
 	private function controller(): ContactController {
 		$l = $this->createMock(IL10N::class);
 		$l->method('t')->willReturnArgument(0);
-		return new ContactController($this->createMock(IRequest::class), $this->contacts, $this->permissions, $l, 'dave');
+		return new ContactController($this->createMock(IRequest::class), $this->contacts, $this->permissions, $l, 'dave', $this->createMock(\OCA\NcVertragswerk\Service\SettingsService::class));
 	}
 
 	public function testSearchNeedsEditRight(): void {
