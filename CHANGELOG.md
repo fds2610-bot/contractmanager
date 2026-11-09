@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Vertragsspiegel als PDF**: Neuer Button „PDF“ zwischen „Filter“ und „Neuer Vertrag“. Er gibt genau die angezeigten Verträge (Kategorie, Filter, Suche und Sortierung der Liste) als PDF im Querformat in einem neuen Tab aus, gruppiert nach Kategorie. Spalten: Vertrag mit Vertragsnummer, Vertragspartner mit verknüpftem Kontakt, Höhe/Umfang (Zuständig, Personen, Versicherungsleistungen, Notizen), läuft bis, Status, Zahlungsweise und Beitrag. Kopfzeile mit Name, Stand und Seitenzahl; der Tabellenkopf wiederholt sich, Verträge werden nicht über Seiten getrennt
+
 ## [1.12.0.1] - 2026-11-07
 
 Zwischenversion des Forks fds2610 auf Basis von 1.12.0.

@@ -452,7 +452,21 @@
 		"Begünstigte Person": "Beneficiary",
 		"Mitversicherte Person": "Co-insured person",
 		"Beitragszahler": "Premium payer",
-		"Sonstige": "Other"
+		"Sonstige": "Other",
+		"Tel. {phone}": "Phone {phone}",
+		"Zuständig: {name}": "Responsible: {name}",
+		"Nr. {number}": "No. {number}",
+		"Vertragsspiegel": "Contract overview",
+		"Stand: {date}": "As of: {date}",
+		"bei": "with",
+		"Höhe / Umfang": "Scope / details",
+		"läuft bis": "runs until",
+		"Zahlungsweise": "Payment interval",
+		"Beitrag": "Amount",
+		"Seite {page} von {total}": "Page {page} of {total}",
+		"Vertragsspiegel der angezeigten Verträge als PDF": "Contract overview of the shown contracts as PDF",
+		"PDF": "PDF",
+		"PDF konnte nicht erstellt werden": "PDF could not be created"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

@@ -36,6 +36,8 @@
         "@nextcloud/l10n": "^3.1.0",
         "@nextcloud/router": "^3.2.0",
         "@nextcloud/vue": "^9.14.1",
+        "jspdf": "^4.2.1",
+        "jspdf-autotable": "^5.0.9",
         "pinia": "^2.3.1",
         "vue": "^3.5.44",
         "vue-material-design-icons": "^5.4.0"

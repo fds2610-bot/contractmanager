@@ -26,6 +26,16 @@
 					</template>
 					{{ t('contractmanager', 'Filter') }}
 				</NcButton>
+				<NcButton variant="secondary"
+					:disabled="loading || contracts.length === 0 || pdfGenerating"
+					:title="t('contractmanager', 'Vertragsspiegel der angezeigten Verträge als PDF')"
+					@click="openContractMirror">
+					<template #icon>
+						<NcLoadingIcon v-if="pdfGenerating" :size="20" />
+						<FilePdfBoxIcon v-else :size="20" />
+					</template>
+					{{ t('contractmanager', 'PDF') }}
+				</NcButton>
 				<NcButton v-if="canEdit" variant="primary" @click="showCreateForm = true">
 					<template #icon>
 						<PlusIcon :size="20" />
@@ -246,6 +256,7 @@ import FilterOffIcon from 'vue-material-design-icons/FilterOff.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CashMultipleIcon from 'vue-material-design-icons/CashMultiple.vue'
 import BellRingIcon from 'vue-material-design-icons/BellRing.vue'
+import FilePdfBoxIcon from 'vue-material-design-icons/FilePdfBox.vue'
 import ContractListItem from '../components/ContractListItem.vue'
 import { getDeadlineInfo, getEffectiveEndDate } from '../utils/periodUtils.js'
 import { DEFAULT_REMINDER_DAYS_1, isEndingSoon, isPlanned } from '../utils/contractStatus'
@@ -255,6 +266,11 @@ import { normalizeCostInput } from '../utils/costFormat'
 import { DEADLINE_WITHIN_OPTIONS, hasMonthlyCostAtLeast, isDeadlineWithin } from '../utils/listFilters'
 import ContractForm from '../components/ContractForm.vue'
 import SettingsService from '../services/SettingsService'
+import ContactService from '../services/ContactService'
+import ContractService from '../services/ContractService'
+import { getCurrentUser } from '@nextcloud/auth'
+import { buildMirrorGroups } from '../utils/contractMirror'
+import { formatDate } from '../utils/dateUtils.js'
 import { showInfo, showError } from '@nextcloud/dialogs'
 
 export default {
@@ -279,6 +295,7 @@ export default {
 		CloseIcon,
 		CashMultipleIcon,
 		BellRingIcon,
+		FilePdfBoxIcon,
 		ContractListItem,
 		ContractForm,
 	},
@@ -309,6 +326,7 @@ export default {
 			viewingContract: null,
 			archivingContract: null,
 			formLoading: false,
+			pdfGenerating: false,
 			sortBy: prefs.sortBy,
 			sortDirection: prefs.sortDirection,
 			sortOptions: [
@@ -791,6 +809,78 @@ export default {
 			} catch (error) {
 				console.error('Failed to persist sort preference:', error)
 			}
+		},
+
+		/**
+		 * „Vertragsspiegel" (#489): exactly the contracts the list shows,
+		 * in its order, as a PDF in a new tab. The tab is opened right away,
+		 * inside the click, because browsers block window.open after an await.
+		 */
+		async openContractMirror() {
+			if (this.pdfGenerating) return
+			const contracts = this.contracts
+			if (!contracts.length) return
+			const tab = window.open('', '_blank')
+			this.pdfGenerating = true
+			try {
+				const [lookups, { renderContractMirrorPdf }] = await Promise.all([
+					this.loadMirrorLookups(contracts),
+					import('../utils/contractMirrorPdf'),
+				])
+				const user = getCurrentUser()
+				const blob = await renderContractMirrorPdf(
+					buildMirrorGroups(contracts, this.allCategories, lookups),
+					{ userName: user?.displayName || user?.uid || '', date: formatDate(new Date()) },
+				)
+				const url = URL.createObjectURL(blob)
+				if (tab && !tab.closed) {
+					tab.location.href = url
+				} else {
+					// Pop-up blocked: download instead.
+					const link = document.createElement('a')
+					link.href = url
+					link.download = t('contractmanager', 'Vertragsspiegel') + '.pdf'
+					link.click()
+				}
+				setTimeout(() => URL.revokeObjectURL(url), 60000)
+			} catch (error) {
+				console.error('Failed to create contract mirror PDF:', error)
+				if (tab && !tab.closed) tab.close()
+				showError(t('contractmanager', 'PDF konnte nicht erstellt werden'))
+			} finally {
+				this.pdfGenerating = false
+			}
+		},
+
+		// Linked address book contacts and the display names of the responsible
+		// users. Both are optional: whatever cannot be resolved falls back to the
+		// stored value (partner name, user ID).
+		async loadMirrorLookups(contracts) {
+			const contactUids = [...new Set(contracts.map(c => c.vendorContactUid).filter(Boolean))]
+			const userIds = [...new Set(contracts.map(c => (c.responsibleUser || '').trim()).filter(Boolean))]
+			const contacts = {}
+			const userNames = {}
+			await Promise.all([
+				...contactUids.map(async uid => {
+					try {
+						contacts[uid] = await ContactService.resolve(uid)
+					} catch (e) {
+						contacts[uid] = null
+					}
+				}),
+				// The user search is only open to editors; viewers see the user ID.
+				...(this.canEdit
+					? userIds.map(async uid => {
+						try {
+							const match = (await ContractService.searchUsers(uid)).find(u => u.uid === uid)
+							if (match) userNames[uid] = match.displayName
+						} catch (e) {
+							// keep the user ID
+						}
+					})
+					: []),
+			])
+			return { contacts, userNames }
 		},
 
 		toggleFilters() {

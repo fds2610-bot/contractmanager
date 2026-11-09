@@ -452,7 +452,21 @@
 		"Begünstigte Person": "Begünstigte Person",
 		"Mitversicherte Person": "Mitversicherte Person",
 		"Beitragszahler": "Beitragszahler",
-		"Sonstige": "Sonstige"
+		"Sonstige": "Sonstige",
+		"Tel. {phone}": "Tel. {phone}",
+		"Zuständig: {name}": "Zuständig: {name}",
+		"Nr. {number}": "Nr. {number}",
+		"Vertragsspiegel": "Vertragsspiegel",
+		"Stand: {date}": "Stand: {date}",
+		"bei": "bei",
+		"Höhe / Umfang": "Höhe / Umfang",
+		"läuft bis": "läuft bis",
+		"Zahlungsweise": "Zahlungsweise",
+		"Beitrag": "Beitrag",
+		"Seite {page} von {total}": "Seite {page} von {total}",
+		"Vertragsspiegel der angezeigten Verträge als PDF": "Vertragsspiegel der angezeigten Verträge als PDF",
+		"PDF": "PDF",
+		"PDF konnte nicht erstellt werden": "PDF konnte nicht erstellt werden"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }
