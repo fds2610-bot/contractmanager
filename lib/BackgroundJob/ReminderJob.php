@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\BackgroundJob;
+namespace OCA\NcVertragswerk\BackgroundJob;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\ReminderService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\ReminderService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use Psr\Log\LoggerInterface;

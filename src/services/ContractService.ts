@@ -2,7 +2,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import type { Contract } from '../store/contracts'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/contracts')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/contracts')
 
 export interface Permissions {
 	isAdmin: boolean

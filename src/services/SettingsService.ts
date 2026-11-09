@@ -1,7 +1,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/settings')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/settings')
 
 export interface UserSettings {
 	emailReminder?: boolean
@@ -16,6 +16,8 @@ export interface UserSettings {
 	backupInterval?: 'daily' | 'weekly' | 'monthly'
 	/** Fixed full hour 0-23 in the user's timezone; null = plain interval. Send -1 to clear. */
 	backupHour?: number | null
+	/** Snapshots kept, 1-999 (#8) */
+	backupKeep?: number
 	backupLastRun?: number
 	backupNextRun?: number
 	[key: string]: unknown
@@ -94,7 +96,7 @@ export default {
 	// Search users and groups for the permission picker
 	async searchUsersAndGroups(query: string): Promise<Principal[]> {
 		const response = await axios.get<Principal[]>(
-			generateUrl('/apps/contractmanager/api/settings/search-principals'),
+			generateUrl('/apps/nc_vertragswerk/api/settings/search-principals'),
 			{ params: { query } },
 		)
 		return response.data

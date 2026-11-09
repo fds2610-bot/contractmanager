@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Service\InsuranceData;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Service\InsuranceData;
 use PHPUnit\Framework\TestCase;
 
 class InsuranceDataTest extends TestCase {

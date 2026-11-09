@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\BackgroundJob;
+namespace OCA\NcVertragswerk\Tests\Unit\BackgroundJob;
 
-use OCA\ContractManager\BackgroundJob\StatusUpdateJob;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
+use OCA\NcVertragswerk\BackgroundJob\StatusUpdateJob;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Listener;
+namespace OCA\NcVertragswerk\Tests\Unit\Listener;
 
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Listener\UserDeletedListener;
-use OCA\ContractManager\Notification\NotificationService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Listener\UserDeletedListener;
+use OCA\NcVertragswerk\Notification\NotificationService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\EventDispatcher\Event;
 use OCP\IUser;
 use OCP\IUserManager;

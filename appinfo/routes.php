@@ -33,12 +33,18 @@ return [
         ['name' => 'contact#status', 'url' => '/api/contacts/status', 'verb' => 'GET'],
         ['name' => 'contact#search', 'url' => '/api/contacts/search', 'verb' => 'GET'],
         ['name' => 'contact#resolve', 'url' => '/api/contacts/resolve', 'verb' => 'GET'],
+        ['name' => 'contact#addressBooks', 'url' => '/api/contacts/addressbooks', 'verb' => 'GET'],
+        ['name' => 'contact#create', 'url' => '/api/contacts', 'verb' => 'POST'],
 
         // Category API routes
         ['name' => 'category#index', 'url' => '/api/categories', 'verb' => 'GET'],
         ['name' => 'category#create', 'url' => '/api/categories', 'verb' => 'POST'],
         ['name' => 'category#update', 'url' => '/api/categories/{id}', 'verb' => 'PUT'],
         ['name' => 'category#destroy', 'url' => '/api/categories/{id}', 'verb' => 'DELETE'],
+        ['name' => 'area#index', 'url' => '/api/areas', 'verb' => 'GET'],
+        ['name' => 'area#create', 'url' => '/api/areas', 'verb' => 'POST'],
+        ['name' => 'area#update', 'url' => '/api/areas/{id}', 'verb' => 'PUT'],
+        ['name' => 'area#destroy', 'url' => '/api/areas/{id}', 'verb' => 'DELETE'],
 
         // User Settings API routes
         ['name' => 'settings#get', 'url' => '/api/settings', 'verb' => 'GET'],

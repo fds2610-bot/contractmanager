@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\Db\Category;
-use OCA\ContractManager\Db\CategoryMapper;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Db\Category;
+use OCA\NcVertragswerk\Db\AreaMapper;
+use OCA\NcVertragswerk\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;
@@ -59,6 +60,7 @@ class ContractImportService {
 		private ITimeFactory $timeFactory,
 		private IL10N $l,
 		private PermissionService $permissionService,
+		private AreaMapper $areaMapper,
 	) {
 	}
 
@@ -213,6 +215,10 @@ class ContractImportService {
 			// A cut-off UID would point to nothing, so drop it instead
 			$contract->setVendorContactUid($contactUid !== null && strlen($contactUid) <= 255 ? $contactUid : null);
 			$contract->setContractNumber(InsuranceData::normalizeContractNumber($this->nullableString($c['contractNumber'] ?? null)));
+			$areaName = $this->nullableString($c['areaName'] ?? null);
+			$contract->setAreaId($areaName !== null ? $this->areaMapper->findByName($areaName)?->getId() : null);
+			$contract->setPaymentMethod(ContractService::normalizePaymentMethod($c['paymentMethod'] ?? null));
+			$contract->setCustomerNumber(InsuranceData::normalizeContractNumber($this->nullableString($c['customerNumber'] ?? null)));
 			$contract->setInsurancePersons(InsuranceData::personsToJson($c['insurancePersons'] ?? null));
 			$contract->setInsuranceBenefits(InsuranceData::benefitsToJson($c['insuranceBenefits'] ?? null));
 			$contract->setCreatedAt($this->stringToDate($c['createdAt'] ?? null) ?? $this->timeFactory->getDateTime());

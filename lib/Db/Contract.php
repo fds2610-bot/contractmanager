@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Db;
+namespace OCA\NcVertragswerk\Db;
 
 use DateTime;
 use JsonSerializable;
-use OCA\ContractManager\Service\InsuranceData;
+use OCA\NcVertragswerk\Service\InsuranceData;
 use OCP\AppFramework\Db\Entity;
 
 /**
@@ -73,6 +73,12 @@ use OCP\AppFramework\Db\Entity;
  * @method string getAmountType()
  * @method string|null getContractNumber()
  * @method void setContractNumber(?string $contractNumber)
+ * @method string|null getCustomerNumber()
+ * @method void setCustomerNumber(?string $customerNumber)
+ * @method int|null getAreaId()
+ * @method void setAreaId(?int $areaId)
+ * @method string|null getPaymentMethod()
+ * @method void setPaymentMethod(?string $paymentMethod)
  * @method string|null getInsurancePersons()
  * @method void setInsurancePersons(?string $insurancePersons)
  * @method string|null getInsuranceBenefits()
@@ -94,6 +100,10 @@ class Contract extends Entity implements JsonSerializable {
     public const AMOUNT_TYPE_NETTO = 'netto';
     public const AMOUNT_TYPE_BRUTTO = 'brutto';
 
+    public const PAYMENT_DEBIT = 'debit';
+    public const PAYMENT_TRANSFER = 'transfer';
+    public const PAYMENT_METHODS = [self::PAYMENT_DEBIT, self::PAYMENT_TRANSFER];
+
     public const INTERVAL_WEEKLY = 'weekly';
     public const INTERVAL_MONTHLY = 'monthly';
     public const INTERVAL_QUARTERLY = 'quarterly';
@@ -105,6 +115,11 @@ class Contract extends Entity implements JsonSerializable {
     protected string $vendor = '';
     protected ?string $vendorContactUid = null;
     protected ?string $contractNumber = null;
+    protected ?string $customerNumber = null;
+    /** „Kategorie" (#7), see Area; categoryId is the „Vertragsart" */
+    protected ?int $areaId = null;
+    /** debit („wird abgebucht") or transfer („überweisen") */
+    protected ?string $paymentMethod = null;
     /** JSON list of {type, name, userId} */
     protected ?string $insurancePersons = null;
     /** JSON list of strings */
@@ -143,6 +158,7 @@ class Contract extends Entity implements JsonSerializable {
     public function __construct() {
         $this->addType('id', 'integer');
         $this->addType('categoryId', 'integer');
+        $this->addType('areaId', 'integer');
         $this->addType('startDate', 'datetime');
         $this->addType('endDate', 'datetime');
         $this->addType('cancelledOn', 'datetime');
@@ -256,6 +272,9 @@ class Contract extends Entity implements JsonSerializable {
             'vendor' => $this->vendor,
             'vendorContactUid' => $this->vendorContactUid,
             'contractNumber' => $this->contractNumber,
+            'customerNumber' => $this->customerNumber,
+            'areaId' => $this->areaId,
+            'paymentMethod' => $this->paymentMethod,
             'insurancePersons' => InsuranceData::decode($this->insurancePersons),
             'insuranceBenefits' => InsuranceData::decode($this->insuranceBenefits),
             'status' => $this->status,

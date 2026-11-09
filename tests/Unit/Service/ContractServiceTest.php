@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
 use DateTime;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Notification\NotificationService;
-use OCA\ContractManager\Service\ContractService;
-use OCA\ContractManager\Service\ForbiddenException;
-use OCA\ContractManager\Service\NotFoundException;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Notification\NotificationService;
+use OCA\NcVertragswerk\Service\ContractService;
+use OCA\NcVertragswerk\Service\ForbiddenException;
+use OCA\NcVertragswerk\Service\NotFoundException;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IL10N;
 use OCP\L10N\IFactory;

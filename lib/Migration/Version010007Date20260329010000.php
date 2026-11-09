@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Migration;
+namespace OCA\NcVertragswerk\Migration;
 
 use Closure;
 use Doctrine\DBAL\Types\Types;

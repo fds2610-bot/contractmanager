@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\AppInfo\Application;
+use OCA\NcVertragswerk\AppInfo\Application;
 use OCP\IConfig;
 
 /**
@@ -31,6 +31,7 @@ class SettingsService {
 	private const KEY_SORT_BY = 'sort_by';
 	private const KEY_SORT_DIRECTION = 'sort_direction';
 	private const KEY_FILTERS = 'filters';
+	private const KEY_DEFAULT_ADDRESSBOOK = 'default_addressbook';
 	private const KEY_DEFAULT_AMOUNT_TYPE = 'default_amount_type';
 
 	private const KEY_CUSTOM_FIELD_LABEL_PREFIX = 'custom_field_label_';
@@ -45,6 +46,7 @@ class SettingsService {
 
 	private const KEY_BACKUP_ENABLED = 'backup_enabled';
 	private const KEY_BACKUP_FOLDER = 'backup_folder';
+	private const KEY_BACKUP_KEEP = 'backup_keep';
 	private const KEY_BACKUP_INTERVAL = 'backup_interval';
 	// Full hour (0-23) in the user's timezone; unset = plain interval as before (#399).
 	private const KEY_BACKUP_HOUR = 'backup_hour';
@@ -67,6 +69,10 @@ class SettingsService {
 		self::BACKUP_INTERVAL_MONTHLY,
 	];
 	public const DEFAULT_BACKUP_FOLDER = '/VertragsWerk-Backup';
+	/** Snapshots kept per user (fds2610/contractmanager#8) */
+	public const DEFAULT_BACKUP_KEEP = 30;
+	public const MIN_BACKUP_KEEP = 1;
+	public const MAX_BACKUP_KEEP = 999;
 
 	private const ALLOWED_AI_PROVIDERS = ['claude', 'openai_compatible'];
 	private const DEFAULT_AI_URLS = [
@@ -106,6 +112,7 @@ class SettingsService {
 		'deadlineWithin' => 0,
 		'minMonthlyCost' => null,
 		'ownerMissing' => false,
+		'areaId' => 0,
 	];
 
 	public function __construct(
@@ -184,6 +191,19 @@ class SettingsService {
 	 * Get the user contracts are handed over to when their owner's account is
 	 * deleted (#299). Empty means no automatic handover happens.
 	 */
+	/**
+	 * Name of the address book that is preselected when a contact is created
+	 * from the contract form (fds2610/contractmanager#3). Address books belong
+	 * to each user, so this is a name, matched per user; '' = first writable.
+	 */
+	public function getDefaultAddressBook(): string {
+		return $this->config->getAppValue(Application::APP_ID, self::KEY_DEFAULT_ADDRESSBOOK, '');
+	}
+
+	public function setDefaultAddressBook(string $name): void {
+		$this->config->setAppValue(Application::APP_ID, self::KEY_DEFAULT_ADDRESSBOOK, mb_substr(trim($name), 0, 255));
+	}
+
 	public function getDeletionSuccessor(): string {
 		return $this->config->getAppValue(
 			Application::APP_ID,
@@ -450,7 +470,7 @@ class SettingsService {
 	/**
 	 * Get filter preferences for a user
 	 *
-	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool}
+	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool, areaId: int}
 	 */
 	public function getUserFilters(string $userId): array {
 		$json = $this->config->getUserValue(
@@ -485,7 +505,7 @@ class SettingsService {
 	}
 
 	/**
-	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool}
+	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool, areaId: int}
 	 */
 	private function validateFilters(array $filters): array {
 		$minMonthlyCost = $filters['minMonthlyCost'] ?? null;
@@ -506,6 +526,8 @@ class SettingsService {
 				: null,
 			// "Ohne aktiven Eigentuemer" ist ein Diagnosewerkzeug und wird nie gespeichert.
 			'ownerMissing' => false,
+			// Kategorie (#7); 0 = alle
+			'areaId' => isset($filters['areaId']) && is_int($filters['areaId']) && $filters['areaId'] > 0 ? $filters['areaId'] : 0,
 		];
 	}
 
@@ -559,6 +581,22 @@ class SettingsService {
 			self::KEY_BACKUP_FOLDER,
 			self::DEFAULT_BACKUP_FOLDER
 		);
+	}
+
+	/**
+	 * How many snapshots to keep; older ones are deleted after each backup.
+	 */
+	public function getUserBackupKeep(string $userId): int {
+		$value = (int)$this->config->getUserValue($userId, Application::APP_ID, self::KEY_BACKUP_KEEP, (string)self::DEFAULT_BACKUP_KEEP);
+		return $value >= self::MIN_BACKUP_KEEP && $value <= self::MAX_BACKUP_KEEP ? $value : self::DEFAULT_BACKUP_KEEP;
+	}
+
+	/**
+	 * Clamped to MIN..MAX, so a typo cannot delete all snapshots.
+	 */
+	public function setUserBackupKeep(string $userId, int $keep): void {
+		$keep = max(self::MIN_BACKUP_KEEP, min(self::MAX_BACKUP_KEEP, $keep));
+		$this->config->setUserValue($userId, Application::APP_ID, self::KEY_BACKUP_KEEP, (string)$keep);
 	}
 
 	/**

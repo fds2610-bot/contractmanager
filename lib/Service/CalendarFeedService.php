@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\Db\Contract;
+use OCA\NcVertragswerk\Db\Contract;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 
@@ -51,7 +51,7 @@ class CalendarFeedService {
 			$deadline = $entry['deadline'];
 
 			$lines[] = 'BEGIN:VEVENT';
-			$lines[] = 'UID:contract-' . $contract->getId() . '-deadline@contractmanager';
+			$lines[] = 'UID:contract-' . $contract->getId() . '-deadline@nc_vertragswerk';
 			$lines[] = 'DTSTAMP:' . $dtstamp;
 			// All-day event on the deadline date (VALUE=DATE, no time component).
 			$lines[] = 'DTSTART;VALUE=DATE:' . $deadline->format('Ymd');

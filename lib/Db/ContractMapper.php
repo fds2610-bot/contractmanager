@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Db;
+namespace OCA\NcVertragswerk\Db;
 
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
@@ -393,6 +393,7 @@ class ContractMapper extends QBMapper {
                     $qb->expr()->iLike('name', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('vendor', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('contract_number', $qb->createNamedParameter($searchPattern)),
+                    $qb->expr()->iLike('customer_number', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('responsible_user', $qb->createNamedParameter($searchPattern))
                 )
             );

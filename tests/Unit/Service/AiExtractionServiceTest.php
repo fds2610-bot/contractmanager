@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Service\AiExtractionService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Service\AiExtractionService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\Http\Client\IClientService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

@@ -19,7 +19,7 @@ vendor/*
 # Release ohne dieses CSS-Bundle liefert eine komplett ungestylte UI aus (#245).
 # js/
 css/*.css
-!css/contractmanager-main.css
+!css/nc_vertragswerk-main.css
 css/*.css.map
 dist/
 

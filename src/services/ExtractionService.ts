@@ -23,7 +23,7 @@ export interface ExtractionResult {
 export default {
 	async extractFromPdf(filePath: string): Promise<ExtractionResult> {
 		const response = await axios.post<ExtractionResult>(
-			generateUrl('/apps/contractmanager/api/extraction/extract'),
+			generateUrl('/apps/nc_vertragswerk/api/extraction/extract'),
 			{ filePath },
 		)
 		return response.data
@@ -31,7 +31,7 @@ export default {
 
 	async getStatus(): Promise<ExtractionStatus> {
 		const response = await axios.get<ExtractionStatus>(
-			generateUrl('/apps/contractmanager/api/extraction/status'),
+			generateUrl('/apps/nc_vertragswerk/api/extraction/status'),
 		)
 		return response.data
 	},

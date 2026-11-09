@@ -12,12 +12,12 @@ export interface InsurancePerson {
 /** Must match InsuranceData::PERSON_TYPES in lib/Service/InsuranceData.php. */
 export function personTypeOptions(): Array<{ value: InsurancePersonType, label: string }> {
 	return [
-		{ value: 'policyholder', label: t('contractmanager', 'Versicherungsnehmer') },
-		{ value: 'insured_person', label: t('contractmanager', 'Abgesicherte Person') },
-		{ value: 'beneficiary', label: t('contractmanager', 'Begünstigte Person') },
-		{ value: 'co_insured', label: t('contractmanager', 'Mitversicherte Person') },
-		{ value: 'payer', label: t('contractmanager', 'Beitragszahler') },
-		{ value: 'other', label: t('contractmanager', 'Sonstige') },
+		{ value: 'policyholder', label: t('nc_vertragswerk', 'Versicherungsnehmer') },
+		{ value: 'insured_person', label: t('nc_vertragswerk', 'Abgesicherte Person') },
+		{ value: 'beneficiary', label: t('nc_vertragswerk', 'Begünstigte Person') },
+		{ value: 'co_insured', label: t('nc_vertragswerk', 'Mitversicherte Person') },
+		{ value: 'payer', label: t('nc_vertragswerk', 'Beitragszahler') },
+		{ value: 'other', label: t('nc_vertragswerk', 'Sonstige') },
 	]
 }
 

@@ -1,6 +1,6 @@
 {
-    "name": "contractmanager",
-    "version": "1.12.0.1",
+    "name": "nc_vertragswerk",
+    "version": "2.0.0",
     "description": "Nextcloud App zur Vertragsverwaltung mit Kündigungserinnerungen",
     "main": "src/main.ts",
     "scripts": {
@@ -18,7 +18,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/cpcMomentum/contractmanager.git"
+        "url": "https://github.com/fds2610/contractmanager.git"
     },
     "keywords": [
         "nextcloud",
@@ -26,7 +26,7 @@
         "contracts",
         "management"
     ],
-    "author": "cpcMomentum GmbH",
+    "author": "fds2610 (ursprünglich cpcMomentum GmbH)",
     "license": "AGPL-3.0-or-later",
     "dependencies": {
         "@nextcloud/auth": "^2.5.3",
@@ -36,6 +36,8 @@
         "@nextcloud/l10n": "^3.1.0",
         "@nextcloud/router": "^3.2.0",
         "@nextcloud/vue": "^9.14.1",
+        "jspdf": "^4.2.1",
+        "jspdf-autotable": "^5.0.9",
         "pinia": "^2.3.1",
         "vue": "^3.5.44",
         "vue-material-design-icons": "^5.4.0"

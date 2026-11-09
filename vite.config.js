@@ -24,8 +24,28 @@ if (!appVersion) {
   throw new Error('vite.config.js: <version> nicht in appinfo/info.xml gefunden')
 }
 
+// jsPDF (Vertragsspiegel, #489) laedt html2canvas, canvg und dompurify per
+// dynamischem import() nach - nur fuer doc.html() und SVG-Bilder, die die App
+// nicht nutzt. Das IIFE-Bundle kennt keine nachgeladenen Chunks und wuerde die
+// drei Pakete (mehrere hundert KB) fest einbauen. Fuer Importe aus jsPDF
+// zeigen sie deshalb auf ein leeres Modul; andere Importe bleiben unberuehrt.
+const JSPDF_OPTIONAL = new Set(['html2canvas', 'canvg', 'dompurify'])
+const jspdfOptionalStub = {
+  name: 'jspdf-optional-stub',
+  enforce: 'pre',
+  resolveId(source, importer) {
+    if (JSPDF_OPTIONAL.has(source) && importer && /[\\/]node_modules[\\/]jspdf[\\/]/.test(importer)) {
+      return '\0jspdf-optional-stub'
+    }
+    return null
+  },
+  load(id) {
+    return id === '\0jspdf-optional-stub' ? 'export default null' : null
+  },
+}
+
 export default defineConfig(({ mode }) => ({
-  plugins: [vue()],
+  plugins: [jspdfOptionalStub, vue()],
   test: {
     environment: 'happy-dom',
     globals: true,
@@ -61,15 +81,15 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
-      name: 'contractmanager',
+      name: 'nc_vertragswerk',
       formats: ['iife'],
-      fileName: () => 'js/contractmanager-main.js',
+      fileName: () => 'js/nc_vertragswerk-main.js',
     },
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-            return 'css/contractmanager-main.css'
+            return 'css/nc_vertragswerk-main.css'
           }
           return 'css/[name][extname]'
         },

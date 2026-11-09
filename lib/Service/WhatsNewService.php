@@ -7,9 +7,9 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\AppInfo\Application;
+use OCA\NcVertragswerk\AppInfo\Application;
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
 use OCP\IConfig;
@@ -42,7 +42,7 @@ class WhatsNewService {
 
 	/**
 	 * App-weite Notiz „diese Installation bestand schon vor dem Fenster",
-	 * gesetzt von {@see \OCA\ContractManager\Migration\WhatsNewBootstrap}.
+	 * gesetzt von {@see \OCA\NcVertragswerk\Migration\WhatsNewBootstrap}.
 	 * Wert = die Version, die das Fenster mitgebracht hat.
 	 */
 	public const KEY_BOOTSTRAP = 'whatsnew_bootstrap';

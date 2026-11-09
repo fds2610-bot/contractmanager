@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Controller;
+namespace OCA\NcVertragswerk\Controller;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\CalendarFeedService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\CalendarFeedService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;

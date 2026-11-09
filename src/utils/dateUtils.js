@@ -1,5 +1,5 @@
 /**
- * Date utility functions for ContractManager
+ * Date utility functions for VertragsWerk
  */
 
 import { getCanonicalLocale } from '@nextcloud/l10n'

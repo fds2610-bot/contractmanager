@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Command;
+namespace OCA\NcVertragswerk\Command;
 
-use OCA\ContractManager\Service\ContractImportService;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\Service\ContractImportService;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,9 +13,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * occ contractmanager:import --user=<uid> --file=<file> [--dry-run]
+ * occ nc_vertragswerk:import --user=<uid> --file=<file> [--dry-run]
  *
- * Counterpart to contractmanager:export: reads a backup JSON into a user's account.
+ * Counterpart to nc_vertragswerk:export: reads a backup JSON into a user's account.
  */
 class ImportContracts extends Command {
 
@@ -28,7 +28,7 @@ class ImportContracts extends Command {
 
 	protected function configure(): void {
 		$this
-			->setName('contractmanager:import')
+			->setName('nc_vertragswerk:import')
 			->setDescription('Import contract data from a backup JSON into a user\'s account')
 			->addOption('user', 'u', InputOption::VALUE_REQUIRED, 'The user ID that will own the imported contracts')
 			->addOption('file', 'f', InputOption::VALUE_REQUIRED, 'Path to the backup JSON on the server')

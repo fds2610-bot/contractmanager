@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Search;
+namespace OCA\NcVertragswerk\Search;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Service\ContractService;
-use OCA\ContractManager\Service\PermissionService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Service\ContractService;
+use OCA\NcVertragswerk\Service\PermissionService;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\IUser;
@@ -70,7 +70,7 @@ class ContractSearchProvider implements IProvider {
 				$contract->getName(),
 				$subline,
 				$appUrl,
-				'icon-contractmanager',
+				'icon-nc_vertragswerk',
 				false,
 			);
 		}, $contracts);

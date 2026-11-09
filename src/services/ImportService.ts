@@ -1,7 +1,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/import')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/import')
 
 export interface ImportSummary {
 	contracts: number

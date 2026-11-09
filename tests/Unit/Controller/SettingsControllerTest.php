@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Controller;
+namespace OCA\NcVertragswerk\Tests\Unit\Controller;
 
-use OCA\ContractManager\Controller\SettingsController;
-use OCA\ContractManager\Service\AutoBackupService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Controller\SettingsController;
+use OCA\NcVertragswerk\Service\AutoBackupService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IGroupManager;
 use OCP\IL10N;
@@ -218,13 +218,13 @@ class SettingsControllerTest extends TestCase {
 			->method('setCalendarFeedToken')
 			->with('admin', 'FRESHTOKEN123');
 		$this->urlGenerator->method('linkToRouteAbsolute')
-			->with('contractmanager.calendar.feed', ['token' => 'FRESHTOKEN123'])
-			->willReturn('https://cloud.example.com/apps/contractmanager/feed/FRESHTOKEN123/contracts.ics');
+			->with('nc_vertragswerk.calendar.feed', ['token' => 'FRESHTOKEN123'])
+			->willReturn('https://cloud.example.com/apps/nc_vertragswerk/feed/FRESHTOKEN123/contracts.ics');
 
 		$data = $this->controller->resetCalendarFeedToken()->getData();
 
 		$this->assertSame(
-			'https://cloud.example.com/apps/contractmanager/feed/FRESHTOKEN123/contracts.ics',
+			'https://cloud.example.com/apps/nc_vertragswerk/feed/FRESHTOKEN123/contracts.ics',
 			$data['calendarFeedUrl'],
 		);
 	}

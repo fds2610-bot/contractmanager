@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Command;
+namespace OCA\NcVertragswerk\Command;
 
-use OCA\ContractManager\Service\ContractExportService;
+use OCA\NcVertragswerk\Service\ContractExportService;
 use OCP\IUserManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * occ contractmanager:export --user=<uid> [--output=<file>]
+ * occ nc_vertragswerk:export --user=<uid> [--output=<file>]
  *
  * Writes a user's own contract data as JSON (same format as the user_migration
  * export and the auto-backup) to a file or stdout. Useful for admin/automation
@@ -29,7 +29,7 @@ class ExportContracts extends Command {
 
 	protected function configure(): void {
 		$this
-			->setName('contractmanager:export')
+			->setName('nc_vertragswerk:export')
 			->setDescription('Export a user\'s contract data as JSON')
 			->addOption('user', 'u', InputOption::VALUE_REQUIRED, 'The user ID whose contracts to export')
 			->addOption('output', 'o', InputOption::VALUE_REQUIRED, 'File path to write to (defaults to stdout)');

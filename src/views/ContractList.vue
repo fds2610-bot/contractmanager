@@ -1,7 +1,7 @@
 <template>
 	<div class="contract-list">
 		<div class="contract-list__header">
-			<h2>{{ t('contractmanager', 'Verträge') }}</h2>
+			<h2>{{ t('nc_vertragswerk', 'Verträge') }}</h2>
 			<div class="contract-list__header-actions">
 				<NcActions :force-menu="true" variant="secondary" :menu-name="activeSortLabel">
 					<template #icon>
@@ -24,13 +24,23 @@
 						<FilterOffIcon v-if="showFilters" :size="20" />
 						<FilterIcon v-else :size="20" />
 					</template>
-					{{ t('contractmanager', 'Filter') }}
+					{{ t('nc_vertragswerk', 'Filter') }}
+				</NcButton>
+				<NcButton variant="secondary"
+					:disabled="loading || contracts.length === 0 || pdfGenerating"
+					:title="t('nc_vertragswerk', 'Vertragsspiegel der angezeigten Verträge als PDF')"
+					@click="openContractMirror">
+					<template #icon>
+						<NcLoadingIcon v-if="pdfGenerating" :size="20" />
+						<FilePdfBoxIcon v-else :size="20" />
+					</template>
+					{{ t('nc_vertragswerk', 'PDF') }}
 				</NcButton>
 				<NcButton v-if="canEdit" variant="primary" @click="showCreateForm = true">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Neuer Vertrag') }}
+					{{ t('nc_vertragswerk', 'Neuer Vertrag') }}
 				</NcButton>
 			</div>
 		</div>
@@ -41,7 +51,7 @@
 		<div v-if="!loading && allContracts.length" class="contract-kpis">
 			<div class="kpi">
 				<div class="kpi__lab">
-					<FileDocumentIcon :size="15" /> {{ t('contractmanager', 'Aktive Verträge') }}
+					<FileDocumentIcon :size="15" /> {{ t('nc_vertragswerk', 'Aktive Verträge') }}
 				</div>
 				<div class="kpi__num">
 					{{ kpiActiveCount }}
@@ -52,7 +62,7 @@
 			</div>
 			<div class="kpi">
 				<div class="kpi__lab">
-					<CashMultipleIcon :size="15" /> {{ t('contractmanager', 'Monatliche Kosten') }}
+					<CashMultipleIcon :size="15" /> {{ t('nc_vertragswerk', 'Monatliche Kosten') }}
 				</div>
 				<div class="kpi__num">
 					{{ kpiMonthlyLabel }}
@@ -63,13 +73,13 @@
 			</div>
 			<div class="kpi" :class="{ 'kpi--warn': kpiEndingSoon > 0 }">
 				<div class="kpi__lab">
-					<BellRingIcon :size="15" /> {{ t('contractmanager', 'Kündigungsfrist endet') }}
+					<BellRingIcon :size="15" /> {{ t('nc_vertragswerk', 'Kündigungsfrist endet') }}
 				</div>
 				<div class="kpi__num">
 					{{ kpiEndingSoon }}
 				</div>
 				<div class="kpi__sub">
-					{{ t('contractmanager', 'innerhalb der Vorlaufzeit') }}
+					{{ t('nc_vertragswerk', 'innerhalb der Vorlaufzeit') }}
 				</div>
 			</div>
 		</div>
@@ -77,23 +87,32 @@
 		<div v-show="showFilters" class="contract-list__filters">
 			<NcSelect v-model="filterVendor"
 				:options="vendorOptions"
-				:placeholder="t('contractmanager', 'Vertragspartner')"
+				:placeholder="t('nc_vertragswerk', 'Vertragspartner')"
 				:clearable="true"
 				input-id="filter-vendor"
 				@update:model-value="persistFilters" />
 			<NcSelect v-model="filterStatuses"
 				:multiple="true"
 				:options="statusOptions"
-				:placeholder="t('contractmanager', 'Status')"
+				:placeholder="t('nc_vertragswerk', 'Status')"
 				:clearable="false"
 				label="label"
 				track-by="id"
 				:reduce="option => option.id"
 				input-id="filter-status"
 				@update:model-value="persistFilters" />
+			<NcSelect v-model="filterAreaId"
+				:options="areaFilterOptions"
+				:placeholder="t('nc_vertragswerk', 'Kategorie')"
+				:clearable="true"
+				label="label"
+				track-by="id"
+				:reduce="option => option.id"
+				input-id="filter-area"
+				@update:model-value="persistFilters" />
 			<NcSelect v-model="filterContractType"
 				:options="contractTypeOptions"
-				:placeholder="t('contractmanager', 'Vertragstyp')"
+				:placeholder="t('nc_vertragswerk', 'Befristung')"
 				:clearable="true"
 				label="label"
 				track-by="id"
@@ -102,13 +121,13 @@
 				@update:model-value="persistFilters" />
 			<NcSelect v-model="filterResponsible"
 				:options="responsibleOptions"
-				:placeholder="t('contractmanager', 'Zuständig')"
+				:placeholder="t('nc_vertragswerk', 'Zuständig')"
 				:clearable="true"
 				input-id="filter-responsible"
 				@update:model-value="persistFilters" />
 			<NcSelect v-model="filterDeadlineWithin"
 				:options="deadlineWithinOptions"
-				:placeholder="t('contractmanager', 'Frist / Ende in')"
+				:placeholder="t('nc_vertragswerk', 'Frist / Ende in')"
 				:clearable="true"
 				label="label"
 				track-by="id"
@@ -117,10 +136,10 @@
 				@update:model-value="persistFilters" />
 			<NcTextField v-model="filterMinMonthlyCostText"
 				class="filter-min-cost"
-				:label="t('contractmanager', 'Monatskosten ab')"
+				:label="t('nc_vertragswerk', 'Monatskosten ab')"
 				inputmode="decimal"
 				:error="minMonthlyCostInvalid"
-				:helper-text="minMonthlyCostInvalid ? t('contractmanager', 'Ungültiger Betrag') : ''"
+				:helper-text="minMonthlyCostInvalid ? t('nc_vertragswerk', 'Ungültiger Betrag') : ''"
 				:show-trailing-button="filterMinMonthlyCostText !== ''"
 				trailing-button-icon="close"
 				@trailing-button-click="filterMinMonthlyCostText = ''" />
@@ -129,7 +148,7 @@
 				type="switch"
 				class="filter-owner-missing"
 				@update:model-value="onOwnerMissingChange">
-				{{ t('contractmanager', 'Ohne aktiven Eigentümer') }}
+				{{ t('nc_vertragswerk', 'Ohne aktiven Eigentümer') }}
 			</NcCheckboxRadioSwitch>
 			<NcButton v-if="hasActiveFilters"
 				variant="tertiary"
@@ -137,7 +156,7 @@
 				<template #icon>
 					<CloseIcon :size="20" />
 				</template>
-				{{ t('contractmanager', 'Zurücksetzen') }}
+				{{ t('nc_vertragswerk', 'Zurücksetzen') }}
 			</NcButton>
 		</div>
 
@@ -149,11 +168,11 @@
 		     nicht "noch keinen Vertrag angelegt" stehen (#332). -->
 		<NcEmptyContent v-else-if="contracts.length === 0"
 			:name="viewIsNarrowed
-				? t('contractmanager', 'Kein Vertrag passt zur aktuellen Auswahl')
-				: t('contractmanager', 'Keine Verträge')"
+				? t('nc_vertragswerk', 'Kein Vertrag passt zur aktuellen Auswahl')
+				: t('nc_vertragswerk', 'Keine Verträge')"
 			:description="viewIsNarrowed
-				? t('contractmanager', 'Filter, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.')
-				: t('contractmanager', 'Erstellen Sie Ihren ersten Vertrag, um zu beginnen.')">
+				? t('nc_vertragswerk', 'Filter, Vertragsart, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.')
+				: t('nc_vertragswerk', 'Erstellen Sie Ihren ersten Vertrag, um zu beginnen.')">
 			<template #icon>
 				<FilterOffIcon v-if="viewIsNarrowed" :size="64" />
 				<FileDocumentIcon v-else :size="64" />
@@ -163,23 +182,23 @@
 					<template #icon>
 						<FilterOffIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Filter zurücksetzen') }}
+					{{ t('nc_vertragswerk', 'Filter zurücksetzen') }}
 				</NcButton>
 				<NcButton v-else-if="!viewIsNarrowed && canEdit" variant="primary" @click="showCreateForm = true">
 					<template #icon>
 						<PlusIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Neuer Vertrag') }}
+					{{ t('nc_vertragswerk', 'Neuer Vertrag') }}
 				</NcButton>
 			</template>
 		</NcEmptyContent>
 
 		<div v-else class="contract-list__table">
 			<div class="contract-list__thead">
-				<span class="col-name">{{ t('contractmanager', 'Vertrag') }}</span>
-				<span>{{ t('contractmanager', 'Status') }}</span>
-				<span class="col-cost">{{ t('contractmanager', 'Kosten') }}</span>
-				<span>{{ t('contractmanager', 'Frist / Ende') }}</span>
+				<span class="col-name">{{ t('nc_vertragswerk', 'Vertrag') }}</span>
+				<span>{{ t('nc_vertragswerk', 'Status') }}</span>
+				<span class="col-cost">{{ t('nc_vertragswerk', 'Kosten') }}</span>
+				<span>{{ t('nc_vertragswerk', 'Frist / Ende') }}</span>
 				<span aria-hidden="true" />
 			</div>
 			<div class="contract-list__items">
@@ -206,15 +225,15 @@
 			@close="closeForm" />
 
 		<NcDialog v-if="showArchiveDialog"
-			:name="t('contractmanager', 'Vertrag archivieren')"
+			:name="t('nc_vertragswerk', 'Vertrag archivieren')"
 			@close="showArchiveDialog = false">
-			<p>{{ t('contractmanager', 'Vertrag "{name}" wirklich archivieren?', { name: archivingContract ? archivingContract.name : '' }) }}</p>
+			<p>{{ t('nc_vertragswerk', 'Vertrag "{name}" wirklich archivieren?', { name: archivingContract ? archivingContract.name : '' }) }}</p>
 			<template #actions>
 				<NcButton @click="showArchiveDialog = false">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="warning" @click="confirmArchive">
-					{{ t('contractmanager', 'Archivieren') }}
+					{{ t('nc_vertragswerk', 'Archivieren') }}
 				</NcButton>
 			</template>
 		</NcDialog>
@@ -225,6 +244,7 @@
 import { mapState, mapActions } from 'pinia'
 import { useContractsStore } from '../store/contracts'
 import { useCategoriesStore } from '../store/categories'
+import { useAreasStore } from '../store/areas'
 import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -246,6 +266,7 @@ import FilterOffIcon from 'vue-material-design-icons/FilterOff.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CashMultipleIcon from 'vue-material-design-icons/CashMultiple.vue'
 import BellRingIcon from 'vue-material-design-icons/BellRing.vue'
+import FilePdfBoxIcon from 'vue-material-design-icons/FilePdfBox.vue'
 import ContractListItem from '../components/ContractListItem.vue'
 import { getDeadlineInfo, getEffectiveEndDate } from '../utils/periodUtils.js'
 import { DEFAULT_REMINDER_DAYS_1, isEndingSoon, isPlanned } from '../utils/contractStatus'
@@ -255,6 +276,11 @@ import { normalizeCostInput } from '../utils/costFormat'
 import { DEADLINE_WITHIN_OPTIONS, hasMonthlyCostAtLeast, isDeadlineWithin } from '../utils/listFilters'
 import ContractForm from '../components/ContractForm.vue'
 import SettingsService from '../services/SettingsService'
+import ContactService from '../services/ContactService'
+import ContractService from '../services/ContractService'
+import { getCurrentUser } from '@nextcloud/auth'
+import { buildMirrorSections } from '../utils/contractMirror'
+import { formatDate } from '../utils/dateUtils.js'
 import { showInfo, showError } from '@nextcloud/dialogs'
 
 export default {
@@ -279,6 +305,7 @@ export default {
 		CloseIcon,
 		CashMultipleIcon,
 		BellRingIcon,
+		FilePdfBoxIcon,
 		ContractListItem,
 		ContractForm,
 	},
@@ -298,7 +325,7 @@ export default {
 			sortDirection: 'asc',
 			filters: { vendor: '', statuses: ['active', 'cancelled', 'ended'], contractType: '' },
 		}
-		const prefs = loadState('contractmanager', 'userPreferences', defaultPrefs)
+		const prefs = loadState('nc_vertragswerk', 'userPreferences', defaultPrefs)
 		const filters = prefs.filters || defaultPrefs.filters
 		return {
 			showCreateForm: false,
@@ -309,20 +336,22 @@ export default {
 			viewingContract: null,
 			archivingContract: null,
 			formLoading: false,
+			pdfGenerating: false,
 			sortBy: prefs.sortBy,
 			sortDirection: prefs.sortDirection,
 			sortOptions: [
-				{ key: 'endDate', label: t('contractmanager', 'Enddatum'), defaultDirection: 'asc' },
-				{ key: 'name', label: t('contractmanager', 'Name'), defaultDirection: 'asc' },
-				{ key: 'updatedAt', label: t('contractmanager', 'Zuletzt geändert'), defaultDirection: 'desc' },
-				{ key: 'cost', label: t('contractmanager', 'Kosten'), defaultDirection: 'desc' },
-				{ key: 'cancellationDeadline', label: t('contractmanager', 'Frist / Ende'), defaultDirection: 'asc' },
+				{ key: 'endDate', label: t('nc_vertragswerk', 'Enddatum'), defaultDirection: 'asc' },
+				{ key: 'name', label: t('nc_vertragswerk', 'Name'), defaultDirection: 'asc' },
+				{ key: 'updatedAt', label: t('nc_vertragswerk', 'Zuletzt geändert'), defaultDirection: 'desc' },
+				{ key: 'cost', label: t('nc_vertragswerk', 'Kosten'), defaultDirection: 'desc' },
+				{ key: 'cancellationDeadline', label: t('nc_vertragswerk', 'Frist / Ende'), defaultDirection: 'asc' },
 			],
 			showFilters: false,
 			filterVendor: filters.vendor || null,
 			filterStatuses: filters.statuses || [],
 			filterContractType: filters.contractType || null,
 			filterResponsible: filters.responsible || null,
+			filterAreaId: filters.areaId || null,
 			filterDeadlineWithin: filters.deadlineWithin || null,
 			filterMinMonthlyCostText: typeof filters.minMonthlyCost === 'number' ? String(filters.minMonthlyCost) : '',
 			minMonthlyCostSaveTimer: null,
@@ -337,15 +366,15 @@ export default {
 			// setting comes back from the user-settings endpoint.
 			defaultReminderDays: DEFAULT_REMINDER_DAYS_1,
 			statusOptions: [
-				{ id: 'planned', label: t('contractmanager', 'Geplant') },
-				{ id: 'active', label: t('contractmanager', 'Aktiv') },
-				{ id: 'ending_soon', label: t('contractmanager', 'Kündigungsfrist endet') },
-				{ id: 'cancelled', label: t('contractmanager', 'Gekündigt') },
-				{ id: 'ended', label: t('contractmanager', 'Abgelaufen') },
+				{ id: 'planned', label: t('nc_vertragswerk', 'Geplant') },
+				{ id: 'active', label: t('nc_vertragswerk', 'Aktiv') },
+				{ id: 'ending_soon', label: t('nc_vertragswerk', 'Kündigungsfrist endet') },
+				{ id: 'cancelled', label: t('nc_vertragswerk', 'Gekündigt') },
+				{ id: 'ended', label: t('nc_vertragswerk', 'Abgelaufen') },
 			],
 			contractTypeOptions: [
-				{ id: 'fixed', label: t('contractmanager', 'Festlaufzeit') },
-				{ id: 'auto_renewal', label: t('contractmanager', 'Automatische Verlängerung') },
+				{ id: 'fixed', label: t('nc_vertragswerk', 'Festlaufzeit') },
+				{ id: 'auto_renewal', label: t('nc_vertragswerk', 'Automatische Verlängerung') },
 			],
 		}
 	},
@@ -357,6 +386,10 @@ export default {
 			isAdmin: 'isAdmin',
 		}),
 		...mapState(useCategoriesStore, ['allCategories']),
+		...mapState(useAreasStore, ['allAreas']),
+		areaFilterOptions() {
+			return this.allAreas.map(a => ({ id: a.id, label: a.name }))
+		},
 		vendorOptions() {
 			const vendors = this.allContracts
 				.map(c => c.vendor)
@@ -376,7 +409,7 @@ export default {
 		deadlineWithinOptions() {
 			return DEADLINE_WITHIN_OPTIONS.map(days => ({
 				id: days,
-				label: t('contractmanager', 'Frist / Ende in {days} Tagen', { days }),
+				label: t('nc_vertragswerk', 'Frist / Ende in {days} Tagen', { days }),
 			}))
 		},
 		filterMinMonthlyCost() {
@@ -393,6 +426,7 @@ export default {
 			if (this.filterStatuses.length > 0) return true
 			if (this.filterContractType) return true
 			if (this.filterResponsible) return true
+			if (this.filterAreaId) return true
 			if (this.filterDeadlineWithin) return true
 			if (this.filterMinMonthlyCost !== null) return true
 			if (this.filterOwnerMissing) return true
@@ -417,15 +451,15 @@ export default {
 		},
 		kpiScopeLabel() {
 			if (this.categoryFilter === 'uncategorized') {
-				return t('contractmanager', 'Kennzahlen für Verträge ohne Kategorie')
+				return t('nc_vertragswerk', 'Kennzahlen für Verträge ohne Vertragsart')
 			}
 			if (this.categoryFilter !== null) {
 				const cat = this.allCategories.find(c => c.id === this.categoryFilter)
 				if (cat) {
-					return t('contractmanager', 'Kennzahlen für Kategorie „{name}“', { name: cat.name })
+					return t('nc_vertragswerk', 'Kennzahlen für Vertragsart „{name}“', { name: cat.name })
 				}
 			}
-			return t('contractmanager', 'Kennzahlen für die gefilterte Ansicht')
+			return t('nc_vertragswerk', 'Kennzahlen für die gefilterte Ansicht')
 		},
 		kpiActiveCount() {
 			// Planned contracts keep the stored status "active" but haven't started
@@ -436,7 +470,7 @@ export default {
 		kpiTypeSub() {
 			const auto = this.kpiBaseContracts.filter(c => c.status === 'active' && !isPlanned(c) && c.contractType === 'auto_renewal').length
 			const rest = this.kpiActiveCount - auto
-			return t('contractmanager', '{auto} mit autom. Verlängerung · {rest} weitere', { auto, rest })
+			return t('nc_vertragswerk', '{auto} mit autom. Verlängerung · {rest} weitere', { auto, rest })
 		},
 		kpiEndingSoon() {
 			return this.kpiBaseContracts.filter(c => isEndingSoon(c, this.defaultReminderDays)).length
@@ -491,15 +525,15 @@ export default {
 			// "ca." signals deliberately that this is a rough monthly estimate, not
 			// a cent-exact figure (netto/brutto mixing, part-month expiry, etc. — #215).
 			const formatted = new Intl.NumberFormat(getCanonicalLocale(), { style: 'currency', currency: this.kpiLeadCurrency }).format(this.kpiMonthlyTotal)
-			return t('contractmanager', 'ca. {amount}', { amount: formatted })
+			return t('nc_vertragswerk', 'ca. {amount}', { amount: formatted })
 		},
 		kpiMonthlySub() {
-			const parts = [t('contractmanager', 'Grobe Orientierung · laufende Verträge auf den Monat')]
+			const parts = [t('nc_vertragswerk', 'Grobe Orientierung · laufende Verträge auf den Monat')]
 			if (this.kpiAmountTypeMixed) {
-				parts.push(t('contractmanager', 'netto und brutto gemischt'))
+				parts.push(t('nc_vertragswerk', 'netto und brutto gemischt'))
 			}
 			if (this.kpiForeignCurrencyCount > 0) {
-				parts.push(t('contractmanager', '+ {n} in anderer Währung', { n: this.kpiForeignCurrencyCount }))
+				parts.push(t('nc_vertragswerk', '+ {n} in anderer Währung', { n: this.kpiForeignCurrencyCount }))
 			}
 			return parts.join(' · ')
 		},
@@ -517,6 +551,7 @@ export default {
 						|| (c.customField2 || '').toLowerCase().includes(query)
 						|| (c.customField3 || '').toLowerCase().includes(query)
 						|| (c.contractNumber || '').toLowerCase().includes(query)
+						|| (c.customerNumber || '').toLowerCase().includes(query)
 						|| (c.responsibleUser || '').toLowerCase().includes(query)
 				})
 			}
@@ -561,6 +596,11 @@ export default {
 				filtered = filtered.filter(c => c.responsibleUser === this.filterResponsible)
 			}
 
+			// Kategorie (#7)
+			if (this.filterAreaId) {
+				filtered = filtered.filter(c => c.areaId === this.filterAreaId)
+			}
+
 			if (this.filterDeadlineWithin) {
 				filtered = filtered.filter(c => isDeadlineWithin(c, this.filterDeadlineWithin))
 			}
@@ -596,6 +636,7 @@ export default {
 		Promise.all([this.fetchContracts(), this.fetchPermissions()]).then(() => this.handleDeepLink())
 		this.loadReminderWindow()
 		this.fetchCategories()
+		this.fetchAreas().catch(e => console.debug('Failed to load areas:', e))
 		if (this.hasActiveFilters) {
 			this.showFilters = true
 		}
@@ -603,6 +644,7 @@ export default {
 	methods: {
 		...mapActions(useContractsStore, ['fetchContracts', 'fetchPermissions', 'createContract', 'updateContract', 'archiveContract']),
 		...mapActions(useCategoriesStore, ['fetchCategories']),
+		...mapActions(useAreasStore, ['fetchAreas']),
 
 		async loadReminderWindow() {
 			try {
@@ -626,7 +668,7 @@ export default {
 		handleDuplicate(contract) {
 			// Laufzeit- und Kuendigungsdaten sowie der Archiv-Zustand gehoeren
 			// zum Original, nicht zur Kopie (#307).
-			this.editingContract = contractForDuplicate(contract, t('contractmanager', 'Kopie'))
+			this.editingContract = contractForDuplicate(contract, t('nc_vertragswerk', 'Kopie'))
 			this.showCreateForm = true
 		},
 
@@ -636,7 +678,7 @@ export default {
 		},
 
 		// Open a specific contract when arriving from a reminder email
-		// (…/apps/contractmanager/?contract=ID). Read once on load; the param is
+		// (…/apps/nc_vertragswerk/?contract=ID). Read once on load; the param is
 		// stripped afterwards so a reload doesn't reopen the contract.
 		handleDeepLink() {
 			const params = new URLSearchParams(window.location.search)
@@ -651,7 +693,7 @@ export default {
 			const id = parseInt(idParam, 10)
 			const contract = Number.isNaN(id) ? null : this.allContracts.find(c => c.id === id)
 			if (!contract) {
-				showInfo(t('contractmanager', 'Der Vertrag aus der Erinnerung ist nicht mehr vorhanden.'))
+				showInfo(t('nc_vertragswerk', 'Der Vertrag aus der Erinnerung ist nicht mehr vorhanden.'))
 				return
 			}
 			// Mirror the normal list-click behaviour: editors land in the editable
@@ -675,7 +717,7 @@ export default {
 				await this.archiveContract(this.archivingContract.id)
 			} catch (error) {
 				console.error('Failed to archive contract:', error)
-				showError(t('contractmanager', 'Fehler beim Archivieren'))
+				showError(t('nc_vertragswerk', 'Fehler beim Archivieren'))
 			} finally {
 				this.showArchiveDialog = false
 				this.archivingContract = null
@@ -704,7 +746,7 @@ export default {
 				this.closeForm()
 			} catch (error) {
 				console.error('Failed to save contract:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			} finally {
 				this.formLoading = false
 			}
@@ -793,6 +835,78 @@ export default {
 			}
 		},
 
+		/**
+		 * „Vertragsspiegel" (#489): exactly the contracts the list shows,
+		 * in its order, as a PDF in a new tab. The tab is opened right away,
+		 * inside the click, because browsers block window.open after an await.
+		 */
+		async openContractMirror() {
+			if (this.pdfGenerating) return
+			const contracts = this.contracts
+			if (!contracts.length) return
+			const tab = window.open('', '_blank')
+			this.pdfGenerating = true
+			try {
+				const [lookups, { renderContractMirrorPdf }] = await Promise.all([
+					this.loadMirrorLookups(contracts),
+					import('../utils/contractMirrorPdf'),
+				])
+				const user = getCurrentUser()
+				const blob = await renderContractMirrorPdf(
+					buildMirrorSections(contracts, this.allAreas, this.allCategories, lookups),
+					{ userName: user?.displayName || user?.uid || '', date: formatDate(new Date()) },
+				)
+				const url = URL.createObjectURL(blob)
+				if (tab && !tab.closed) {
+					tab.location.href = url
+				} else {
+					// Pop-up blocked: download instead.
+					const link = document.createElement('a')
+					link.href = url
+					link.download = t('nc_vertragswerk', 'Vertragsspiegel') + '.pdf'
+					link.click()
+				}
+				setTimeout(() => URL.revokeObjectURL(url), 60000)
+			} catch (error) {
+				console.error('Failed to create contract mirror PDF:', error)
+				if (tab && !tab.closed) tab.close()
+				showError(t('nc_vertragswerk', 'PDF konnte nicht erstellt werden'))
+			} finally {
+				this.pdfGenerating = false
+			}
+		},
+
+		// Linked address book contacts and the display names of the responsible
+		// users. Both are optional: whatever cannot be resolved falls back to the
+		// stored value (partner name, user ID).
+		async loadMirrorLookups(contracts) {
+			const contactUids = [...new Set(contracts.map(c => c.vendorContactUid).filter(Boolean))]
+			const userIds = [...new Set(contracts.map(c => (c.responsibleUser || '').trim()).filter(Boolean))]
+			const contacts = {}
+			const userNames = {}
+			await Promise.all([
+				...contactUids.map(async uid => {
+					try {
+						contacts[uid] = await ContactService.resolve(uid)
+					} catch (e) {
+						contacts[uid] = null
+					}
+				}),
+				// The user search is only open to editors; viewers see the user ID.
+				...(this.canEdit
+					? userIds.map(async uid => {
+						try {
+							const match = (await ContractService.searchUsers(uid)).find(u => u.uid === uid)
+							if (match) userNames[uid] = match.displayName
+						} catch (e) {
+							// keep the user ID
+						}
+					})
+					: []),
+			])
+			return { contacts, userNames }
+		},
+
 		toggleFilters() {
 			this.showFilters = !this.showFilters
 		},
@@ -802,6 +916,7 @@ export default {
 			this.filterStatuses = []
 			this.filterContractType = null
 			this.filterResponsible = null
+			this.filterAreaId = null
 			this.filterDeadlineWithin = null
 			this.filterMinMonthlyCostText = ''
 			this.filterOwnerMissing = false
@@ -821,6 +936,7 @@ export default {
 						statuses: this.filterStatuses,
 						contractType: this.filterContractType || '',
 						responsible: this.filterResponsible || '',
+						areaId: this.filterAreaId || 0,
 						deadlineWithin: this.filterDeadlineWithin || 0,
 						minMonthlyCost: this.filterMinMonthlyCost,
 					},

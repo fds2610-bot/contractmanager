@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Service\AutoBackupService;
-use OCA\ContractManager\Service\ContractExportService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Service\AutoBackupService;
+use OCA\NcVertragswerk\Service\ContractExportService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;
@@ -130,6 +130,7 @@ class AutoBackupServiceTest extends TestCase {
 
 	public function testBackupForUserPrunesOldestBeyondRetention(): void {
 		$this->settingsService->method('getUserBackupFolder')->willReturn('/VertragsWerk-Backup');
+		$this->settingsService->method('getUserBackupKeep')->willReturn(30);
 		$this->exportService->method('exportJson')->willReturn('{}');
 
 		// 31 existing snapshots (already over the limit of 30). Oldest one must be
@@ -153,6 +154,30 @@ class AutoBackupServiceTest extends TestCase {
 		$target->method('newFile')->willReturn($this->createMock(File::class));
 		$target->method('getDirectoryListing')->willReturn($existing);
 
+		$home = $this->mockUserHome();
+		$home->method('nodeExists')->willReturn(true);
+		$home->method('get')->willReturn($target);
+		$this->rootFolder->method('getUserFolder')->willReturn($home);
+
+		$this->service->backupForUser('alice');
+	}
+
+	public function testBackupForUserKeepsTheConfiguredNumber(): void {
+		$this->settingsService->method('getUserBackupFolder')->willReturn('/VertragsWerk-Backup');
+		$this->settingsService->method('getUserBackupKeep')->with('alice')->willReturn(3);
+		$this->exportService->method('exportJson')->willReturn('{}');
+
+		// 5 snapshots, keep 3 (#8): the two oldest go.
+		$existing = [];
+		for ($i = 1; $i <= 5; $i++) {
+			$node = $this->createMock(File::class);
+			$node->method('getName')->willReturn(sprintf('contracts-2026-09-%02d-090000.json', $i));
+			$node->expects($i <= 2 ? $this->once() : $this->never())->method('delete');
+			$existing[] = $node;
+		}
+		$target = $this->createMock(Folder::class);
+		$target->method('newFile')->willReturn($this->createMock(File::class));
+		$target->method('getDirectoryListing')->willReturn($existing);
 		$home = $this->mockUserHome();
 		$home->method('nodeExists')->willReturn(true);
 		$home->method('get')->willReturn($target);

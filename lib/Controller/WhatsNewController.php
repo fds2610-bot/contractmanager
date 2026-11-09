@@ -7,11 +7,11 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\ContractManager\Controller;
+namespace OCA\NcVertragswerk\Controller;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\WhatsNewService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\WhatsNewService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;

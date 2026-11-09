@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\BackgroundJob;
+namespace OCA\NcVertragswerk\BackgroundJob;
 
 use DateTime;
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\ContractMapper;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\ContractMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
 use OCP\IGroupManager;

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Controller;
+namespace OCA\NcVertragswerk\Tests\Unit\Controller;
 
-use OCA\ContractManager\Controller\ImportController;
-use OCA\ContractManager\Service\ContractImportService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\Controller\ImportController;
+use OCA\NcVertragswerk\Service\ContractImportService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\AppFramework\Http;
 use OCP\Files\File;
 use OCP\Files\Folder;

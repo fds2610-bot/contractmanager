@@ -1,5 +1,5 @@
 /**
- * Period utility functions for ContractManager
+ * Period utility functions for VertragsWerk
  * Handles period strings like "3 months", "14 days", "1 year"
  */
 
@@ -92,14 +92,14 @@ export function formatPeriod(periodString) {
 	if (!period) return periodString || ''
 
 	const units = {
-		day: t('contractmanager', 'Tag'),
-		days: t('contractmanager', 'Tage'),
-		week: t('contractmanager', 'Woche'),
-		weeks: t('contractmanager', 'Wochen'),
-		month: t('contractmanager', 'Monat'),
-		months: t('contractmanager', 'Monate'),
-		year: t('contractmanager', 'Jahr'),
-		years: t('contractmanager', 'Jahre'),
+		day: t('nc_vertragswerk', 'Tag'),
+		days: t('nc_vertragswerk', 'Tage'),
+		week: t('nc_vertragswerk', 'Woche'),
+		weeks: t('nc_vertragswerk', 'Wochen'),
+		month: t('nc_vertragswerk', 'Monat'),
+		months: t('nc_vertragswerk', 'Monate'),
+		year: t('nc_vertragswerk', 'Jahr'),
+		years: t('nc_vertragswerk', 'Jahre'),
 	}
 
 	return `${period.value} ${units[period.unit] || period.unit}`

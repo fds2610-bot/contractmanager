@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
 use DateTime;
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Notification\NotificationService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Notification\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\L10N\IFactory;
@@ -32,6 +32,13 @@ class ContractService {
 	];
 
 	private const MAX_STRING_LENGTH = 500;
+
+	/**
+	 * Payment method („wird abgebucht" / „überweisen", #7); anything else is empty.
+	 */
+	public static function normalizePaymentMethod(mixed $value): ?string {
+		return is_string($value) && in_array($value, Contract::PAYMENT_METHODS, true) ? $value : null;
+	}
 	private const MAX_NOTES_LENGTH = 5000;
 
 	public function __construct(
@@ -359,6 +366,9 @@ class ContractService {
         ?string $contractNumber = null,
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
+        ?string $customerNumber = null,
+        ?int $areaId = null,
+        ?string $paymentMethod = null,
     ): Contract {
         $contract = new Contract();
         $contract->setName($name);
@@ -393,6 +403,9 @@ class ContractService {
         $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
+        $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
+        $contract->setAreaId($areaId !== null && $areaId > 0 ? $areaId : null);
+        $contract->setPaymentMethod(self::normalizePaymentMethod($paymentMethod));
         $contract->setCreatedBy($userId);
         $contract->setCreatedAt(new DateTime());
         $contract->setUpdatedAt(new DateTime());
@@ -439,6 +452,9 @@ class ContractService {
         ?string $contractNumber = null,
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
+        ?string $customerNumber = null,
+        ?int $areaId = null,
+        ?string $paymentMethod = null,
     ): Contract {
         try {
             $contract = $this->mapper->find($id);
@@ -478,6 +494,9 @@ class ContractService {
         $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
+        $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
+        $contract->setAreaId($areaId !== null && $areaId > 0 ? $areaId : null);
+        $contract->setPaymentMethod(self::normalizePaymentMethod($paymentMethod));
         if ($isPrivate !== null) {
             $contract->setIsPrivate($isPrivate);
         }

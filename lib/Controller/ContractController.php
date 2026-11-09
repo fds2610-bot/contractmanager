@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Controller;
+namespace OCA\NcVertragswerk\Controller;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\ContractService;
-use OCA\ContractManager\Service\ForbiddenException;
-use OCA\ContractManager\Service\NotFoundException;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\ContractService;
+use OCA\NcVertragswerk\Service\ForbiddenException;
+use OCA\NcVertragswerk\Service\NotFoundException;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
@@ -90,8 +90,8 @@ class ContractController extends Controller {
 	 * statement about the user database, not a property of the contract, and a
 	 * stored flag would drift the moment an account is created or removed.
 	 *
-	 * @param \OCA\ContractManager\Db\Contract[] $contracts
-	 * @return array<int, array<string, mixed>|\OCA\ContractManager\Db\Contract>
+	 * @param \OCA\NcVertragswerk\Db\Contract[] $contracts
+	 * @return array<int, array<string, mixed>|\OCA\NcVertragswerk\Db\Contract>
 	 */
 	private function withOwnerStatus(array $contracts, bool $isAdmin): array {
 		if (!$isAdmin) {
@@ -279,6 +279,9 @@ class ContractController extends Controller {
 		?string $contractNumber = null,
 		?array $insurancePersons = null,
 		?array $insuranceBenefits = null,
+		?string $customerNumber = null,
+		?int $areaId = null,
+		?string $paymentMethod = null,
 	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l->t('Nicht angemeldet')], Http::STATUS_UNAUTHORIZED);
@@ -332,6 +335,9 @@ class ContractController extends Controller {
 				$contractNumber,
 				$insurancePersons,
 				$insuranceBenefits,
+				$customerNumber,
+				$areaId,
+				$paymentMethod,
 			);
 
 			return new JSONResponse($contract, Http::STATUS_CREATED);
@@ -376,6 +382,9 @@ class ContractController extends Controller {
 		?string $contractNumber = null,
 		?array $insurancePersons = null,
 		?array $insuranceBenefits = null,
+		?string $customerNumber = null,
+		?int $areaId = null,
+		?string $paymentMethod = null,
 	): JSONResponse {
 		if ($this->userId === null) {
 			return new JSONResponse(['error' => $this->l->t('Nicht angemeldet')], Http::STATUS_UNAUTHORIZED);
@@ -433,6 +442,9 @@ class ContractController extends Controller {
 				$contractNumber,
 				$insurancePersons,
 				$insuranceBenefits,
+				$customerNumber,
+				$areaId,
+				$paymentMethod,
 			);
 
 			return new JSONResponse($updatedContract);

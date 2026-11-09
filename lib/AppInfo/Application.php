@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\AppInfo;
+namespace OCA\NcVertragswerk\AppInfo;
 
-use OCA\ContractManager\Listener\UserDeletedListener;
-use OCA\ContractManager\Notification\Notifier;
-use OCA\ContractManager\Search\ContractSearchProvider;
-use OCA\ContractManager\UserMigration\ContractMigrator;
+use OCA\NcVertragswerk\Listener\UserDeletedListener;
+use OCA\NcVertragswerk\Notification\Notifier;
+use OCA\NcVertragswerk\Search\ContractSearchProvider;
+use OCA\NcVertragswerk\UserMigration\ContractMigrator;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -15,7 +15,7 @@ use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\User\Events\UserDeletedEvent;
 
 class Application extends App implements IBootstrap {
-    public const APP_ID = 'contractmanager';
+    public const APP_ID = 'nc_vertragswerk';
 
     public function __construct() {
         parent::__construct(self::APP_ID);

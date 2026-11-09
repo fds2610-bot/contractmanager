@@ -44,6 +44,10 @@ export interface Contract {
 	customField2?: string | null
 	customField3?: string | null
 	contractNumber?: string | null
+	customerNumber?: string | null
+	/** „Kategorie" (#7); categoryId is the „Vertragsart" */
+	areaId?: number | null
+	paymentMethod?: 'debit' | 'transfer' | null
 	insurancePersons?: InsurancePerson[]
 	insuranceBenefits?: string[]
 	archived?: boolean

@@ -17,7 +17,7 @@ class ComposerStaticInit247b349b72e12d08e4234eee0e3a841b
         ),
         'O' =>
         array (
-            'OCA\\ContractManager\\' => 20,
+            'OCA\\NcVertragswerk\\' => 19,
         ),
     );
 
@@ -26,7 +26,7 @@ class ComposerStaticInit247b349b72e12d08e4234eee0e3a841b
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'OCA\\ContractManager\\' =>
+        'OCA\\NcVertragswerk\\' =>
         array (
             0 => __DIR__ . '/../..' . '/lib',
         ),

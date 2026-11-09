@@ -3,7 +3,7 @@ js/** merge=ours
 # Nicht ins Release-Archiv — git archive respektiert export-ignore (nc-app-tooling#21).
 # Haelt Dev-/Test-/Config-Dateien aus Sign-Tree + Tarball, ohne handgepflegte
 # rm-Liste; nc-release-check Check 9 (Whitelist) bleibt von selbst gruen.
-# vendor/ bleibt drin: contractmanager liefert eine Runtime aus (smalot/pdfparser).
+# vendor/ bleibt drin: nc_vertragswerk liefert eine Runtime aus (smalot/pdfparser).
 /.github               export-ignore
 /.claude               export-ignore
 /.githooks             export-ignore

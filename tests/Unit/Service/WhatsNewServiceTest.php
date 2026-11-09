@@ -7,10 +7,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\WhatsNewService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\WhatsNewService;
 use OCP\App\IAppManager;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -466,6 +466,6 @@ class WhatsNewServiceTest extends TestCase {
 	public function testAppIdBleibtDerAblageortDerMarke(): void {
 		// Die Marke haengt an der App-ID, nicht an einem eigenen Namensraum —
 		// sonst findet sie eine Kopie der Vorlage in einer anderen App nicht.
-		self::assertSame('contractmanager', Application::APP_ID);
+		self::assertSame('nc_vertragswerk', Application::APP_ID);
 	}
 }

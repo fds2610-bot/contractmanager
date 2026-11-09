@@ -7,10 +7,10 @@ declare(strict_types=1);
  * SPDX-License-Identifier: AGPL-3.0-or-later
  */
 
-namespace OCA\ContractManager\Migration;
+namespace OCA\NcVertragswerk\Migration;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\WhatsNewService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\WhatsNewService;
 use OCP\App\IAppManager;
 use OCP\IConfig;
 use OCP\Migration\IOutput;

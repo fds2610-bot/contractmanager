@@ -14,25 +14,29 @@
 			</a>
 			<div class="contract-list-item__meta">
 				<span>{{ contract.vendor }}</span>
+				<template v-for="number in numbers" :key="number.title">
+					<span class="sep">·</span>
+					<span :title="number.title" class="contract-list-item__number">{{ number.text }}</span>
+				</template>
 				<template v-if="contract.renewalPeriod && contract.contractType === 'auto_renewal'">
 					<span class="sep">·</span>
-					<span>{{ t('contractmanager', 'Verlängerung:') }} {{ formatPeriod(contract.renewalPeriod) }}</span>
+					<span>{{ t('nc_vertragswerk', 'Verlängerung:') }} {{ formatPeriod(contract.renewalPeriod) }}</span>
 				</template>
 				<template v-if="mode === 'trash' && contract.deletedAt">
 					<span class="sep">·</span>
-					<span>{{ t('contractmanager', 'Gelöscht:') }} {{ formatDate(contract.deletedAt) }}</span>
+					<span>{{ t('nc_vertragswerk', 'Gelöscht:') }} {{ formatDate(contract.deletedAt) }}</span>
 				</template>
 				<template v-if="mode === 'trash' && contract.deletedBy">
 					<span class="sep">·</span>
-					<span>{{ t('contractmanager', 'Gelöscht von') }}: {{ contract.deletedBy }}</span>
+					<span>{{ t('nc_vertragswerk', 'Gelöscht von') }}: {{ contract.deletedBy }}</span>
 				</template>
 				<template v-if="showCreator && contract.createdBy">
 					<span class="sep">·</span>
-					<span>{{ t('contractmanager', 'Erstellt von') }}: {{ contract.createdBy }}</span>
+					<span>{{ t('nc_vertragswerk', 'Erstellt von') }}: {{ contract.createdBy }}</span>
 				</template>
 				<template v-if="contract.responsibleUser">
 					<span class="sep">·</span>
-					<span>{{ t('contractmanager', 'Zuständig') }}: {{ contract.responsibleUser }}</span>
+					<span>{{ t('nc_vertragswerk', 'Zuständig') }}: {{ contract.responsibleUser }}</span>
 				</template>
 			</div>
 		</div>
@@ -40,9 +44,9 @@
 			<span class="cm-chip" :class="'cm-chip--' + statusChip.cls" :title="statusChip.title">
 				{{ statusChip.label }}
 			</span>
-			<span v-if="contract.isPrivate" class="cm-chip cm-chip--lock" :title="t('contractmanager', 'Privater Vertrag (nur für mich sichtbar)')">
+			<span v-if="contract.isPrivate" class="cm-chip cm-chip--lock" :title="t('nc_vertragswerk', 'Privater Vertrag (nur für mich sichtbar)')">
 				<LockIcon :size="14" />
-				{{ t('contractmanager', 'Privat') }}
+				{{ t('nc_vertragswerk', 'Privat') }}
 			</span>
 		</div>
 		<div class="contract-list-item__cost">
@@ -55,7 +59,7 @@
 		<div class="contract-list-item__actions">
 			<NcButton v-if="contract.contractFolder"
 				variant="tertiary"
-				:title="t('contractmanager', 'Vertragsordner öffnen')"
+				:title="t('nc_vertragswerk', 'Vertragsordner öffnen')"
 				@click.stop="openFolder">
 				<template #icon>
 					<FolderOpenIcon :size="20" />
@@ -63,7 +67,7 @@
 			</NcButton>
 			<NcButton v-if="contract.mainDocument"
 				variant="tertiary"
-				:title="t('contractmanager', 'Vertragsdokument öffnen')"
+				:title="t('nc_vertragswerk', 'Vertragsdokument öffnen')"
 				@click.stop="openDocument">
 				<template #icon>
 					<FileDocumentIcon :size="20" />
@@ -75,7 +79,7 @@
 					<template #icon>
 						<ArchiveIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Archivieren') }}
+					{{ t('nc_vertragswerk', 'Archivieren') }}
 				</NcActionButton>
 				<!-- In the trash the server lists only what this user may restore
 				     (#438), so the action does not depend on the editor role there:
@@ -86,7 +90,7 @@
 					<template #icon>
 						<RestoreIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Wiederherstellen') }}
+					{{ t('nc_vertragswerk', 'Wiederherstellen') }}
 				</NcActionButton>
 				<!-- Duplizieren und Bearbeiten gibt es nur in der Vertragsliste.
 				     Im Archiv wird angesehen, wiederhergestellt und geloescht,
@@ -97,14 +101,14 @@
 					<template #icon>
 						<ContentDuplicate :size="20" />
 					</template>
-					{{ t('contractmanager', 'Duplizieren') }}
+					{{ t('nc_vertragswerk', 'Duplizieren') }}
 				</NcActionButton>
 				<NcActionButton v-if="canEdit && mode === 'default'"
 					@click.stop="$emit('edit', contract)">
 					<template #icon>
 						<PencilIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Bearbeiten') }}
+					{{ t('nc_vertragswerk', 'Bearbeiten') }}
 				</NcActionButton>
 				<NcActionButton v-if="canEdit && mode !== 'trash'"
 					class="delete-action"
@@ -113,7 +117,7 @@
 					<template #icon>
 						<DeleteIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Löschen') }}
+					{{ t('nc_vertragswerk', 'Löschen') }}
 				</NcActionButton>
 				<NcActionButton v-if="mode === 'trash' && isAdmin"
 					class="delete-action"
@@ -122,23 +126,21 @@
 					<template #icon>
 						<DeleteForeverIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Endgültig löschen') }}
+					{{ t('nc_vertragswerk', 'Endgültig löschen') }}
 				</NcActionButton>
 			</NcActions>
 		</div>
 
 		<!-- Delete confirmation dialog -->
 		<NcDialog v-if="showDeleteDialog"
-			:name="t('contractmanager', 'Vertrag löschen')"
-			:message="t('contractmanager', 'Der Vertrag wird in den Papierkorb verschoben und nach 30 Tagen automatisch gelöscht. Bis dahin kann er wiederhergestellt werden.')"
+			:name="t('nc_vertragswerk', 'Vertrag löschen')"
+			:message="t('nc_vertragswerk', 'Der Vertrag wird in den Papierkorb verschoben und nach 30 Tagen automatisch gelöscht. Bis dahin kann er wiederhergestellt werden.')"
 			:buttons="deleteDialogButtons"
 			@update:open="showDeleteDialog = $event" />
 	</div>
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { getCurrentUser } from '@nextcloud/auth'
 import { mapState, mapActions } from 'pinia'
 import { useContractsStore } from '../store/contracts'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -159,7 +161,8 @@ import { getCanonicalLocale } from '@nextcloud/l10n'
 import { formatDate } from '../utils/dateUtils.js'
 import { formatPeriod, getDeadlineInfo } from '../utils/periodUtils.js'
 import { isEndingSoon, isEndingSoonFixed, isExpiredFixed, isEndedCancelled, isPlanned } from '../utils/contractStatus'
-import { isUrl } from '../utils/documentUtils.js'
+import { openDocumentInNewTab } from '../utils/documentUtils.js'
+import { numberLines } from '../utils/contractMirror'
 import { CONTRACT_DND_TYPE } from '../utils/categoryDrop'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
@@ -226,32 +229,35 @@ export default {
 		},
 		// Single derived status chip — replaces the former stack of badges
 		// (Status + „Kündigungsfrist endet" + „Abgelaufen") with one clear signal.
+		numbers() {
+			return numberLines(this.contract)
+		},
 		statusChip() {
 			if (this.planned) {
-				return { cls: 'planned', label: t('contractmanager', 'Geplant'), title: t('contractmanager', 'Der Vertrag beginnt erst zum Startdatum.') }
+				return { cls: 'planned', label: t('nc_vertragswerk', 'Geplant'), title: t('nc_vertragswerk', 'Der Vertrag beginnt erst zum Startdatum.') }
 			}
 			if (this.expiredFixed) {
-				return { cls: 'expired', label: t('contractmanager', 'Abgelaufen'), title: t('contractmanager', 'Das Enddatum ist überschritten.') }
+				return { cls: 'expired', label: t('nc_vertragswerk', 'Abgelaufen'), title: t('nc_vertragswerk', 'Das Enddatum ist überschritten.') }
 			}
 			if (this.endingSoon) {
-				return { cls: 'soon', label: t('contractmanager', 'Kündigungsfrist endet'), title: t('contractmanager', 'Die Kündigungsfrist läuft in Kürze ab.') }
+				return { cls: 'soon', label: t('nc_vertragswerk', 'Kündigungsfrist endet'), title: t('nc_vertragswerk', 'Die Kündigungsfrist läuft in Kürze ab.') }
 			}
 			if (this.endingSoonFixed) {
-				return { cls: 'soon', label: t('contractmanager', 'endet'), title: t('contractmanager', 'Der befristete Vertrag läuft in Kürze aus.') }
+				return { cls: 'soon', label: t('nc_vertragswerk', 'endet'), title: t('nc_vertragswerk', 'Der befristete Vertrag läuft in Kürze aus.') }
 			}
 			if (this.endedCancelled) {
-				return { cls: 'ended', label: t('contractmanager', 'Beendet'), title: '' }
+				return { cls: 'ended', label: t('nc_vertragswerk', 'Beendet'), title: '' }
 			}
 			if (this.contract.status === 'cancelled') {
-				return { cls: 'cancelled', label: t('contractmanager', 'Gekündigt'), title: '' }
+				return { cls: 'cancelled', label: t('nc_vertragswerk', 'Gekündigt'), title: '' }
 			}
 			if (this.contract.status === 'ended') {
-				return { cls: 'ended', label: t('contractmanager', 'Beendet'), title: '' }
+				return { cls: 'ended', label: t('nc_vertragswerk', 'Beendet'), title: '' }
 			}
 			if (this.contract.contractType === 'fixed') {
-				return { cls: 'active-fixed', label: t('contractmanager', 'Laufend'), title: t('contractmanager', 'Befristeter Vertrag, endet automatisch zum Enddatum.') }
+				return { cls: 'active-fixed', label: t('nc_vertragswerk', 'Laufend'), title: t('nc_vertragswerk', 'Befristeter Vertrag, endet automatisch zum Enddatum.') }
 			}
-			return { cls: 'active', label: t('contractmanager', 'Laufend'), title: '' }
+			return { cls: 'active', label: t('nc_vertragswerk', 'Laufend'), title: '' }
 		},
 		// Value + semantics of the "Frist / Ende" column (#252): the shown date
 		// means different things per contract, so each row carries its own label.
@@ -263,9 +269,9 @@ export default {
 		},
 		deadlineLabel() {
 			const labels = {
-				cancelBy: t('contractmanager', 'Kündbar bis'),
-				cancelledTo: t('contractmanager', 'Gekündigt zum'),
-				runsUntil: t('contractmanager', 'Läuft bis'),
+				cancelBy: t('nc_vertragswerk', 'Kündbar bis'),
+				cancelledTo: t('nc_vertragswerk', 'Gekündigt zum'),
+				runsUntil: t('nc_vertragswerk', 'Läuft bis'),
 			}
 			return labels[this.deadlineInfo.labelKey] || null
 		},
@@ -277,11 +283,11 @@ export default {
 		deleteDialogButtons() {
 			return [
 				{
-					label: t('contractmanager', 'Abbrechen'),
+					label: t('nc_vertragswerk', 'Abbrechen'),
 					callback: () => { this.showDeleteDialog = false },
 				},
 				{
-					label: t('contractmanager', 'In Papierkorb'),
+					label: t('nc_vertragswerk', 'In Papierkorb'),
 					variant: 'warning',
 					callback: () => { this.handleDelete() },
 				},
@@ -314,11 +320,11 @@ export default {
 		async handleDelete() {
 			try {
 				await this.deleteContract(this.contract.id)
-				showSuccess(t('contractmanager', 'Vertrag in Papierkorb verschoben'))
+				showSuccess(t('nc_vertragswerk', 'Vertrag in Papierkorb verschoben'))
 				this.$emit('delete', this.contract)
 			} catch (error) {
 				console.error('Failed to delete contract:', error)
-				showError(t('contractmanager', 'Fehler beim Löschen'))
+				showError(t('nc_vertragswerk', 'Fehler beim Löschen'))
 			} finally {
 				this.showDeleteDialog = false
 			}
@@ -338,46 +344,8 @@ export default {
 			})
 			window.open(filesUrl, '_blank', 'noopener,noreferrer')
 		},
-		async openDocument() {
-			if (!this.contract.mainDocument) return
-			// URL (intern oder extern): direkt oeffnen
-			if (isUrl(this.contract.mainDocument)) {
-				window.open(this.contract.mainDocument, '_blank', 'noopener,noreferrer')
-				return
-			}
-			// Legacy-Pfad: Versuch 1 - Nextcloud Viewer Overlay (kein neuer Tab)
-			if (window.OCA?.Viewer?.open) {
-				OCA.Viewer.open({ path: this.contract.mainDocument })
-				return
-			}
-			// Legacy-Pfad: Versuch 2 - File-ID per WebDAV holen und /f/{id} oeffnen
-			try {
-				const user = getCurrentUser()?.uid
-				const davPath = `/remote.php/dav/files/${user}${this.contract.mainDocument}`
-				const response = await axios({
-					method: 'PROPFIND',
-					url: davPath,
-					headers: { Depth: '0' },
-					data: `<?xml version="1.0"?>
-						<d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
-							<d:prop><oc:fileid/></d:prop>
-						</d:propfind>`,
-				})
-				const parser = new DOMParser()
-				const xml = parser.parseFromString(response.data, 'application/xml')
-				const fileidNode = xml.getElementsByTagNameNS('http://owncloud.org/ns', 'fileid')[0]
-				if (fileidNode?.textContent) {
-					window.open(generateUrl('/f/{fileId}', { fileId: fileidNode.textContent }), '_blank', 'noopener,noreferrer')
-					return
-				}
-			} catch (e) {
-				console.warn('[ContractManager] Could not resolve file ID:', e)
-			}
-			// Versuch 3: Datei in Files-App anzeigen (scrollto)
-			const path = this.contract.mainDocument
-			const parentDir = path.substring(0, path.lastIndexOf('/')) || '/'
-			const fileName = path.substring(path.lastIndexOf('/') + 1)
-			window.open(generateUrl('/apps/files/?dir={dir}&scrollto={file}', { dir: parentDir, file: fileName }), '_blank', 'noopener,noreferrer')
+		openDocument() {
+			openDocumentInNewTab(this.contract.mainDocument)
 		},
 	},
 }

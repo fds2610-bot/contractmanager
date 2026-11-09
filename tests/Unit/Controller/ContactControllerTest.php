@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Controller;
+namespace OCA\NcVertragswerk\Tests\Unit\Controller;
 
-use OCA\ContractManager\Controller\ContactController;
-use OCA\ContractManager\Service\ContactService;
-use OCA\ContractManager\Service\PermissionService;
+use OCA\NcVertragswerk\Controller\ContactController;
+use OCA\NcVertragswerk\Service\ContactService;
+use OCA\NcVertragswerk\Service\PermissionService;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
 use OCP\IRequest;
@@ -26,7 +26,7 @@ class ContactControllerTest extends TestCase {
 	private function controller(): ContactController {
 		$l = $this->createMock(IL10N::class);
 		$l->method('t')->willReturnArgument(0);
-		return new ContactController($this->createMock(IRequest::class), $this->contacts, $this->permissions, $l, 'dave');
+		return new ContactController($this->createMock(IRequest::class), $this->contacts, $this->permissions, $l, 'dave', $this->createMock(\OCA\NcVertragswerk\Service\SettingsService::class));
 	}
 
 	public function testSearchNeedsEditRight(): void {
