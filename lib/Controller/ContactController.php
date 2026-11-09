@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Controller;
+namespace OCA\NcVertragswerk\Controller;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\ContactService;
-use OCA\ContractManager\Service\PermissionService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\ContactService;
+use OCA\NcVertragswerk\Service\PermissionService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;

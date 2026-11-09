@@ -1,7 +1,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/contacts')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/contacts')
 
 export interface ContactOption {
 	uid: string

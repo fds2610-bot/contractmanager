@@ -1,21 +1,21 @@
 <template>
 	<div class="trash-view">
 		<div class="trash-view__header">
-			<h2>{{ t('contractmanager', 'Papierkorb') }}</h2>
+			<h2>{{ t('nc_vertragswerk', 'Papierkorb') }}</h2>
 			<NcButton v-if="isAdmin && trashedContracts.length > 0"
 				variant="error"
 				@click="confirmEmptyTrash">
 				<template #icon>
 					<DeleteIcon :size="20" />
 				</template>
-				{{ t('contractmanager', 'Papierkorb leeren') }}
+				{{ t('nc_vertragswerk', 'Papierkorb leeren') }}
 			</NcButton>
 		</div>
 
 		<NcNoteCard v-if="trashedContracts.length > 0" type="info">
-			<p>{{ t('contractmanager', 'Verträge, die ihr Eigentümer selbst gelöscht hat, werden nach 30 Tagen endgültig gelöscht. Von anderen gelöschte Verträge bleiben, bis sie wiederhergestellt oder von einem Administrator gelöscht werden.') }}</p>
+			<p>{{ t('nc_vertragswerk', 'Verträge, die ihr Eigentümer selbst gelöscht hat, werden nach 30 Tagen endgültig gelöscht. Von anderen gelöschte Verträge bleiben, bis sie wiederhergestellt oder von einem Administrator gelöscht werden.') }}</p>
 			<p v-if="isAdmin">
-				{{ t('contractmanager', 'Als Admin werden Ihre gelöschten Verträge nicht automatisch gelöscht.') }}
+				{{ t('nc_vertragswerk', 'Als Admin werden Ihre gelöschten Verträge nicht automatisch gelöscht.') }}
 			</p>
 		</NcNoteCard>
 
@@ -24,8 +24,8 @@
 		</div>
 
 		<NcEmptyContent v-else-if="trashedContracts.length === 0"
-			:name="t('contractmanager', 'Papierkorb leer')"
-			:description="t('contractmanager', 'Gelöschte Verträge werden hier angezeigt.')">
+			:name="t('nc_vertragswerk', 'Papierkorb leer')"
+			:description="t('nc_vertragswerk', 'Gelöschte Verträge werden hier angezeigt.')">
 			<template #icon>
 				<DeleteIcon :size="64" />
 			</template>
@@ -42,29 +42,29 @@
 		</div>
 
 		<NcDialog v-if="showDeleteDialog"
-			:name="t('contractmanager', 'Vertrag endgültig löschen?')"
+			:name="t('nc_vertragswerk', 'Vertrag endgültig löschen?')"
 			@close="showDeleteDialog = false">
-			<p>{{ t('contractmanager', 'Der Vertrag wird unwiderruflich gelöscht.') }}</p>
+			<p>{{ t('nc_vertragswerk', 'Der Vertrag wird unwiderruflich gelöscht.') }}</p>
 			<template #actions>
 				<NcButton @click="showDeleteDialog = false">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="error" @click="handlePermanentDelete">
-					{{ t('contractmanager', 'Endgültig löschen') }}
+					{{ t('nc_vertragswerk', 'Endgültig löschen') }}
 				</NcButton>
 			</template>
 		</NcDialog>
 
 		<NcDialog v-if="showEmptyTrashDialog"
-			:name="t('contractmanager', 'Papierkorb wirklich leeren?')"
+			:name="t('nc_vertragswerk', 'Papierkorb wirklich leeren?')"
 			@close="showEmptyTrashDialog = false">
-			<p>{{ t('contractmanager', 'Alle Verträge werden unwiderruflich gelöscht.') }}</p>
+			<p>{{ t('nc_vertragswerk', 'Alle Verträge werden unwiderruflich gelöscht.') }}</p>
 			<template #actions>
 				<NcButton @click="showEmptyTrashDialog = false">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="error" @click="handleEmptyTrash">
-					{{ t('contractmanager', 'Papierkorb leeren') }}
+					{{ t('nc_vertragswerk', 'Papierkorb leeren') }}
 				</NcButton>
 			</template>
 		</NcDialog>
@@ -124,10 +124,10 @@ export default {
 		async handleRestore(contract) {
 			try {
 				await this.restoreFromTrash(contract.id)
-				showSuccess(t('contractmanager', 'Vertrag wiederhergestellt'))
+				showSuccess(t('nc_vertragswerk', 'Vertrag wiederhergestellt'))
 			} catch (error) {
 				console.error('Failed to restore contract:', error)
-				showError(t('contractmanager', 'Fehler beim Wiederherstellen'))
+				showError(t('nc_vertragswerk', 'Fehler beim Wiederherstellen'))
 			}
 		},
 
@@ -141,10 +141,10 @@ export default {
 
 			try {
 				await this.deletePermanently(this.contractToDelete.id)
-				showSuccess(t('contractmanager', 'Vertrag endgültig gelöscht'))
+				showSuccess(t('nc_vertragswerk', 'Vertrag endgültig gelöscht'))
 			} catch (error) {
 				console.error('Failed to delete contract:', error)
-				showError(t('contractmanager', 'Fehler beim Löschen'))
+				showError(t('nc_vertragswerk', 'Fehler beim Löschen'))
 			} finally {
 				this.showDeleteDialog = false
 				this.contractToDelete = null
@@ -158,10 +158,10 @@ export default {
 		async handleEmptyTrash() {
 			try {
 				await this.emptyTrash()
-				showSuccess(t('contractmanager', 'Papierkorb geleert'))
+				showSuccess(t('nc_vertragswerk', 'Papierkorb geleert'))
 			} catch (error) {
 				console.error('Failed to empty trash:', error)
-				showError(t('contractmanager', 'Fehler beim Leeren des Papierkorbs'))
+				showError(t('nc_vertragswerk', 'Fehler beim Leeren des Papierkorbs'))
 			} finally {
 				this.showEmptyTrashDialog = false
 			}

@@ -2,7 +2,7 @@
 	<div class="insurance-details">
 		<!-- Persons -->
 		<div class="ins-block">
-			<span class="ins-label">{{ t('contractmanager', 'Personen') }}</span>
+			<span class="ins-label">{{ t('nc_vertragswerk', 'Personen') }}</span>
 			<template v-if="readOnly">
 				<ul v-if="filledPersons.length" class="ins-readonly">
 					<li v-for="(person, index) in filledPersons" :key="index">
@@ -26,7 +26,7 @@
 					data-test="insurance-person-row">
 					<select :value="person.type"
 						class="ins-input ins-input--type"
-						:aria-label="t('contractmanager', 'Personentyp')"
+						:aria-label="t('nc_vertragswerk', 'Personentyp')"
 						@change="updatePerson(index, { type: $event.target.value })">
 						<option v-for="opt in personTypeOptions" :key="opt.value" :value="opt.value">
 							{{ opt.label }}
@@ -36,7 +36,7 @@
 						<div class="ins-input ins-person__box" :class="{ 'ins-person__box--chip': person.userId }">
 							<NcChip v-if="person.userId"
 								:text="person.name"
-								:aria-label-close="t('contractmanager', 'Benutzer entfernen')"
+								:aria-label-close="t('nc_vertragswerk', 'Benutzer entfernen')"
 								@close="clearUser(index)">
 								<template #icon>
 									<AccountIcon :size="18" />
@@ -45,8 +45,8 @@
 							<input v-else
 								:value="person.name"
 								class="ins-person__text"
-								:placeholder="t('contractmanager', 'Name oder Benutzer suchen...')"
-								:aria-label="t('contractmanager', 'Name oder Benutzer')"
+								:placeholder="t('nc_vertragswerk', 'Name oder Benutzer suchen...')"
+								:aria-label="t('nc_vertragswerk', 'Name oder Benutzer')"
 								autocomplete="off"
 								@input="onPersonInput(index, $event.target.value)"
 								@keydown="onPersonKeydown(index, $event)"
@@ -70,8 +70,8 @@
 					</div>
 					<button type="button"
 						class="ins-btn ins-btn--add"
-						:aria-label="t('contractmanager', 'Weitere Person hinzufügen')"
-						:title="t('contractmanager', 'Weitere Person hinzufügen')"
+						:aria-label="t('nc_vertragswerk', 'Weitere Person hinzufügen')"
+						:title="t('nc_vertragswerk', 'Weitere Person hinzufügen')"
 						data-test="insurance-person-add"
 						@click="addPerson(index)">
 						<PlusCircleIcon :size="26" />
@@ -79,8 +79,8 @@
 					<button v-if="persons.length > 1"
 						type="button"
 						class="ins-btn ins-btn--remove"
-						:aria-label="t('contractmanager', 'Person entfernen')"
-						:title="t('contractmanager', 'Person entfernen')"
+						:aria-label="t('nc_vertragswerk', 'Person entfernen')"
+						:title="t('nc_vertragswerk', 'Person entfernen')"
 						@click="removePerson(index)">
 						<MinusCircleIcon :size="26" />
 					</button>
@@ -90,7 +90,7 @@
 
 		<!-- Benefits -->
 		<div class="ins-block">
-			<span class="ins-label">{{ t('contractmanager', 'Versicherungsleistungen') }}</span>
+			<span class="ins-label">{{ t('nc_vertragswerk', 'Versicherungsleistungen') }}</span>
 			<template v-if="readOnly">
 				<ul v-if="filledBenefits.length" class="ins-readonly ins-readonly--bullets">
 					<li v-for="(benefit, index) in filledBenefits" :key="index">
@@ -107,13 +107,13 @@
 					<input :value="benefit"
 						class="ins-input"
 						maxlength="1000"
-						:placeholder="t('contractmanager', 'z.B. Glasbruch bis 1.000 €')"
-						:aria-label="t('contractmanager', 'Versicherungsleistung')"
+						:placeholder="t('nc_vertragswerk', 'z.B. Glasbruch bis 1.000 €')"
+						:aria-label="t('nc_vertragswerk', 'Versicherungsleistung')"
 						@input="updateBenefit(index, $event.target.value)">
 					<button type="button"
 						class="ins-btn ins-btn--add"
-						:aria-label="t('contractmanager', 'Weitere Leistung hinzufügen')"
-						:title="t('contractmanager', 'Weitere Leistung hinzufügen')"
+						:aria-label="t('nc_vertragswerk', 'Weitere Leistung hinzufügen')"
+						:title="t('nc_vertragswerk', 'Weitere Leistung hinzufügen')"
 						data-test="insurance-benefit-add"
 						@click="addBenefit(index)">
 						<PlusCircleIcon :size="26" />
@@ -121,8 +121,8 @@
 					<button v-if="benefits.length > 1"
 						type="button"
 						class="ins-btn ins-btn--remove"
-						:aria-label="t('contractmanager', 'Leistung entfernen')"
-						:title="t('contractmanager', 'Leistung entfernen')"
+						:aria-label="t('nc_vertragswerk', 'Leistung entfernen')"
+						:title="t('nc_vertragswerk', 'Leistung entfernen')"
 						@click="removeBenefit(index)">
 						<MinusCircleIcon :size="26" />
 					</button>

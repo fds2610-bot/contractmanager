@@ -2,7 +2,7 @@ import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 import type { Category } from '../store/categories'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/categories')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/categories')
 
 export default {
 	async getAll(): Promise<Category[]> {

@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
-    'OCA\\ContractManager\\' => array($baseDir . '/lib'),
+    'OCA\\NcVertragswerk\\' => array($baseDir . '/lib'),
 );

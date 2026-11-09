@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
 use DateTime;
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Db\ReminderSent;
-use OCA\ContractManager\Db\ReminderSentMapper;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Db\ReminderSent;
+use OCA\NcVertragswerk\Db\ReminderSentMapper;
 use Psr\Log\LoggerInterface;
 
 /**

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
 use DateTime;
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Notification\NotificationService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Notification\NotificationService;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\L10N\IFactory;

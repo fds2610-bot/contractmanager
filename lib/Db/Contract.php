@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Db;
+namespace OCA\NcVertragswerk\Db;
 
 use DateTime;
 use JsonSerializable;
-use OCA\ContractManager\Service\InsuranceData;
+use OCA\NcVertragswerk\Service\InsuranceData;
 use OCP\AppFramework\Db\Entity;
 
 /**

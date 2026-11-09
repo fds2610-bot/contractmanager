@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Service\ContactService;
+use OCA\NcVertragswerk\Service\ContactService;
 use OCP\App\IAppManager;
 use OCP\Contacts\IManager;
 use OCP\IAddressBook;

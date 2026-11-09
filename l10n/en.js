@@ -1,5 +1,5 @@
 OC.L10N.register(
-    "contractmanager",
+    "nc_vertragswerk",
     {
     "Deine Verträge samt Kategorien sowie Kündigungs- und Erinnerungseinstellungen" : "Your contracts including categories, cancellation and reminder settings",
     "Zuständig" : "Responsible",

@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'cpcmomentum/contractmanager',
+        'name' => 'fds2610/nc_vertragswerk',
         'pretty_version' => '1.0.0+no-version-set',
         'version' => '1.0.0.0',
         'reference' => null,
@@ -10,7 +10,7 @@
         'dev' => false,
     ),
     'versions' => array(
-        'cpcmomentum/contractmanager' => array(
+        'fds2610/nc_vertragswerk' => array(
             'pretty_version' => '1.0.0+no-version-set',
             'version' => '1.0.0.0',
             'reference' => null,

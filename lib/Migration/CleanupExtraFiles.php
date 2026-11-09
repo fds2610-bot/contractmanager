@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Migration;
+namespace OCA\NcVertragswerk\Migration;
 
 use OCP\App\AppPathNotFoundException;
 use OCP\App\IAppManager;
@@ -26,7 +26,7 @@ class CleanupExtraFiles implements IRepairStep {
 
 	public function run(IOutput $output): void {
 		try {
-			$appPath = $this->appManager->getAppPath('contractmanager');
+			$appPath = $this->appManager->getAppPath('nc_vertragswerk');
 		} catch (AppPathNotFoundException) {
 			return;
 		}

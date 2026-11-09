@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Service\EmailService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Service\EmailService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\IConfig;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
@@ -112,7 +112,7 @@ class EmailServiceTest extends TestCase {
 	public function testBuildContractUrlUsesIndexPhpWhenFrontControllerInactive(): void {
 		// Default instance (mod_rewrite off): path must include /index.php
 		$this->assertSame(
-			'https://nc.example.test/index.php/apps/contractmanager/?contract=42',
+			'https://nc.example.test/index.php/apps/nc_vertragswerk/?contract=42',
 			$this->callBuildContractUrl(false, null),
 		);
 	}
@@ -120,7 +120,7 @@ class EmailServiceTest extends TestCase {
 	public function testBuildContractUrlOmitsIndexPhpWhenIgnoreFrontControllerSet(): void {
 		// htaccess.IgnoreFrontController = true → no /index.php prefix
 		$this->assertSame(
-			'https://nc.example.test/apps/contractmanager/?contract=42',
+			'https://nc.example.test/apps/nc_vertragswerk/?contract=42',
 			$this->callBuildContractUrl(true, null),
 		);
 	}
@@ -128,7 +128,7 @@ class EmailServiceTest extends TestCase {
 	public function testBuildContractUrlOmitsIndexPhpWhenFrontControllerEnvActive(): void {
 		// front_controller_active=true (env) → no /index.php prefix
 		$this->assertSame(
-			'https://nc.example.test/apps/contractmanager/?contract=42',
+			'https://nc.example.test/apps/nc_vertragswerk/?contract=42',
 			$this->callBuildContractUrl(false, 'true'),
 		);
 	}

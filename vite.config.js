@@ -81,15 +81,15 @@ export default defineConfig(({ mode }) => ({
     emptyOutDir: true,
     lib: {
       entry: resolve(__dirname, 'src/main.ts'),
-      name: 'contractmanager',
+      name: 'nc_vertragswerk',
       formats: ['iife'],
-      fileName: () => 'js/contractmanager-main.js',
+      fileName: () => 'js/nc_vertragswerk-main.js',
     },
     rollupOptions: {
       output: {
         assetFileNames: (assetInfo) => {
           if (assetInfo.name && assetInfo.name.endsWith('.css')) {
-            return 'css/contractmanager-main.css'
+            return 'css/nc_vertragswerk-main.css'
           }
           return 'css/[name][extname]'
         },

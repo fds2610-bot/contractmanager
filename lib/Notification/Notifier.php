@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Notification;
+namespace OCA\NcVertragswerk\Notification;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IURLGenerator;
@@ -143,7 +143,7 @@ class Notifier implements INotifier {
 			)
 		);
 		$notification->setLink(
-			$this->urlGenerator->linkToRouteAbsolute('contractmanager.page.index')
+			$this->urlGenerator->linkToRouteAbsolute('nc_vertragswerk.page.index')
 		);
 
 		return $notification;

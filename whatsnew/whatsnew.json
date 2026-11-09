@@ -1,4 +1,38 @@
 {
+	"2.0.0": [
+		{
+			"title": {
+				"de": "Vertragsspiegel als PDF",
+				"en": "Contract overview as PDF"
+			},
+			"text": {
+				"de": "Der neue Button „PDF“ gibt die gerade angezeigten Verträge als übersichtliche Tabelle aus, nach Kategorie gruppiert, mit Vertragspartner, Umfang, Laufzeit, Status, Zahlungsweise und Beitrag.",
+				"en": "The new “PDF” button prints the contracts currently shown as a clear table, grouped by category, with partner, scope, term, status, payment interval and amount."
+			},
+			"icon": "file-document",
+			"where": {
+				"de": "Vertragsliste › PDF",
+				"en": "Contract list › PDF"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Vertragsnummer und Versicherungsangaben",
+				"en": "Contract number and insurance details"
+			},
+			"text": {
+				"de": "Jeder Vertrag kann eine Vertragsnummer bekommen. Bei Versicherungen erfassen Sie zusätzlich die beteiligten Personen und die versicherten Leistungen.",
+				"en": "Every contract can now have a contract number. For insurance contracts you can also record the persons involved and the insured benefits."
+			},
+			"icon": "tag",
+			"where": {
+				"de": "Vertrag bearbeiten",
+				"en": "Edit contract"
+			},
+			"plus": false
+		}
+	],
 	"1.12.0": [
 		{
 			"title": {

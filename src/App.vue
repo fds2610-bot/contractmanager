@@ -1,10 +1,10 @@
 <template>
-	<NcContent app-name="contractmanager">
+	<NcContent app-name="nc_vertragswerk">
 		<!-- Account without a VertragsWerk role: the server refuses all
 		     contract data, so explain why instead of showing an empty app. -->
 		<NcAppContent v-if="noAccess">
-			<NcEmptyContent :name="t('contractmanager', 'Kein Zugriff auf VertragsWerk')"
-				:description="t('contractmanager', 'Ihnen wurde noch keine Rolle in VertragsWerk zugewiesen. Bitte wenden Sie sich an Ihre Nextcloud-Administration.')">
+			<NcEmptyContent :name="t('nc_vertragswerk', 'Kein Zugriff auf VertragsWerk')"
+				:description="t('nc_vertragswerk', 'Ihnen wurde noch keine Rolle in VertragsWerk zugewiesen. Bitte wenden Sie sich an Ihre Nextcloud-Administration.')">
 				<template #icon>
 					<AccountLockOutlineIcon :size="64" />
 				</template>
@@ -15,7 +15,7 @@
 			<NcAppNavigation>
 				<div class="nav-search">
 					<NcTextField v-model="searchQuery"
-						:label="t('contractmanager', 'Verträge durchsuchen …')"
+						:label="t('nc_vertragswerk', 'Verträge durchsuchen …')"
 						:show-trailing-button="searchQuery !== ''"
 						trailing-button-icon="close"
 						@trailing-button-click="searchQuery = ''">
@@ -25,7 +25,7 @@
 					</NcTextField>
 				</div>
 
-				<NcAppNavigationItem :name="t('contractmanager', 'Verträge')"
+				<NcAppNavigationItem :name="t('nc_vertragswerk', 'Verträge')"
 					:class="{ active: currentView === 'contracts' && selectedCategoryId === null }"
 					@click="showAllContracts">
 					<template #icon>
@@ -57,7 +57,7 @@
 				</NcAppNavigationItem>
 
 				<NcAppNavigationItem v-if="uncategorizedCount > 0"
-					:name="t('contractmanager', 'Ohne Kategorie')"
+					:name="t('nc_vertragswerk', 'Ohne Kategorie')"
 					:class="{ active: currentView === 'contracts' && selectedCategoryId === 'uncategorized', 'nav-drop-target': dropTargetKey === 'uncategorized' }"
 					class="category-item"
 					@click="filterByCategory('uncategorized')"
@@ -73,7 +73,7 @@
 					</template>
 				</NcAppNavigationItem>
 
-				<NcAppNavigationItem :name="t('contractmanager', 'Archiv')"
+				<NcAppNavigationItem :name="t('nc_vertragswerk', 'Archiv')"
 					:class="{ active: currentView === 'archive' }"
 					@click="currentView = 'archive'; selectedCategoryId = null">
 					<template #icon>
@@ -87,7 +87,7 @@
 				<!-- Also shown to non-editors when something of theirs lies in the
 				     trash (#438): an owner notified about a deletion must find it. -->
 				<NcAppNavigationItem v-if="canEdit || trashedCount > 0"
-					:name="t('contractmanager', 'Papierkorb')"
+					:name="t('nc_vertragswerk', 'Papierkorb')"
 					:class="{ active: currentView === 'trash' }"
 					@click="currentView = 'trash'; selectedCategoryId = null">
 					<template #icon>
@@ -99,7 +99,7 @@
 				</NcAppNavigationItem>
 
 				<template #footer>
-					<NcAppNavigationItem :name="t('contractmanager', 'Einstellungen')"
+					<NcAppNavigationItem :name="t('nc_vertragswerk', 'Einstellungen')"
 						:class="{ active: currentView === 'settings' }"
 						@click="currentView = 'settings'; selectedCategoryId = null">
 						<template #icon>
@@ -109,7 +109,7 @@
 					<!-- Dauerhafter Zugang zu den Neuerungen (#427): oeffnet das
 					     „Was ist neu?"-Fenster im Archiv-Modus (alle bisherigen Punkte).
 					     Kein eigener View, nur ein Knopf. -->
-					<NcAppNavigationItem :name="t('contractmanager', 'Neuerungen')"
+					<NcAppNavigationItem :name="t('nc_vertragswerk', 'Neuerungen')"
 						@click="openWhatsNew">
 						<template #icon>
 							<BullhornOutlineIcon :size="20" />
@@ -251,11 +251,11 @@ export default {
 			try {
 				await this.setContractCategory(id, targetCategoryId)
 				showSuccess(targetCategoryId === null
-					? t('contractmanager', 'Kategorie entfernt')
-					: t('contractmanager', 'In Kategorie verschoben'))
+					? t('nc_vertragswerk', 'Kategorie entfernt')
+					: t('nc_vertragswerk', 'In Kategorie verschoben'))
 			} catch (error) {
 				console.error('Failed to reassign category:', error)
-				showError(t('contractmanager', 'Fehler beim Ändern der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Ändern der Kategorie'))
 			}
 		},
 		showAllContracts() {

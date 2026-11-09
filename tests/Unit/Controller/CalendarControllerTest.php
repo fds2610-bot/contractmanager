@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Controller;
+namespace OCA\NcVertragswerk\Tests\Unit\Controller;
 
-use OCA\ContractManager\Controller\CalendarController;
-use OCA\ContractManager\Service\CalendarFeedService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Controller\CalendarController;
+use OCA\NcVertragswerk\Service\CalendarFeedService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Http\DataDisplayResponse;
 use OCP\AppFramework\Http\NotFoundResponse;
 use OCP\IRequest;

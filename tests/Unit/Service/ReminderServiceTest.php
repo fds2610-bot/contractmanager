@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
 use DateTime;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Db\ReminderSentMapper;
-use OCA\ContractManager\Service\EmailService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\ReminderService;
-use OCA\ContractManager\Service\SettingsService;
-use OCA\ContractManager\Service\TalkService;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Db\ReminderSentMapper;
+use OCA\NcVertragswerk\Service\EmailService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\ReminderService;
+use OCA\NcVertragswerk\Service\SettingsService;
+use OCA\NcVertragswerk\Service\TalkService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
@@ -639,12 +639,12 @@ class ReminderServiceTest extends TestCase {
 		// Deadline in 2 Tagen → liegt im first-Fenster (14 Tage) UND final-Fenster (3 Tage)
 		$deadline = new DateTime('+2 days');
 		// auto_renewal mit cancellationPeriod = 0 days → deadline = endDate
-		$contract = new \OCA\ContractManager\Db\Contract();
+		$contract = new \OCA\NcVertragswerk\Db\Contract();
 		$contract->setId(42);
 		$contract->setName('Doppelmail-Test');
 		$contract->setVendor('Test');
 		$contract->setCreatedBy('testuser');
-		$contract->setStatus(\OCA\ContractManager\Db\Contract::STATUS_ACTIVE);
+		$contract->setStatus(\OCA\NcVertragswerk\Db\Contract::STATUS_ACTIVE);
 		$contract->setReminderEnabled(1);
 		$contract->setArchived(0);
 		$contract->setEndDate($deadline);
@@ -661,7 +661,7 @@ class ReminderServiceTest extends TestCase {
 		$this->permissionService->method('canUserSeeContract')->willReturn(true);
 		$this->optOutMapper->method('findOptedOutUsers')->willReturn([]);
 		$this->reminderSentMapper->method('hasBeenSent')->willReturn(false);
-		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\ContractManager\Db\ReminderSent());
+		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\NcVertragswerk\Db\ReminderSent());
 		$this->emailService->method('sendReminder')->willReturn(true);
 		$this->talkService->method('isTalkAvailable')->willReturn(false);
 
@@ -702,7 +702,7 @@ class ReminderServiceTest extends TestCase {
 		]);
 		$this->optOutMapper->method('findOptedOutUsers')->willReturn([]);
 		$this->reminderSentMapper->method('hasBeenSent')->willReturn(false);
-		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\ContractManager\Db\ReminderSent());
+		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\NcVertragswerk\Db\ReminderSent());
 		$this->talkService->method('isTalkAvailable')->willReturn(false);
 
 		// alice (own/creator) + bob (all, can see) = 2 recipients; carol excluded (cannot see)
@@ -734,7 +734,7 @@ class ReminderServiceTest extends TestCase {
 		// bob opted out of this contract
 		$this->optOutMapper->method('findOptedOutUsers')->willReturn(['bob']);
 		$this->reminderSentMapper->method('hasBeenSent')->willReturn(false);
-		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\ContractManager\Db\ReminderSent());
+		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\NcVertragswerk\Db\ReminderSent());
 		$this->talkService->method('isTalkAvailable')->willReturn(false);
 
 		// only alice receives it, bob opted out
@@ -768,7 +768,7 @@ class ReminderServiceTest extends TestCase {
 		$this->permissionService->method('canUserSeeContract')->willReturn(true);
 		$this->optOutMapper->method('findOptedOutUsers')->willReturn([]);
 		$this->reminderSentMapper->method('hasBeenSent')->willReturn(false);
-		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\ContractManager\Db\ReminderSent());
+		$this->reminderSentMapper->method('insert')->willReturn(new \OCA\NcVertragswerk\Db\ReminderSent());
 		$this->talkService->method('isTalkAvailable')->willReturn(false);
 
 		// only bob (responsible) receives it, not alice (creator)

@@ -8,7 +8,7 @@
  * plain "text/plain") means the sidebar drop targets only react to a contract
  * row being dragged, not to arbitrary text or files dropped from outside.
  */
-export const CONTRACT_DND_TYPE = 'application/x-contractmanager-contract-id'
+export const CONTRACT_DND_TYPE = 'application/x-nc_vertragswerk-contract-id'
 
 /**
  * The sentinel key used for the "Ohne Kategorie" (uncategorized) drop target,

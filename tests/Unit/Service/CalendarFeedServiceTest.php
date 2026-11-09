@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Service\CalendarFeedService;
-use OCA\ContractManager\Service\ReminderService;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Service\CalendarFeedService;
+use OCA\NcVertragswerk\Service\ReminderService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\IL10N;
 use PHPUnit\Framework\TestCase;
@@ -61,7 +61,7 @@ class CalendarFeedServiceTest extends TestCase {
 		$ics = $this->service->buildIcs('alice');
 
 		$this->assertStringContainsString('BEGIN:VEVENT', $ics);
-		$this->assertStringContainsString('UID:contract-11-deadline@contractmanager', $ics);
+		$this->assertStringContainsString('UID:contract-11-deadline@nc_vertragswerk', $ics);
 		$this->assertStringContainsString('DTSTART;VALUE=DATE:20261201', $ics);
 		$this->assertStringContainsString('SUMMARY:Kündigungsfrist: Strom', $ics);
 		$this->assertStringContainsString('DESCRIPTION:Vertragspartner: Stadtwerke', $ics);

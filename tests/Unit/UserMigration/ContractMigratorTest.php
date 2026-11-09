@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\UserMigration;
+namespace OCA\NcVertragswerk\Tests\Unit\UserMigration;
 
-use OCA\ContractManager\Db\Category;
-use OCA\ContractManager\Db\CategoryMapper;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Service\ContractExportService;
-use OCA\ContractManager\Service\ContractImportService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\UserMigration\ContractMigrator;
+use OCA\NcVertragswerk\Db\Category;
+use OCA\NcVertragswerk\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Service\ContractExportService;
+use OCA\NcVertragswerk\Service\ContractImportService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\UserMigration\ContractMigrator;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\IRootFolder;
@@ -119,7 +119,7 @@ class ContractMigratorTest extends TestCase {
 		$dest = $this->createMock(IExportDestination::class);
 		$dest->expects($this->once())
 			->method('addFileContents')
-			->with('contractmanager/contracts.json', $this->callback(function (string $content) use (&$captured) {
+			->with('nc_vertragswerk/contracts.json', $this->callback(function (string $content) use (&$captured) {
 				$captured = $content;
 				return true;
 			}));
@@ -163,9 +163,9 @@ class ContractMigratorTest extends TestCase {
 		]);
 
 		$source = $this->createMock(IImportSource::class);
-		$source->method('getMigratorVersion')->with('contractmanager')->willReturn(1);
-		$source->method('pathExists')->with('contractmanager/contracts.json')->willReturn(true);
-		$source->method('getFileContents')->with('contractmanager/contracts.json')->willReturn($json);
+		$source->method('getMigratorVersion')->with('nc_vertragswerk')->willReturn(1);
+		$source->method('pathExists')->with('nc_vertragswerk/contracts.json')->willReturn(true);
+		$source->method('getFileContents')->with('nc_vertragswerk/contracts.json')->willReturn($json);
 
 		// New category (not present yet) → insert, gets id 99.
 		$this->categoryMapper->method('findByName')->with('Versicherung')->willReturn(null);

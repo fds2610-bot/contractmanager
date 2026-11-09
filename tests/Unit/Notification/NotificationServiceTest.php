@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Notification;
+namespace OCA\NcVertragswerk\Tests\Unit\Notification;
 
 use DateTime;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Notification\NotificationService;
-use OCA\ContractManager\Notification\Notifier;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Notification\NotificationService;
+use OCA\NcVertragswerk\Notification\Notifier;
 use OCP\IGroupManager;
 use OCP\IUserManager;
 use OCP\Notification\IManager as INotificationManager;

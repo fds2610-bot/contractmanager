@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\AppInfo\Application;
+use OCA\NcVertragswerk\AppInfo\Application;
 use OCP\App\IAppManager;
 use OCP\L10N\IFactory;
 use Psr\Log\LoggerInterface;

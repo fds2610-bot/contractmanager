@@ -1,7 +1,9 @@
 # VertragsWerk
 
 Nextcloud App zur Vertragsverwaltung mit automatischen Kündigungserinnerungen.
-Die App-ID bleibt `contractmanager`.
+App-ID `nc_vertragswerk`. Eigenständige Weiterentwicklung von fds2610 auf Basis von
+[cpcMomentum/contractmanager](https://github.com/cpcMomentum/contractmanager) 1.12.0
+(dort App-ID `contractmanager`). Die App wird nicht im App Store veröffentlicht.
 
 ## Features
 
@@ -49,8 +51,16 @@ npm run build
 ### Deployment
 
 1. `npm run build` ausführen
-2. Ordner `contractmanager/` nach `/var/www/nextcloud/apps/` kopieren
-3. App aktivieren: `php occ app:enable contractmanager`
+2. Ordner als `nc_vertragswerk/` nach `/var/www/nextcloud/apps/` kopieren
+3. App aktivieren: `php occ app:enable nc_vertragswerk`
+
+### Umstieg von `contractmanager`
+
+Die Tabellen (`oc_contractmgr_*`) sind dieselben. Beim ersten Aktivieren übernimmt
+`nc_vertragswerk` die App- und Benutzereinstellungen von `contractmanager`
+(Repair-Step `ImportFromContractManager`). Ablauf: `contractmanager` deaktivieren,
+`nc_vertragswerk` installieren und aktivieren, danach den alten App-Ordner löschen
+(nicht `occ app:remove contractmanager` ohne `--keep-data`).
 
 ## Lizenz
 
@@ -58,4 +68,6 @@ AGPL-3.0-or-later
 
 ## Autor
 
-cpcMomentum GmbH - https://cpcMomentum.com
+fds2610 (Weiterentwicklung ab 2.0.0)
+
+Ursprünglich: cpcMomentum GmbH - https://cpcMomentum.com (Axel Deffner)

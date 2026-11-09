@@ -56,12 +56,12 @@ export function textLines(text: string | null | undefined): string[] {
 
 export function intervalLabel(interval: string | null | undefined): string {
 	const labels: Record<string, string> = {
-		weekly: t('contractmanager', 'Wöchentlich'),
-		monthly: t('contractmanager', 'Monatlich'),
-		quarterly: t('contractmanager', 'Quartalsweise'),
-		semi_annual: t('contractmanager', 'Halbjährlich'),
-		yearly: t('contractmanager', 'Jährlich'),
-		one_time: t('contractmanager', 'Einmalig'),
+		weekly: t('nc_vertragswerk', 'Wöchentlich'),
+		monthly: t('nc_vertragswerk', 'Monatlich'),
+		quarterly: t('nc_vertragswerk', 'Quartalsweise'),
+		semi_annual: t('nc_vertragswerk', 'Halbjährlich'),
+		yearly: t('nc_vertragswerk', 'Jährlich'),
+		one_time: t('nc_vertragswerk', 'Einmalig'),
 	}
 	return interval ? (labels[interval] ?? interval) : ''
 }
@@ -73,11 +73,11 @@ export function intervalLabel(interval: string | null | undefined): string {
  * it is a reminder, not a status, and would be stale on paper.
  */
 export function statusLabel(contract: Contract): string {
-	if (isPlanned(contract)) return t('contractmanager', 'Geplant')
-	if (isExpiredFixed(contract)) return t('contractmanager', 'Abgelaufen')
-	if (isEndedCancelled(contract) || contract.status === 'ended') return t('contractmanager', 'Beendet')
-	if (contract.status === 'cancelled') return t('contractmanager', 'Gekündigt')
-	return t('contractmanager', 'Laufend')
+	if (isPlanned(contract)) return t('nc_vertragswerk', 'Geplant')
+	if (isExpiredFixed(contract)) return t('nc_vertragswerk', 'Abgelaufen')
+	if (isEndedCancelled(contract) || contract.status === 'ended') return t('nc_vertragswerk', 'Beendet')
+	if (contract.status === 'cancelled') return t('nc_vertragswerk', 'Gekündigt')
+	return t('nc_vertragswerk', 'Laufend')
 }
 
 export function formatAmount(cost: string | null | undefined, currency: string | null | undefined): string {
@@ -113,7 +113,7 @@ function vendorLines(contract: Contract, contact: ResolvedContact | null | undef
 		add(contact.organization)
 		add(contact.name)
 		contact.addresses.forEach(add)
-		contact.phones.forEach(phone => add(t('contractmanager', 'Tel. {phone}', { phone }, undefined, PLAIN)))
+		contact.phones.forEach(phone => add(t('nc_vertragswerk', 'Tel. {phone}', { phone }, undefined, PLAIN)))
 		contact.emails.forEach(add)
 	}
 	return lines
@@ -123,7 +123,7 @@ function scopeLines(contract: Contract, userNames: Record<string, string>): stri
 	const lines: string[] = []
 	const responsible = (contract.responsibleUser ?? '').trim()
 	if (responsible !== '') {
-		lines.push(t('contractmanager', 'Zuständig: {name}', { name: userNames[responsible] || responsible }, undefined, PLAIN))
+		lines.push(t('nc_vertragswerk', 'Zuständig: {name}', { name: userNames[responsible] || responsible }, undefined, PLAIN))
 	}
 	const typeLabels = new Map<string, string>(personTypeOptions().map(o => [o.value, o.label]))
 	for (const person of contract.insurancePersons ?? []) {
@@ -145,7 +145,7 @@ export function buildMirrorRow(contract: Contract, lookups: MirrorLookups = {}):
 	return {
 		contract: [
 			...textLines(contract.name),
-			...(number !== '' ? [t('contractmanager', 'Nr. {number}', { number }, undefined, PLAIN)] : []),
+			...(number !== '' ? [t('nc_vertragswerk', 'Nr. {number}', { number }, undefined, PLAIN)] : []),
 		],
 		vendor: vendorLines(contract, contact),
 		scope: scopeLines(contract, lookups.userNames ?? {}),
@@ -172,7 +172,7 @@ export function buildMirrorGroups(contracts: Contract[], categories: Category[],
 	}
 	const rest = contracts.filter(c => c.categoryId === null || c.categoryId === undefined || !known.has(c.categoryId))
 	if (rest.length) {
-		groups.push({ title: t('contractmanager', 'Ohne Kategorie'), rows: rest.map(c => buildMirrorRow(c, lookups)) })
+		groups.push({ title: t('nc_vertragswerk', 'Ohne Kategorie'), rows: rest.map(c => buildMirrorRow(c, lookups)) })
 	}
 	return groups
 }

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Listener;
+namespace OCA\NcVertragswerk\Listener;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Notification\NotificationService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Notification\NotificationService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IUserManager;

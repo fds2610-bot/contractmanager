@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\Db\Category;
-use OCA\ContractManager\Db\CategoryMapper;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Db\Category;
+use OCA\NcVertragswerk\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;

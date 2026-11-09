@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\IConfig;
 use PHPUnit\Framework\TestCase;
 
@@ -703,13 +703,13 @@ class SettingsServiceTest extends TestCase {
 	}
 
 	public function testSetBackupHourStoresIt(): void {
-		$this->config->expects($this->once())->method('setUserValue')->with('alice', 'contractmanager', 'backup_hour', '22');
+		$this->config->expects($this->once())->method('setUserValue')->with('alice', 'nc_vertragswerk', 'backup_hour', '22');
 
 		$this->service->setUserBackupHour('alice', 22);
 	}
 
 	public function testSetBackupHourNullClearsIt(): void {
-		$this->config->expects($this->once())->method('deleteUserValue')->with('alice', 'contractmanager', 'backup_hour');
+		$this->config->expects($this->once())->method('deleteUserValue')->with('alice', 'nc_vertragswerk', 'backup_hour');
 
 		$this->service->setUserBackupHour('alice', null);
 	}

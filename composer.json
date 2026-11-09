@@ -1,5 +1,5 @@
 {
-    "name": "cpcmomentum/contractmanager",
+    "name": "fds2610/nc_vertragswerk",
     "description": "Nextcloud App zur Vertragsverwaltung mit Kündigungserinnerungen",
     "type": "project",
     "license": "AGPL-3.0-or-later",
@@ -19,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "OCA\\ContractManager\\": "lib/"
+            "OCA\\NcVertragswerk\\": "lib/"
         }
     },
     "autoload-dev": {

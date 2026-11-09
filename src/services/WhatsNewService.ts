@@ -1,7 +1,7 @@
 import axios from '@nextcloud/axios'
 import { generateUrl } from '@nextcloud/router'
 
-const baseUrl = generateUrl('/apps/contractmanager/api/whatsnew')
+const baseUrl = generateUrl('/apps/nc_vertragswerk/api/whatsnew')
 
 /** „Was ist neu?"-Fenster (#415) — ein Eintrag, bereits in Nutzersprache. */
 export interface WhatsNewEntry {

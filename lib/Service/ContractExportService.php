@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\CategoryMapper;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
 use OCP\App\IAppManager;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Utility\ITimeFactory;
@@ -19,7 +19,7 @@ use OCP\AppFramework\Utility\ITimeFactory;
  * three consumers so they can never drift apart (#296):
  *  - the user_migration flow (ContractMigrator, "Data migration" / occ user:export),
  *  - the periodic auto-backup job (AutoBackupService),
- *  - the occ contractmanager:export command.
+ *  - the occ nc_vertragswerk:export command.
  *
  * Only data OWNED by the given user is included (created_by). Attachments are
  * kept as path references only.

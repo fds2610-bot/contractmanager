@@ -1,7 +1,7 @@
 <template>
 	<div class="archive-view">
 		<div class="archive-view__header">
-			<h2>{{ t('contractmanager', 'Archiv') }}</h2>
+			<h2>{{ t('nc_vertragswerk', 'Archiv') }}</h2>
 		</div>
 
 		<div v-if="loading" class="archive-view__loading">
@@ -9,8 +9,8 @@
 		</div>
 
 		<NcEmptyContent v-else-if="archivedContracts.length === 0"
-			:name="t('contractmanager', 'Archiv leer')"
-			:description="t('contractmanager', 'Archivierte Verträge werden hier angezeigt.')">
+			:name="t('nc_vertragswerk', 'Archiv leer')"
+			:description="t('nc_vertragswerk', 'Archivierte Verträge werden hier angezeigt.')">
 			<template #icon>
 				<ArchiveIcon :size="64" />
 			</template>
@@ -32,15 +32,15 @@
 			@close="closeForm" />
 
 		<NcDialog v-if="showRestoreDialog"
-			:name="t('contractmanager', 'Vertrag wiederherstellen')"
+			:name="t('nc_vertragswerk', 'Vertrag wiederherstellen')"
 			@close="showRestoreDialog = false">
-			<p>{{ t('contractmanager', 'Vertrag "{name}" wiederherstellen?', { name: restoringContract ? restoringContract.name : '' }) }}</p>
+			<p>{{ t('nc_vertragswerk', 'Vertrag "{name}" wiederherstellen?', { name: restoringContract ? restoringContract.name : '' }) }}</p>
 			<template #actions>
 				<NcButton @click="showRestoreDialog = false">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="primary" @click="confirmRestore">
-					{{ t('contractmanager', 'Wiederherstellen') }}
+					{{ t('nc_vertragswerk', 'Wiederherstellen') }}
 				</NcButton>
 			</template>
 		</NcDialog>

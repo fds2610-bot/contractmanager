@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Db\Category;
-use OCA\ContractManager\Db\CategoryMapper;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Db\ReminderOptOutMapper;
-use OCA\ContractManager\Service\ContractImportService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\Db\Category;
+use OCA\NcVertragswerk\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
+use OCA\NcVertragswerk\Service\ContractImportService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\Folder;
 use OCP\Files\IRootFolder;

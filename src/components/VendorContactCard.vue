@@ -24,19 +24,19 @@
 				</li>
 			</ul>
 			<p v-else class="vendor-contact-card__empty">
-				{{ t('contractmanager', 'Im Kontakt sind keine E-Mail-Adresse, Telefonnummer oder Adresse hinterlegt.') }}
+				{{ t('nc_vertragswerk', 'Im Kontakt sind keine E-Mail-Adresse, Telefonnummer oder Adresse hinterlegt.') }}
 			</p>
 			<a v-if="contact.contactsUrl"
 				class="vendor-contact-card__open"
 				:href="contact.contactsUrl"
 				target="_blank"
 				rel="noopener noreferrer">
-				{{ t('contractmanager', 'In Kontakte öffnen') }}
+				{{ t('nc_vertragswerk', 'In Kontakte öffnen') }}
 				<OpenInNewIcon :size="14" />
 			</a>
 		</template>
 		<NcNoteCard v-else type="info">
-			{{ t('contractmanager', 'Der verknüpfte Kontakt ist in Ihren Adressbüchern nicht verfügbar.') }}
+			{{ t('nc_vertragswerk', 'Der verknüpfte Kontakt ist in Ihren Adressbüchern nicht verfügbar.') }}
 		</NcNoteCard>
 	</div>
 </template>

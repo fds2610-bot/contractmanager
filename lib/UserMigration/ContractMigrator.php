@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\UserMigration;
+namespace OCA\NcVertragswerk\UserMigration;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\ContractExportService;
-use OCA\ContractManager\Service\ContractImportService;
-use OCA\ContractManager\Service\ValidationException;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\ContractExportService;
+use OCA\NcVertragswerk\Service\ContractImportService;
+use OCA\NcVertragswerk\Service\ValidationException;
 use OCP\IL10N;
 use OCP\IUser;
 use OCP\UserMigration\IExportDestination;

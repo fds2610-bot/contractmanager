@@ -1,65 +1,65 @@
 <template>
 	<div class="settings-view">
 		<div class="settings-view__header">
-			<h2>{{ t('contractmanager', 'Einstellungen') }}</h2>
+			<h2>{{ t('nc_vertragswerk', 'Einstellungen') }}</h2>
 		</div>
 
 		<div class="settings-layout">
 			<nav class="settings-nav">
 				<div class="settings-nav-group">
-					{{ t('contractmanager', 'Meine Einstellungen') }}
+					{{ t('nc_vertragswerk', 'Meine Einstellungen') }}
 				</div>
 				<button type="button"
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'notifications' }"
 					@click="activeSection = 'notifications'">
-					<BellIcon :size="18" /> {{ t('contractmanager', 'Benachrichtigungen') }}
+					<BellIcon :size="18" /> {{ t('nc_vertragswerk', 'Benachrichtigungen') }}
 				</button>
 				<button type="button"
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'amount' }"
 					@click="activeSection = 'amount'">
-					<CashMultipleIcon :size="18" /> {{ t('contractmanager', 'Betragsangabe') }}
+					<CashMultipleIcon :size="18" /> {{ t('nc_vertragswerk', 'Betragsangabe') }}
 				</button>
 				<button type="button"
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'backup' }"
 					@click="activeSection = 'backup'">
-					<BackupRestoreIcon :size="18" /> {{ t('contractmanager', 'Auto-Backup') }}
+					<BackupRestoreIcon :size="18" /> {{ t('nc_vertragswerk', 'Auto-Backup') }}
 				</button>
 				<button type="button"
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'calendar' }"
 					@click="activeSection = 'calendar'">
-					<CalendarIcon :size="18" /> {{ t('contractmanager', 'Kalender-Abo') }}
+					<CalendarIcon :size="18" /> {{ t('nc_vertragswerk', 'Kalender-Abo') }}
 				</button>
 				<template v-if="$isAdmin">
 					<div class="settings-nav-group">
-						{{ t('contractmanager', 'Administration') }}
+						{{ t('nc_vertragswerk', 'Administration') }}
 					</div>
 					<button type="button"
 						class="settings-nav-item"
 						:class="{ active: activeSection === 'permissions' }"
 						@click="activeSection = 'permissions'">
-						<ShieldIcon :size="18" /> {{ t('contractmanager', 'Berechtigungen') }}
+						<ShieldIcon :size="18" /> {{ t('nc_vertragswerk', 'Berechtigungen') }}
 					</button>
 					<button type="button"
 						class="settings-nav-item"
 						:class="{ active: activeSection === 'transfer' }"
 						@click="activeSection = 'transfer'">
-						<SwapHorizontalIcon :size="18" /> {{ t('contractmanager', 'Verträge übertragen') }}
+						<SwapHorizontalIcon :size="18" /> {{ t('nc_vertragswerk', 'Verträge übertragen') }}
 					</button>
 					<button type="button"
 						class="settings-nav-item"
 						:class="{ active: activeSection === 'admin' }"
 						@click="activeSection = 'admin'">
-						<CogIcon :size="18" /> {{ t('contractmanager', 'Administrator-Einstellungen') }}
+						<CogIcon :size="18" /> {{ t('nc_vertragswerk', 'Administrator-Einstellungen') }}
 					</button>
 					<button type="button"
 						class="settings-nav-item"
 						:class="{ active: activeSection === 'categories' }"
 						@click="activeSection = 'categories'">
-						<TagIcon :size="18" /> {{ t('contractmanager', 'Kategorien') }}
+						<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Kategorien') }}
 					</button>
 				</template>
 				<button v-else
@@ -67,41 +67,41 @@
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'categories' }"
 					@click="activeSection = 'categories'">
-					<TagIcon :size="18" /> {{ t('contractmanager', 'Kategorien') }}
+					<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Kategorien') }}
 				</button>
 			</nav>
 
 			<div class="settings-content">
 				<!-- User Settings -->
 				<div v-show="activeSection === 'notifications'" class="settings-section">
-					<h3>{{ t('contractmanager', 'Benachrichtigungen') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Benachrichtigungen') }}</h3>
 					<p class="settings-description">
-						{{ t('contractmanager', 'Legen Sie fest, für welche Verträge Sie Erinnerungen erhalten möchten, wie früh und auf welchem Weg.') }}
+						{{ t('nc_vertragswerk', 'Legen Sie fest, für welche Verträge Sie Erinnerungen erhalten möchten, wie früh und auf welchem Weg.') }}
 					</p>
 
 					<!-- Reminder mode: which contracts -->
 					<div class="settings-item">
-						<label class="settings-label">{{ t('contractmanager', 'Erinnerungen für') }}</label>
+						<label class="settings-label">{{ t('nc_vertragswerk', 'Erinnerungen für') }}</label>
 						<NcCheckboxRadioSwitch v-model="reminderMode"
 							value="all"
 							name="reminderMode"
 							type="radio"
 							@update:model-value="onReminderModeChange">
-							{{ t('contractmanager', 'Alle Verträge, die ich sehe') }}
+							{{ t('nc_vertragswerk', 'Alle Verträge, die ich sehe') }}
 						</NcCheckboxRadioSwitch>
 						<NcCheckboxRadioSwitch v-model="reminderMode"
 							value="own"
 							name="reminderMode"
 							type="radio"
 							@update:model-value="onReminderModeChange">
-							{{ t('contractmanager', 'Nur meine eigenen Verträge') }}
+							{{ t('nc_vertragswerk', 'Nur meine eigenen Verträge') }}
 						</NcCheckboxRadioSwitch>
 						<NcCheckboxRadioSwitch v-model="reminderMode"
 							value="none"
 							name="reminderMode"
 							type="radio"
 							@update:model-value="onReminderModeChange">
-							{{ t('contractmanager', 'Keine Erinnerungen') }}
+							{{ t('nc_vertragswerk', 'Keine Erinnerungen') }}
 						</NcCheckboxRadioSwitch>
 					</div>
 
@@ -109,48 +109,48 @@
 						<!-- Channel: e-mail -->
 						<div class="settings-item">
 							<NcCheckboxRadioSwitch v-model="emailReminder" @update:model-value="onEmailReminderChange">
-								{{ t('contractmanager', 'Per E-Mail benachrichtigen') }}
+								{{ t('nc_vertragswerk', 'Per E-Mail benachrichtigen') }}
 							</NcCheckboxRadioSwitch>
 							<p class="settings-description">
-								{{ t('contractmanager', 'E-Mails gehen an Ihre in Nextcloud hinterlegte Adresse.') }}
+								{{ t('nc_vertragswerk', 'E-Mails gehen an Ihre in Nextcloud hinterlegte Adresse.') }}
 							</p>
 						</div>
 
 						<!-- Channel: personal Talk chat -->
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Eigener Nextcloud Talk Chat (optional)') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Eigener Nextcloud Talk Chat (optional)') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Token eines Chats, in dem Sie Erinnerungen erhalten möchten (aus der Chat-URL). Leer lassen, um Talk nicht zu nutzen.') }}
+								{{ t('nc_vertragswerk', 'Token eines Chats, in dem Sie Erinnerungen erhalten möchten (aus der Chat-URL). Leer lassen, um Talk nicht zu nutzen.') }}
 							</p>
 							<NcTextField v-model="userReminders.talkChatToken"
-								:placeholder="t('contractmanager', 'z.B. abc123xyz')"
+								:placeholder="t('nc_vertragswerk', 'z.B. abc123xyz')"
 								class="settings-input" />
 						</div>
 
 						<!-- Personal lead time -->
 						<div class="settings-item reminder-days">
-							<label class="settings-label">{{ t('contractmanager', 'Eigene Vorlaufzeit (Tage vor der Frist)') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Eigene Vorlaufzeit (Tage vor der Frist)') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Leer lassen, um die Standardwerte des Administrators zu verwenden.') }}
+								{{ t('nc_vertragswerk', 'Leer lassen, um die Standardwerte des Administrators zu verwenden.') }}
 							</p>
 							<div class="reminder-inputs">
 								<div class="reminder-input-group">
-									<label>{{ t('contractmanager', 'Erste Erinnerung') }}</label>
+									<label>{{ t('nc_vertragswerk', 'Erste Erinnerung') }}</label>
 									<NcTextField v-model="userReminders.reminderDays1Personal"
 										type="number"
 										:min="1"
 										:placeholder="String(reminderDefaults.days1)"
 										class="number-input" />
-									<span class="unit">{{ t('contractmanager', 'Tage') }}</span>
+									<span class="unit">{{ t('nc_vertragswerk', 'Tage') }}</span>
 								</div>
 								<div class="reminder-input-group">
-									<label>{{ t('contractmanager', 'Letzte Erinnerung') }}</label>
+									<label>{{ t('nc_vertragswerk', 'Letzte Erinnerung') }}</label>
 									<NcTextField v-model="userReminders.reminderDays2Personal"
 										type="number"
 										:min="1"
 										:placeholder="String(reminderDefaults.days2)"
 										class="number-input" />
-									<span class="unit">{{ t('contractmanager', 'Tage') }}</span>
+									<span class="unit">{{ t('nc_vertragswerk', 'Tage') }}</span>
 								</div>
 							</div>
 						</div>
@@ -160,16 +160,16 @@
 								<template #icon>
 									<NcLoadingIcon v-if="savingUserReminders" :size="20" />
 								</template>
-								{{ t('contractmanager', 'Speichern') }}
+								{{ t('nc_vertragswerk', 'Speichern') }}
 							</NcButton>
 						</div>
 					</template>
 				</div>
 
 				<div v-show="activeSection === 'amount'" class="settings-section">
-					<h3>{{ t('contractmanager', 'Betragsangabe') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Betragsangabe') }}</h3>
 					<p class="settings-description">
-						{{ t('contractmanager', 'Standard für neue Verträge. Pro Vertrag kann davon abgewichen werden.') }}
+						{{ t('nc_vertragswerk', 'Standard für neue Verträge. Pro Vertrag kann davon abgewichen werden.') }}
 					</p>
 					<div class="settings-item">
 						<NcCheckboxRadioSwitch v-model="defaultAmountType"
@@ -177,50 +177,50 @@
 							name="defaultAmountType"
 							type="radio"
 							@update:model-value="onDefaultAmountTypeChange">
-							{{ t('contractmanager', 'Netto') }}
+							{{ t('nc_vertragswerk', 'Netto') }}
 						</NcCheckboxRadioSwitch>
 						<NcCheckboxRadioSwitch v-model="defaultAmountType"
 							value="brutto"
 							name="defaultAmountType"
 							type="radio"
 							@update:model-value="onDefaultAmountTypeChange">
-							{{ t('contractmanager', 'Brutto') }}
+							{{ t('nc_vertragswerk', 'Brutto') }}
 						</NcCheckboxRadioSwitch>
 					</div>
 				</div>
 
 				<!-- Auto-Backup (#296) -->
 				<div v-show="activeSection === 'backup'" class="settings-section">
-					<h3>{{ t('contractmanager', 'Automatisches Backup') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Automatisches Backup') }}</h3>
 					<p class="settings-description">
-						{{ t('contractmanager', 'Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.') }}
+						{{ t('nc_vertragswerk', 'Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.') }}
 					</p>
 					<div class="settings-item">
 						<NcCheckboxRadioSwitch :model-value="backupEnabled" @update:model-value="onBackupEnabledChange">
-							{{ t('contractmanager', 'Automatisches Backup aktivieren') }}
+							{{ t('nc_vertragswerk', 'Automatisches Backup aktivieren') }}
 						</NcCheckboxRadioSwitch>
 					</div>
 					<template v-if="backupEnabled">
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Zielordner') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Zielordner') }}</label>
 							<input v-model="backupFolder"
 								class="settings-input"
 								placeholder="/VertragsWerk-Backup"
 								@blur="onBackupFolderChange">
 						</div>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Intervall') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Intervall') }}</label>
 							<select v-model="backupInterval" class="settings-input" @change="onBackupIntervalChange">
-								<option value="daily">{{ t('contractmanager', 'Täglich') }}</option>
-								<option value="weekly">{{ t('contractmanager', 'Wöchentlich') }}</option>
-								<option value="monthly">{{ t('contractmanager', 'Monatlich') }}</option>
+								<option value="daily">{{ t('nc_vertragswerk', 'Täglich') }}</option>
+								<option value="weekly">{{ t('nc_vertragswerk', 'Wöchentlich') }}</option>
+								<option value="monthly">{{ t('nc_vertragswerk', 'Monatlich') }}</option>
 							</select>
 						</div>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Uhrzeit') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Uhrzeit') }}</label>
 							<select v-model="backupHour" class="settings-input" @change="onBackupHourChange">
 								<option value="">
-									{{ t('contractmanager', 'Keine feste Uhrzeit') }}
+									{{ t('nc_vertragswerk', 'Keine feste Uhrzeit') }}
 								</option>
 								<option v-for="hour in 24" :key="hour" :value="String(hour - 1)">
 									{{ String(hour - 1).padStart(2, '0') }}:00
@@ -228,14 +228,14 @@
 							</select>
 						</div>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.') }}
+							{{ t('nc_vertragswerk', 'Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.') }}
 						</p>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Zuletzt gesichert') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Zuletzt gesichert') }}</label>
 							<span class="settings-value">{{ lastBackupText }}</span>
 						</div>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Nächste Sicherung') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Nächste Sicherung') }}</label>
 							<span class="settings-value">{{ nextBackupText }}</span>
 						</div>
 						<div class="settings-item">
@@ -244,17 +244,17 @@
 									<NcLoadingIcon v-if="backingUpNow" :size="20" />
 									<BackupRestoreIcon v-else :size="20" />
 								</template>
-								{{ t('contractmanager', 'Jetzt sichern') }}
+								{{ t('nc_vertragswerk', 'Jetzt sichern') }}
 							</NcButton>
 						</div>
 					</template>
 
 					<template v-if="canEdit">
 						<h3 class="settings-subheading">
-							{{ t('contractmanager', 'Backup einlesen') }}
+							{{ t('nc_vertragswerk', 'Backup einlesen') }}
 						</h3>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Liest eine Sicherungsdatei (JSON) aus Ihren Nextcloud-Dateien ein, auch aus einer anderen Nextcloud. Die Verträge gehören danach Ihnen. Verträge, die Sie schon haben (gleicher Name, Anbieter und Beginn), werden übersprungen.') }}
+							{{ t('nc_vertragswerk', 'Liest eine Sicherungsdatei (JSON) aus Ihren Nextcloud-Dateien ein, auch aus einer anderen Nextcloud. Die Verträge gehören danach Ihnen. Verträge, die Sie schon haben (gleicher Name, Anbieter und Beginn), werden übersprungen.') }}
 						</p>
 						<div class="settings-item">
 							<NcButton variant="secondary" :disabled="importBusy" @click="pickImportFile">
@@ -262,7 +262,7 @@
 									<NcLoadingIcon v-if="importBusy" :size="20" />
 									<UploadIcon v-else :size="20" />
 								</template>
-								{{ t('contractmanager', 'Sicherungsdatei wählen') }}
+								{{ t('nc_vertragswerk', 'Sicherungsdatei wählen') }}
 							</NcButton>
 						</div>
 					</template>
@@ -270,13 +270,13 @@
 
 				<!-- Kalender-Abo (#68) -->
 				<div v-show="activeSection === 'calendar'" class="settings-section">
-					<h3>{{ t('contractmanager', 'Kalender-Abo') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Kalender-Abo') }}</h3>
 					<p class="settings-description">
-						{{ t('contractmanager', 'Abonnieren Sie Ihre Vertragsfristen als schreibgeschützten Kalender in der Nextcloud-Kalender-App. Pro Vertrag erscheint ein Ganztags-Termin an der Kündigungsfrist (bzw. dem Vertragsende). Enthalten sind nur die Verträge, für die Sie Erinnerungen erhalten – so läuft der Kalender nicht über.') }}
+						{{ t('nc_vertragswerk', 'Abonnieren Sie Ihre Vertragsfristen als schreibgeschützten Kalender in der Nextcloud-Kalender-App. Pro Vertrag erscheint ein Ganztags-Termin an der Kündigungsfrist (bzw. dem Vertragsende). Enthalten sind nur die Verträge, für die Sie Erinnerungen erhalten – so läuft der Kalender nicht über.') }}
 					</p>
 					<template v-if="calendarFeedUrl">
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Abo-URL') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Abo-URL') }}</label>
 							<div class="calendar-feed-row">
 								<input ref="calendarFeedInput"
 									class="settings-input calendar-feed-url"
@@ -284,19 +284,19 @@
 									readonly
 									:value="calendarFeedUrl">
 								<NcButton variant="secondary" @click="copyCalendarFeedUrl">
-									{{ t('contractmanager', 'Kopieren') }}
+									{{ t('nc_vertragswerk', 'Kopieren') }}
 								</NcButton>
 							</div>
 							<p class="settings-description">
-								{{ t('contractmanager', 'In der Kalender-App: „Neues Abonnement” bzw. „Abonnement aus Link” und diese URL einfügen.') }}
+								{{ t('nc_vertragswerk', 'In der Kalender-App: „Neues Abonnement” bzw. „Abonnement aus Link” und diese URL einfügen.') }}
 							</p>
 						</div>
 						<div class="settings-item">
 							<NcButton variant="tertiary" @click="resetCalendarFeed">
-								{{ t('contractmanager', 'URL neu erzeugen') }}
+								{{ t('nc_vertragswerk', 'URL neu erzeugen') }}
 							</NcButton>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Die bisherige URL wird dabei ungültig. Nutzen Sie das, falls die URL versehentlich geteilt wurde.') }}
+								{{ t('nc_vertragswerk', 'Die bisherige URL wird dabei ungültig. Nutzen Sie das, falls die URL versehentlich geteilt wurde.') }}
 							</p>
 						</div>
 					</template>
@@ -305,10 +305,10 @@
 							<template #icon>
 								<NcLoadingIcon v-if="generatingCalendarFeed" :size="20" />
 							</template>
-							{{ t('contractmanager', 'Abo-URL erzeugen') }}
+							{{ t('nc_vertragswerk', 'Abo-URL erzeugen') }}
 						</NcButton>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Die URL enthält einen geheimen Zugangs-Token. Geben Sie sie nicht weiter.') }}
+							{{ t('nc_vertragswerk', 'Die URL enthält einen geheimen Zugangs-Token. Geben Sie sie nicht weiter.') }}
 						</p>
 					</div>
 				</div>
@@ -319,19 +319,19 @@
 					<div v-show="activeSection === 'permissions'" class="settings-section admin-section">
 						<h3>
 							<ShieldIcon :size="20" class="admin-icon" />
-							{{ t('contractmanager', 'Berechtigungen') }}
+							{{ t('nc_vertragswerk', 'Berechtigungen') }}
 						</h3>
 
 						<!-- Editor Permission -->
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Editor-Berechtigung') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Editor-Berechtigung') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Benutzer und Gruppen mit Editor-Rechten können alle sichtbaren Verträge erstellen und bearbeiten.') }}
+								{{ t('nc_vertragswerk', 'Benutzer und Gruppen mit Editor-Rechten können alle sichtbaren Verträge erstellen und bearbeiten.') }}
 							</p>
 							<NcSelect v-model="permissionSettings.editors"
 								:options="searchResults"
 								:loading="searching"
-								:placeholder="t('contractmanager', 'Benutzer oder Gruppen suchen...')"
+								:placeholder="t('nc_vertragswerk', 'Benutzer oder Gruppen suchen...')"
 								:multiple="true"
 								label="displayName"
 								track-by="id"
@@ -343,7 +343,7 @@
 										<AccountIcon v-else :size="20" />
 										<span>{{ option.displayName }}</span>
 										<span class="permission-option-type">
-											{{ option.type === 'group' ? t('contractmanager', 'Gruppe') : t('contractmanager', 'Benutzer') }}
+											{{ option.type === 'group' ? t('nc_vertragswerk', 'Gruppe') : t('nc_vertragswerk', 'Benutzer') }}
 										</span>
 									</div>
 								</template>
@@ -359,14 +359,14 @@
 
 						<!-- Viewer Permission -->
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Viewer-Berechtigung') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Viewer-Berechtigung') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Benutzer und Gruppen mit Viewer-Rechten können alle Verträge nur ansehen.') }}
+								{{ t('nc_vertragswerk', 'Benutzer und Gruppen mit Viewer-Rechten können alle Verträge nur ansehen.') }}
 							</p>
 							<NcSelect v-model="permissionSettings.viewers"
 								:options="searchResults"
 								:loading="searching"
-								:placeholder="t('contractmanager', 'Benutzer oder Gruppen suchen...')"
+								:placeholder="t('nc_vertragswerk', 'Benutzer oder Gruppen suchen...')"
 								:multiple="true"
 								label="displayName"
 								track-by="id"
@@ -378,7 +378,7 @@
 										<AccountIcon v-else :size="20" />
 										<span>{{ option.displayName }}</span>
 										<span class="permission-option-type">
-											{{ option.type === 'group' ? t('contractmanager', 'Gruppe') : t('contractmanager', 'Benutzer') }}
+											{{ option.type === 'group' ? t('nc_vertragswerk', 'Gruppe') : t('nc_vertragswerk', 'Benutzer') }}
 										</span>
 									</div>
 								</template>
@@ -397,17 +397,17 @@
 					<div v-show="activeSection === 'transfer'" class="settings-section admin-section">
 						<h3>
 							<ShieldIcon :size="20" class="admin-icon" />
-							{{ t('contractmanager', 'Verträge übertragen') }}
+							{{ t('nc_vertragswerk', 'Verträge übertragen') }}
 						</h3>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Überträgt die Zuständigkeit für alle Verträge einer Person auf eine andere, zum Beispiel bei einem Mitarbeiterwechsel. „Erstellt von" bleibt unverändert.') }}
+							{{ t('nc_vertragswerk', 'Überträgt die Zuständigkeit für alle Verträge einer Person auf eine andere, zum Beispiel bei einem Mitarbeiterwechsel. „Erstellt von" bleibt unverändert.') }}
 						</p>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Von') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Von') }}</label>
 							<NcSelect v-model="transferFrom"
 								:options="transferUserResults"
 								:loading="transferSearching"
-								:placeholder="t('contractmanager', 'Benutzer suchen...')"
+								:placeholder="t('nc_vertragswerk', 'Benutzer suchen...')"
 								label="displayName"
 								track-by="id"
 								:clearable="true"
@@ -415,15 +415,15 @@
 								@search="onTransferSearch"
 								@update:model-value="onTransferFromChange" />
 							<p v-if="transferCount !== null" class="settings-description">
-								{{ t('contractmanager', 'Betrifft {count} Verträge', { count: transferCount }) }}
+								{{ t('nc_vertragswerk', 'Betrifft {count} Verträge', { count: transferCount }) }}
 							</p>
 						</div>
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Auf') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Auf') }}</label>
 							<NcSelect v-model="transferTo"
 								:options="transferUserResults"
 								:loading="transferSearching"
-								:placeholder="t('contractmanager', 'Benutzer suchen...')"
+								:placeholder="t('nc_vertragswerk', 'Benutzer suchen...')"
 								label="displayName"
 								track-by="id"
 								:clearable="true"
@@ -435,19 +435,19 @@
 								<template #icon>
 									<NcLoadingIcon v-if="transferring" :size="20" />
 								</template>
-								{{ t('contractmanager', 'Übertragen') }}
+								{{ t('nc_vertragswerk', 'Übertragen') }}
 							</NcButton>
 						</div>
 						<NcDialog v-if="showTransferDialog"
-							:name="t('contractmanager', 'Verträge übertragen')"
-							:message="t('contractmanager', '{count} Verträge von {from} auf {to} übertragen?', { count: transferCount || 0, from: transferFrom ? transferFrom.displayName : '', to: transferTo ? transferTo.displayName : '' })"
+							:name="t('nc_vertragswerk', 'Verträge übertragen')"
+							:message="t('nc_vertragswerk', '{count} Verträge von {from} auf {to} übertragen?', { count: transferCount || 0, from: transferFrom ? transferFrom.displayName : '', to: transferTo ? transferTo.displayName : '' })"
 							@update:open="showTransferDialog = $event">
 							<template #actions>
 								<NcButton @click="showTransferDialog = false">
-									{{ t('contractmanager', 'Abbrechen') }}
+									{{ t('nc_vertragswerk', 'Abbrechen') }}
 								</NcButton>
 								<NcButton variant="primary" @click="doTransfer">
-									{{ t('contractmanager', 'Übertragen') }}
+									{{ t('nc_vertragswerk', 'Übertragen') }}
 								</NcButton>
 							</template>
 						</NcDialog>
@@ -456,7 +456,7 @@
 					<div v-show="activeSection === 'admin'" class="settings-section admin-section">
 						<h3>
 							<ShieldIcon :size="20" class="admin-icon" />
-							{{ t('contractmanager', 'Administrator-Einstellungen') }}
+							{{ t('nc_vertragswerk', 'Administrator-Einstellungen') }}
 						</h3>
 
 						<!-- Reminder link health (overwrite.cli.url) -->
@@ -466,26 +466,26 @@
 								:aria-expanded="reminderLinkExpanded ? 'true' : 'false'"
 								@click="reminderLinkExpanded = !reminderLinkExpanded">
 								<InformationOutlineIcon :size="18" class="reminder-link-summary__icon" />
-								<span>{{ t('contractmanager', 'Hinweis') }}</span>
+								<span>{{ t('nc_vertragswerk', 'Hinweis') }}</span>
 								<ChevronUpIcon v-if="reminderLinkExpanded" :size="18" />
 								<ChevronDownIcon v-else :size="18" />
 							</button>
 							<div v-if="reminderLinkExpanded" class="reminder-link-details">
 								<p class="reminder-link-intro">
-									{{ t('contractmanager', 'Links in Erinnerungs-E-Mails führen eventuell zur falschen Adresse:') }}
+									{{ t('nc_vertragswerk', 'Links in Erinnerungs-E-Mails führen eventuell zur falschen Adresse:') }}
 								</p>
 								<dl class="reminder-link-values">
 									<div>
-										<dt>{{ t('contractmanager', 'Hinterlegt') }}</dt>
+										<dt>{{ t('nc_vertragswerk', 'Hinterlegt') }}</dt>
 										<dd>{{ reminderLink.cliUrl || '—' }}</dd>
 									</div>
 									<div>
-										<dt>{{ t('contractmanager', 'Du nutzt') }}</dt>
+										<dt>{{ t('nc_vertragswerk', 'Du nutzt') }}</dt>
 										<dd>{{ safeAccessHost }}</dd>
 									</div>
 								</dl>
 								<p class="reminder-link-fix">
-									{{ t('contractmanager', 'So korrigierst du das: bei verwaltetem Hosting im Verwaltungs-Panel deines Anbieters, auf einem eigenen Server per Kommandozeile:') }}
+									{{ t('nc_vertragswerk', 'So korrigierst du das: bei verwaltetem Hosting im Verwaltungs-Panel deines Anbieters, auf einem eigenen Server per Kommandozeile:') }}
 								</p>
 								<code class="reminder-link-command">{{ reminderLinkCommand }}</code>
 							</div>
@@ -493,44 +493,44 @@
 
 						<!-- Default reminder lead time -->
 						<div class="settings-item reminder-days">
-							<label class="settings-label">{{ t('contractmanager', 'Standard-Vorlaufzeit (Tage vor Kündigungsfrist)') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Standard-Vorlaufzeit (Tage vor Kündigungsfrist)') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Gilt für alle Benutzer, die keine eigene Vorlaufzeit eingestellt haben.') }}
+								{{ t('nc_vertragswerk', 'Gilt für alle Benutzer, die keine eigene Vorlaufzeit eingestellt haben.') }}
 							</p>
 
 							<div class="reminder-inputs">
 								<div class="reminder-input-group">
-									<label>{{ t('contractmanager', 'Erste Erinnerung') }}</label>
+									<label>{{ t('nc_vertragswerk', 'Erste Erinnerung') }}</label>
 									<NcTextField v-model="adminSettings.reminderDays1"
 										type="number"
 										:min="1"
 										class="number-input"
 										@blur="saveReminderDays('reminderDays1')" />
-									<span class="unit">{{ t('contractmanager', 'Tage') }}</span>
+									<span class="unit">{{ t('nc_vertragswerk', 'Tage') }}</span>
 								</div>
 
 								<div class="reminder-input-group">
-									<label>{{ t('contractmanager', 'Letzte Erinnerung') }}</label>
+									<label>{{ t('nc_vertragswerk', 'Letzte Erinnerung') }}</label>
 									<NcTextField v-model="adminSettings.reminderDays2"
 										type="number"
 										:min="1"
 										class="number-input"
 										@blur="saveReminderDays('reminderDays2')" />
-									<span class="unit">{{ t('contractmanager', 'Tage') }}</span>
+									<span class="unit">{{ t('nc_vertragswerk', 'Tage') }}</span>
 								</div>
 							</div>
 						</div>
 
 						<!-- Successor for contracts of deleted accounts (#299) -->
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'Nachfolger bei gelöschtem Konto') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'Nachfolger bei gelöschtem Konto') }}</label>
 							<p class="settings-description">
-								{{ t('contractmanager', 'Wird ein Konto gelöscht, geht die Zuständigkeit für dessen Verträge an diese Person über. Ohne Angabe bleiben die Verträge unverändert. Private Verträge werden nie automatisch übertragen, sie bleiben für Administratoren sichtbar. Verträge werden dabei nie gelöscht.') }}
+								{{ t('nc_vertragswerk', 'Wird ein Konto gelöscht, geht die Zuständigkeit für dessen Verträge an diese Person über. Ohne Angabe bleiben die Verträge unverändert. Private Verträge werden nie automatisch übertragen, sie bleiben für Administratoren sichtbar. Verträge werden dabei nie gelöscht.') }}
 							</p>
 							<NcSelect v-model="deletionSuccessorOption"
 								:options="transferUserResults"
 								:loading="transferSearching"
-								:placeholder="t('contractmanager', 'Benutzer suchen...')"
+								:placeholder="t('nc_vertragswerk', 'Benutzer suchen...')"
 								label="displayName"
 								track-by="id"
 								:clearable="true"
@@ -539,7 +539,7 @@
 								@search="onTransferSearch"
 								@update:model-value="onDeletionSuccessorChange" />
 							<p class="settings-description">
-								{{ t('contractmanager', 'Denk daran, den Eintrag anzupassen, wenn diese Person selbst das Unternehmen verlässt.') }}
+								{{ t('nc_vertragswerk', 'Denk daran, den Eintrag anzupassen, wenn diese Person selbst das Unternehmen verlässt.') }}
 							</p>
 						</div>
 					</div>
@@ -548,16 +548,16 @@
 					<div v-show="activeSection === 'admin'" class="settings-section admin-section">
 						<h3>
 							<ShieldIcon :size="20" class="admin-icon" />
-							{{ t('contractmanager', 'Zusatzfelder') }}
+							{{ t('nc_vertragswerk', 'Zusatzfelder') }}
 						</h3>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Aktivieren Sie bis zu 3 optionale Zusatzfelder für Verträge.') }}
+							{{ t('nc_vertragswerk', 'Aktivieren Sie bis zu 3 optionale Zusatzfelder für Verträge.') }}
 						</p>
 
 						<div v-for="n in 3" :key="'cf' + n" class="settings-item custom-field-item">
 							<NcCheckboxRadioSwitch :model-value="customFieldEnabled(n)"
 								@update:model-value="toggleCustomField(n, $event)">
-								{{ t('contractmanager', 'Zusatzfeld {n}', { n }) }}
+								{{ t('nc_vertragswerk', 'Zusatzfeld {n}', { n }) }}
 							</NcCheckboxRadioSwitch>
 							<NcTextField v-if="customFieldEnabled(n)"
 								v-model="adminSettings['customFieldLabel' + n]"
@@ -571,17 +571,17 @@
 					<div v-show="activeSection === 'admin'" class="settings-section admin-section">
 						<h3>
 							<ShieldIcon :size="20" class="admin-icon" />
-							{{ t('contractmanager', 'KI-Vertragsanalyse') }}
+							{{ t('nc_vertragswerk', 'KI-Vertragsanalyse') }}
 						</h3>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Automatische Erkennung von Vertragsdaten aus PDF-Dokumenten.') }}
+							{{ t('nc_vertragswerk', 'Automatische Erkennung von Vertragsdaten aus PDF-Dokumenten.') }}
 						</p>
 
 						<div class="settings-item">
-							<label class="settings-label">{{ t('contractmanager', 'KI-Provider') }}</label>
+							<label class="settings-label">{{ t('nc_vertragswerk', 'KI-Provider') }}</label>
 							<NcSelect v-model="adminSettings.aiProvider"
 								:options="aiProviderOptions"
-								:placeholder="t('contractmanager', 'Deaktiviert')"
+								:placeholder="t('nc_vertragswerk', 'Deaktiviert')"
 								label="label"
 								track-by="value"
 								:reduce="option => option.value"
@@ -589,26 +589,26 @@
 								class="settings-input" />
 							<p class="ai-status" :class="aiActive ? 'ai-status--active' : 'ai-status--inactive'">
 								{{ aiActive
-									? t('contractmanager', 'Aktiv – Analyse verfügbar')
+									? t('nc_vertragswerk', 'Aktiv – Analyse verfügbar')
 									: (adminSettings.aiProvider
-										? t('contractmanager', 'Inaktiv – kein API-Key gespeichert')
-										: t('contractmanager', 'Deaktiviert – kein Provider gewählt')) }}
+										? t('nc_vertragswerk', 'Inaktiv – kein API-Key gespeichert')
+										: t('nc_vertragswerk', 'Deaktiviert – kein Provider gewählt')) }}
 							</p>
 						</div>
 
 						<template v-if="adminSettings.aiProvider">
 							<div class="settings-item">
-								<label class="settings-label">{{ t('contractmanager', 'API Key') }}</label>
+								<label class="settings-label">{{ t('nc_vertragswerk', 'API Key') }}</label>
 								<NcTextField v-model="adminSettings.aiApiKey"
 									type="password"
-									:placeholder="t('contractmanager', 'API Key eingeben')"
+									:placeholder="t('nc_vertragswerk', 'API Key eingeben')"
 									class="settings-input" />
 							</div>
 
 							<div class="settings-item">
-								<label class="settings-label">{{ t('contractmanager', 'API URL') }}</label>
+								<label class="settings-label">{{ t('nc_vertragswerk', 'API URL') }}</label>
 								<p class="settings-description">
-									{{ t('contractmanager', 'Standard-URL wird automatisch gesetzt. Für Ollama z.B. http://localhost:11434/v1') }}
+									{{ t('nc_vertragswerk', 'Standard-URL wird automatisch gesetzt. Für Ollama z.B. http://localhost:11434/v1') }}
 								</p>
 								<NcTextField v-model="adminSettings.aiApiUrl"
 									:placeholder="aiDefaultUrl"
@@ -616,7 +616,7 @@
 							</div>
 
 							<div class="settings-item">
-								<label class="settings-label">{{ t('contractmanager', 'Modell') }}</label>
+								<label class="settings-label">{{ t('nc_vertragswerk', 'Modell') }}</label>
 								<NcTextField v-model="adminSettings.aiModel"
 									:placeholder="aiDefaultModel"
 									class="settings-input" />
@@ -628,26 +628,26 @@
 								<template #icon>
 									<NcLoadingIcon v-if="savingAi" :size="20" />
 								</template>
-								{{ t('contractmanager', 'KI-Einstellungen speichern') }}
+								{{ t('nc_vertragswerk', 'KI-Einstellungen speichern') }}
 							</NcButton>
 							<p class="settings-description settings-description--hint">
-								{{ t('contractmanager', 'Provider, API-Key, URL und Modell werden zusammen gespeichert.') }}
+								{{ t('nc_vertragswerk', 'Provider, API-Key, URL und Modell werden zusammen gespeichert.') }}
 							</p>
 						</div>
 					</div>
 
 					<!-- Category Management (Admin only) -->
 					<div v-show="activeSection === 'categories'" class="settings-section">
-						<h3>{{ t('contractmanager', 'Kategorien verwalten') }}</h3>
+						<h3>{{ t('nc_vertragswerk', 'Kategorien verwalten') }}</h3>
 						<p class="settings-description">
-							{{ t('contractmanager', 'Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.') }}
+							{{ t('nc_vertragswerk', 'Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.') }}
 						</p>
 
 						<div class="category-management">
 							<!-- Add new category -->
 							<div class="category-add">
 								<NcTextField v-model="newCategoryName"
-									:placeholder="t('contractmanager', 'Neue Kategorie...')"
+									:placeholder="t('nc_vertragswerk', 'Neue Kategorie...')"
 									class="category-input"
 									@keyup.enter="addCategory" />
 								<NcButton variant="primary"
@@ -656,7 +656,7 @@
 									<template #icon>
 										<PlusIcon :size="20" />
 									</template>
-									{{ t('contractmanager', 'Hinzufügen') }}
+									{{ t('nc_vertragswerk', 'Hinzufügen') }}
 								</NcButton>
 							</div>
 
@@ -705,9 +705,9 @@
 
 				<!-- Categories (read-only for non-admins) -->
 				<div v-if="!$isAdmin" v-show="activeSection === 'categories'" class="settings-section">
-					<h3>{{ t('contractmanager', 'Kategorien') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Kategorien') }}</h3>
 					<p class="settings-description">
-						{{ t('contractmanager', 'Kategorien können nur von Administratoren verwaltet werden.') }}
+						{{ t('nc_vertragswerk', 'Kategorien können nur von Administratoren verwaltet werden.') }}
 					</p>
 
 					<div class="category-list">
@@ -722,35 +722,35 @@
 		</div>
 
 		<NcDialog v-if="importPreview"
-			:name="t('contractmanager', 'Backup einlesen?')"
+			:name="t('nc_vertragswerk', 'Backup einlesen?')"
 			@close="closeImportDialog">
 			<p class="import-file">
 				{{ importPath }}
 			</p>
 			<ul class="import-summary">
-				<li>{{ n('contractmanager', '%n Vertrag wird eingelesen', '%n Verträge werden eingelesen', importPreview.contracts) }}</li>
+				<li>{{ n('nc_vertragswerk', '%n Vertrag wird eingelesen', '%n Verträge werden eingelesen', importPreview.contracts) }}</li>
 				<li v-if="importPreview.duplicates > 0">
-					{{ n('contractmanager', '%n Vertrag ist schon vorhanden und wird übersprungen', '%n Verträge sind schon vorhanden und werden übersprungen', importPreview.duplicates) }}
+					{{ n('nc_vertragswerk', '%n Vertrag ist schon vorhanden und wird übersprungen', '%n Verträge sind schon vorhanden und werden übersprungen', importPreview.duplicates) }}
 				</li>
 				<li v-if="importPreview.inTrash > 0">
-					{{ n('contractmanager', '%n Vertrag liegt im Papierkorb und wird übersprungen. Stellen Sie ihn dort wieder her.', '%n Verträge liegen im Papierkorb und werden übersprungen. Stellen Sie sie dort wieder her.', importPreview.inTrash) }}
+					{{ n('nc_vertragswerk', '%n Vertrag liegt im Papierkorb und wird übersprungen. Stellen Sie ihn dort wieder her.', '%n Verträge liegen im Papierkorb und werden übersprungen. Stellen Sie sie dort wieder her.', importPreview.inTrash) }}
 				</li>
 				<li v-if="importPreview.invalid > 0">
-					{{ n('contractmanager', '%n Eintrag ist unvollständig und wird übersprungen', '%n Einträge sind unvollständig und werden übersprungen', importPreview.invalid) }}
+					{{ n('nc_vertragswerk', '%n Eintrag ist unvollständig und wird übersprungen', '%n Einträge sind unvollständig und werden übersprungen', importPreview.invalid) }}
 				</li>
 				<li v-if="importPreview.categories > 0">
-					{{ n('contractmanager', '%n Kategorie wird neu angelegt', '%n Kategorien werden neu angelegt', importPreview.categories) }}
+					{{ n('nc_vertragswerk', '%n Kategorie wird neu angelegt', '%n Kategorien werden neu angelegt', importPreview.categories) }}
 				</li>
 				<li v-if="importPreview.missingFiles > 0">
-					{{ n('contractmanager', 'Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren.', 'Bei %n Verträgen wurden verknüpfte Dokumente oder Ordner hier nicht gefunden. Die Pfade bleiben erhalten, die Dateien müssen Sie selbst nachkopieren.', importPreview.missingFiles) }}
+					{{ n('nc_vertragswerk', 'Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren.', 'Bei %n Verträgen wurden verknüpfte Dokumente oder Ordner hier nicht gefunden. Die Pfade bleiben erhalten, die Dateien müssen Sie selbst nachkopieren.', importPreview.missingFiles) }}
 				</li>
 				<li v-if="importPreview.unknownUsers > 0">
-					{{ n('contractmanager', 'Bei %n Vertrag gibt es den Zuständigen hier nicht, das Feld bleibt leer.', 'Bei %n Verträgen gibt es den Zuständigen hier nicht, das Feld bleibt leer.', importPreview.unknownUsers) }}
+					{{ n('nc_vertragswerk', 'Bei %n Vertrag gibt es den Zuständigen hier nicht, das Feld bleibt leer.', 'Bei %n Verträgen gibt es den Zuständigen hier nicht, das Feld bleibt leer.', importPreview.unknownUsers) }}
 				</li>
 			</ul>
 			<template #actions>
 				<NcButton @click="closeImportDialog">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="primary"
 					:disabled="importBusy || importPreview.contracts === 0"
@@ -758,21 +758,21 @@
 					<template v-if="importBusy" #icon>
 						<NcLoadingIcon :size="20" />
 					</template>
-					{{ t('contractmanager', 'Einlesen') }}
+					{{ t('nc_vertragswerk', 'Einlesen') }}
 				</NcButton>
 			</template>
 		</NcDialog>
 
 		<NcDialog v-if="showDeleteCategoryDialog"
-			:name="t('contractmanager', 'Kategorie löschen')"
+			:name="t('nc_vertragswerk', 'Kategorie löschen')"
 			@close="showDeleteCategoryDialog = false">
-			<p>{{ t('contractmanager', 'Kategorie "{name}" wirklich löschen?', { name: deletingCategory ? deletingCategory.name : '' }) }}</p>
+			<p>{{ t('nc_vertragswerk', 'Kategorie "{name}" wirklich löschen?', { name: deletingCategory ? deletingCategory.name : '' }) }}</p>
 			<template #actions>
 				<NcButton @click="showDeleteCategoryDialog = false">
-					{{ t('contractmanager', 'Abbrechen') }}
+					{{ t('nc_vertragswerk', 'Abbrechen') }}
 				</NcButton>
 				<NcButton variant="error" @click="executeDeleteCategory">
-					{{ t('contractmanager', 'Löschen') }}
+					{{ t('nc_vertragswerk', 'Löschen') }}
 				</NcButton>
 			</template>
 		</NcDialog>
@@ -925,29 +925,29 @@ export default {
 		...mapState(useContractsStore, ['canEdit']),
 		customFieldPlaceholders() {
 			return [
-				t('contractmanager', 'z.B. Versicherungsnummer'),
-				t('contractmanager', 'z.B. Zugeordnet an'),
-				t('contractmanager', 'z.B. Kostenstelle'),
+				t('nc_vertragswerk', 'z.B. Versicherungsnummer'),
+				t('nc_vertragswerk', 'z.B. Zugeordnet an'),
+				t('nc_vertragswerk', 'z.B. Kostenstelle'),
 			]
 		},
 		// "Last / next backup" display (#397). Both are absolute Unix timestamps
 		// computed by the backend, so the frontend only formats them.
 		lastBackupText() {
 			if (!this.backupLastRun) {
-				return t('contractmanager', 'Noch nie')
+				return t('nc_vertragswerk', 'Noch nie')
 			}
 			return new Date(this.backupLastRun * 1000).toLocaleString(getCanonicalLocale())
 		},
 		nextBackupText() {
 			if (!this.backupNextRun) {
-				return t('contractmanager', 'Nach der ersten Sicherung')
+				return t('nc_vertragswerk', 'Nach der ersten Sicherung')
 			}
 			return new Date(this.backupNextRun * 1000).toLocaleString(getCanonicalLocale())
 		},
 		aiProviderOptions() {
 			return [
 				{ value: 'claude', label: 'Claude (Anthropic)' },
-				{ value: 'openai_compatible', label: t('contractmanager', 'OpenAI-kompatibel (Mistral, Ollama, OpenAI, ...)') },
+				{ value: 'openai_compatible', label: t('nc_vertragswerk', 'OpenAI-kompatibel (Mistral, Ollama, OpenAI, ...)') },
 			]
 		},
 		aiDefaultUrl() {
@@ -1020,10 +1020,10 @@ export default {
 		async saveAdminField(field, value) {
 			try {
 				await SettingsService.updateAdminSettings({ [field]: value })
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save admin setting ' + field + ':', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			}
 		},
 
@@ -1071,10 +1071,10 @@ export default {
 			try {
 				const { calendarFeedUrl } = await SettingsService.resetCalendarFeedToken()
 				this.calendarFeedUrl = calendarFeedUrl
-				showSuccess(t('contractmanager', 'Abo-URL erzeugt'))
+				showSuccess(t('nc_vertragswerk', 'Abo-URL erzeugt'))
 			} catch (error) {
 				console.error('Failed to reset calendar feed token:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			} finally {
 				this.generatingCalendarFeed = false
 			}
@@ -1083,7 +1083,7 @@ export default {
 		async copyCalendarFeedUrl() {
 			try {
 				await navigator.clipboard.writeText(this.calendarFeedUrl)
-				showSuccess(t('contractmanager', 'In die Zwischenablage kopiert'))
+				showSuccess(t('nc_vertragswerk', 'In die Zwischenablage kopiert'))
 			} catch (error) {
 				// Clipboard API can be blocked (e.g. non-secure context) — fall back
 				// to selecting the field so the user can copy manually.
@@ -1091,7 +1091,7 @@ export default {
 				if (input) {
 					input.select()
 				}
-				showError(t('contractmanager', 'Kopieren nicht möglich – bitte manuell markieren'))
+				showError(t('nc_vertragswerk', 'Kopieren nicht möglich – bitte manuell markieren'))
 			}
 		},
 
@@ -1100,10 +1100,10 @@ export default {
 			this.backupEnabled = value
 			try {
 				await SettingsService.updateUserSettings({ backupEnabled: value })
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save backup enabled:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.backupEnabled = previous
 			}
 		},
@@ -1112,10 +1112,10 @@ export default {
 			const previous = this.backupFolder
 			try {
 				await SettingsService.updateUserSettings({ backupFolder: this.backupFolder })
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save backup folder:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.backupFolder = previous
 			}
 		},
@@ -1129,10 +1129,10 @@ export default {
 				if (typeof updated.backupNextRun === 'number') {
 					this.backupNextRun = updated.backupNextRun
 				}
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save backup interval:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.backupInterval = previous
 			}
 		},
@@ -1146,10 +1146,10 @@ export default {
 					this.backupNextRun = updated.backupNextRun
 				}
 				this.savedBackupHour = this.backupHour
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save backup hour:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.backupHour = this.savedBackupHour
 			}
 		},
@@ -1157,11 +1157,11 @@ export default {
 		async pickImportFile() {
 			let path
 			try {
-				path = await getFilePickerBuilder(t('contractmanager', 'Sicherungsdatei wählen'))
+				path = await getFilePickerBuilder(t('nc_vertragswerk', 'Sicherungsdatei wählen'))
 					.setMultiSelect(false)
 					.setMimeTypeFilter(['application/json'])
 					.addButton({
-						label: t('contractmanager', 'Auswählen'),
+						label: t('nc_vertragswerk', 'Auswählen'),
 						variant: 'primary',
 						callback: () => {},
 					})
@@ -1180,7 +1180,7 @@ export default {
 				this.importPath = path
 			} catch (error) {
 				console.error('Import preview failed:', error)
-				showError(error?.response?.data?.error || t('contractmanager', 'Die Datei konnte nicht gelesen werden.'))
+				showError(error?.response?.data?.error || t('nc_vertragswerk', 'Die Datei konnte nicht gelesen werden.'))
 			} finally {
 				this.importBusy = false
 			}
@@ -1191,11 +1191,11 @@ export default {
 			try {
 				const summary = await ImportService.import(this.importPath)
 				this.closeImportDialog()
-				showSuccess(n('contractmanager', '%n Vertrag eingelesen', '%n Verträge eingelesen', summary.contracts))
+				showSuccess(n('nc_vertragswerk', '%n Vertrag eingelesen', '%n Verträge eingelesen', summary.contracts))
 				await Promise.all([this.fetchContracts(), this.fetchArchivedContracts(), this.fetchCategories()])
 			} catch (error) {
 				console.error('Import failed:', error)
-				showError(error?.response?.data?.error || t('contractmanager', 'Einlesen fehlgeschlagen'))
+				showError(error?.response?.data?.error || t('nc_vertragswerk', 'Einlesen fehlgeschlagen'))
 			} finally {
 				this.importBusy = false
 			}
@@ -1213,10 +1213,10 @@ export default {
 				const { backupLastRun, backupNextRun } = await SettingsService.triggerBackupNow()
 				this.backupLastRun = backupLastRun
 				this.backupNextRun = backupNextRun
-				showSuccess(t('contractmanager', 'Sicherung erstellt'))
+				showSuccess(t('nc_vertragswerk', 'Sicherung erstellt'))
 			} catch (error) {
 				console.error('Failed to trigger backup:', error)
-				showError(t('contractmanager', 'Sicherung fehlgeschlagen'))
+				showError(t('nc_vertragswerk', 'Sicherung fehlgeschlagen'))
 			} finally {
 				this.backingUpNow = false
 			}
@@ -1226,10 +1226,10 @@ export default {
 			const previous = this.reminderMode
 			try {
 				await SettingsService.updateUserSettings({ reminderMode: value })
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save reminder mode:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.reminderMode = previous
 			}
 		},
@@ -1245,10 +1245,10 @@ export default {
 					reminderDays1Personal: days1 === '' ? 0 : parseInt(days1, 10),
 					reminderDays2Personal: days2 === '' ? 0 : parseInt(days2, 10),
 				})
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save reminder settings:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			} finally {
 				this.savingUserReminders = false
 			}
@@ -1260,7 +1260,7 @@ export default {
 				await SettingsService.updateUserSettings({ defaultAmountType: this.defaultAmountType })
 			} catch (error) {
 				console.error('Failed to save default amount type:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.defaultAmountType = previous
 			}
 		},
@@ -1383,13 +1383,13 @@ export default {
 			this.transferring = true
 			try {
 				const count = await ContractService.transfer(this.principalUid(this.transferFrom), this.principalUid(this.transferTo))
-				showSuccess(t('contractmanager', '{count} Verträge übertragen', { count }))
+				showSuccess(t('nc_vertragswerk', '{count} Verträge übertragen', { count }))
 				this.transferFrom = null
 				this.transferTo = null
 				this.transferCount = null
 			} catch (e) {
 				console.error('Transfer failed:', e)
-				showError(t('contractmanager', 'Übertragung fehlgeschlagen'))
+				showError(t('nc_vertragswerk', 'Übertragung fehlgeschlagen'))
 			} finally {
 				this.transferring = false
 			}
@@ -1409,20 +1409,20 @@ export default {
 				await SettingsService.updatePermissionSettings({
 					[field]: ids,
 				})
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save permission settings:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			}
 		},
 
 		async onEmailReminderChange(value) {
 			try {
 				await SettingsService.updateUserSettings({ emailReminder: value })
-				showSuccess(t('contractmanager', 'Einstellung gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
 			} catch (error) {
 				console.error('Failed to save user settings:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.emailReminder = !value
 			}
 		},
@@ -1445,10 +1445,10 @@ export default {
 				this.adminSettings.aiApiKey = result.aiApiKey || ''
 				this.adminSettings.aiApiUrl = result.aiApiUrl || ''
 				this.adminSettings.aiModel = result.aiModel || ''
-				showSuccess(t('contractmanager', 'KI-Einstellungen gespeichert'))
+				showSuccess(t('nc_vertragswerk', 'KI-Einstellungen gespeichert'))
 			} catch (error) {
 				console.error('Failed to save AI settings:', error)
-				showError(t('contractmanager', 'Fehler beim Speichern der KI-Einstellungen'))
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern der KI-Einstellungen'))
 			} finally {
 				this.savingAi = false
 			}
@@ -1461,10 +1461,10 @@ export default {
 			try {
 				await this.createCategory(this.newCategoryName.trim())
 				this.newCategoryName = ''
-				showSuccess(t('contractmanager', 'Kategorie hinzugefügt'))
+				showSuccess(t('nc_vertragswerk', 'Kategorie hinzugefügt'))
 			} catch (error) {
 				console.error('Failed to add category:', error)
-				showError(t('contractmanager', 'Fehler beim Hinzufügen der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Hinzufügen der Kategorie'))
 			} finally {
 				this.addingCategory = false
 			}
@@ -1489,10 +1489,10 @@ export default {
 					name: this.editingCategoryName.trim(),
 				})
 				this.cancelEdit()
-				showSuccess(t('contractmanager', 'Kategorie aktualisiert'))
+				showSuccess(t('nc_vertragswerk', 'Kategorie aktualisiert'))
 			} catch (error) {
 				console.error('Failed to update category:', error)
-				showError(t('contractmanager', 'Fehler beim Aktualisieren der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Aktualisieren der Kategorie'))
 			}
 		},
 
@@ -1505,10 +1505,10 @@ export default {
 			if (!this.deletingCategory) return
 			try {
 				await this.deleteCategory(this.deletingCategory.id)
-				showSuccess(t('contractmanager', 'Kategorie gelöscht'))
+				showSuccess(t('nc_vertragswerk', 'Kategorie gelöscht'))
 			} catch (error) {
 				console.error('Failed to delete category:', error)
-				showError(t('contractmanager', 'Fehler beim Löschen der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Löschen der Kategorie'))
 			} finally {
 				this.showDeleteCategoryDialog = false
 				this.deletingCategory = null

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
-use OCA\ContractManager\Db\Category;
-use OCA\ContractManager\Db\CategoryMapper;
+use OCA\NcVertragswerk\Db\Category;
+use OCA\NcVertragswerk\Db\CategoryMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 

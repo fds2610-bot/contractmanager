@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Db;
+namespace OCA\NcVertragswerk\Db;
 
 use OCP\AppFramework\Db\QBMapper;
 use OCP\DB\QueryBuilder\IQueryBuilder;

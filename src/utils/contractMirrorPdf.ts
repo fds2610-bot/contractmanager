@@ -47,23 +47,23 @@ export async function renderContractMirrorPdf(groups: MirrorGroup[], options: Mi
 	const [{ jsPDF: JsPdf }, { autoTable }] = await Promise.all([import('jspdf'), import('jspdf-autotable')])
 
 	const doc = new JsPdf({ orientation: 'landscape', unit: 'mm', format: 'a4' })
-	const title = t('contractmanager', 'Vertragsspiegel')
+	const title = t('nc_vertragswerk', 'Vertragsspiegel')
 	doc.setProperties({ title: `${title} – ${options.userName}` })
 	doc.viewerPreferences({ DisplayDocTitle: true })
 
 	const pageWidth = doc.internal.pageSize.getWidth()
 	const headerTitle = toWinAnsi(`${title} – ${options.userName}`)
-	const standLine = toWinAnsi(t('contractmanager', 'Stand: {date}', { date: options.date }, undefined, PLAIN))
+	const standLine = toWinAnsi(t('nc_vertragswerk', 'Stand: {date}', { date: options.date }, undefined, PLAIN))
 	const text = (value: string[] | string) => toWinAnsi(Array.isArray(value) ? value.join('\n') : value)
 
 	const columns = [
-		{ title: t('contractmanager', 'Vertrag'), halign: 'left', width: 50 },
-		{ title: t('contractmanager', 'bei'), halign: 'center', width: 48 },
-		{ title: t('contractmanager', 'Höhe / Umfang'), halign: 'left', width: 'auto' },
-		{ title: t('contractmanager', 'läuft bis'), halign: 'center', width: 22 },
-		{ title: t('contractmanager', 'Status'), halign: 'center', width: 22 },
-		{ title: t('contractmanager', 'Zahlungsweise'), halign: 'center', width: 31 },
-		{ title: t('contractmanager', 'Beitrag'), halign: 'right', width: 25 },
+		{ title: t('nc_vertragswerk', 'Vertrag'), halign: 'left', width: 50 },
+		{ title: t('nc_vertragswerk', 'bei'), halign: 'center', width: 48 },
+		{ title: t('nc_vertragswerk', 'Höhe / Umfang'), halign: 'left', width: 'auto' },
+		{ title: t('nc_vertragswerk', 'läuft bis'), halign: 'center', width: 22 },
+		{ title: t('nc_vertragswerk', 'Status'), halign: 'center', width: 22 },
+		{ title: t('nc_vertragswerk', 'Zahlungsweise'), halign: 'center', width: 31 },
+		{ title: t('nc_vertragswerk', 'Beitrag'), halign: 'right', width: 25 },
 	] as const
 
 	const body: unknown[] = []
@@ -128,7 +128,7 @@ export async function renderContractMirrorPdf(groups: MirrorGroup[], options: Mi
 		doc.setFontSize(9)
 		doc.text(standLine, MARGIN, lineY)
 		doc.text(
-			toWinAnsi(t('contractmanager', 'Seite {page} von {total}', { page: String(page), total: String(pageCount) }, undefined, PLAIN)),
+			toWinAnsi(t('nc_vertragswerk', 'Seite {page} von {total}', { page: String(page), total: String(pageCount) }, undefined, PLAIN)),
 			pageWidth - MARGIN,
 			lineY,
 			{ align: 'right' },

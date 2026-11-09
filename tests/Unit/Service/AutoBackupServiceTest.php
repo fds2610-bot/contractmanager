@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Service;
+namespace OCA\NcVertragswerk\Tests\Unit\Service;
 
-use OCA\ContractManager\Service\AutoBackupService;
-use OCA\ContractManager\Service\ContractExportService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Service\AutoBackupService;
+use OCA\NcVertragswerk\Service\ContractExportService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\Files\File;
 use OCP\Files\Folder;

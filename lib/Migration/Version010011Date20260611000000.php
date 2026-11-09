@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Migration;
+namespace OCA\NcVertragswerk\Migration;
 
 use Closure;
-use OCA\ContractManager\AppInfo\Application;
+use OCA\NcVertragswerk\AppInfo\Application;
 use OCP\DB\ISchemaWrapper;
 use OCP\DB\Types;
 use OCP\IConfig;

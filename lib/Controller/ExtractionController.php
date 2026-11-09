@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Controller;
+namespace OCA\NcVertragswerk\Controller;
 
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Service\AiExtractionService;
-use OCA\ContractManager\Service\PdfTextService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Service\AiExtractionService;
+use OCA\NcVertragswerk\Service\PdfTextService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;

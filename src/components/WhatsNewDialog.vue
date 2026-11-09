@@ -10,12 +10,12 @@
 				{{ title }}
 			</h2>
 			<p v-if="archive && groups.length === 0" class="whatsnew__empty">
-				{{ t('contractmanager', 'Noch keine Neuerungen.') }}
+				{{ t('nc_vertragswerk', 'Noch keine Neuerungen.') }}
 			</p>
 
 			<div v-for="group in groups" :key="group.version" class="whatsnew__group">
 				<p class="whatsnew__version">
-					{{ t('contractmanager', 'Version {version}', { version: group.version }) }}
+					{{ t('nc_vertragswerk', 'Version {version}', { version: group.version }) }}
 				</p>
 
 				<div v-for="(entry, index) in group.entries" :key="group.version + '-' + index" class="whatsnew__entry">
@@ -31,15 +31,15 @@
 							{{ entry.text }}
 						</p>
 						<p v-if="entry.where" class="whatsnew__where">
-							{{ t('contractmanager', 'Zu finden unter') }}
-							<b>{{ entry.where }}</b><span v-if="entry.adminOnly">{{ ' ' + t('contractmanager', '(nur für Administratoren)') }}</span>
+							{{ t('nc_vertragswerk', 'Zu finden unter') }}
+							<b>{{ entry.where }}</b><span v-if="entry.adminOnly">{{ ' ' + t('nc_vertragswerk', '(nur für Administratoren)') }}</span>
 						</p>
 						<a v-if="entry.plus"
 							class="whatsnew__link"
 							:href="WERKPLUS_URL"
 							target="_blank"
 							rel="noreferrer noopener">
-							{{ t('contractmanager', 'Mehr zu WerkPlus') }}
+							{{ t('nc_vertragswerk', 'Mehr zu WerkPlus') }}
 						</a>
 					</div>
 				</div>
@@ -47,7 +47,7 @@
 
 			<div class="actions">
 				<NcButton variant="primary" @click="dismiss">
-					{{ archive ? t('contractmanager', 'Schließen') : t('contractmanager', 'Alles klar') }}
+					{{ archive ? t('nc_vertragswerk', 'Schließen') : t('nc_vertragswerk', 'Alles klar') }}
 				</NcButton>
 			</div>
 		</div>
@@ -116,7 +116,7 @@ const groups = ref<WhatsNewGroup[]>([])
 /** Archiv-Modus (#427): ueber das Menue aufgerufen, nicht das Auto-Popup. */
 const archive = ref(false)
 // Anzeigename aus info.xml, nicht die App-ID: die App heisst VertragsWerk.
-const title = t('contractmanager', 'Was ist neu in VertragsWerk')
+const title = t('nc_vertragswerk', 'Was ist neu in VertragsWerk')
 
 /** Unbekannter oder fehlender Name faellt auf den Stern zurueck. */
 function iconFor(name: string): Component {

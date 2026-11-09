@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Controller;
+namespace OCA\NcVertragswerk\Tests\Unit\Controller;
 
-use OCA\ContractManager\Controller\CategoryController;
-use OCA\ContractManager\Controller\ContractController;
-use OCA\ContractManager\Controller\ExtractionController;
-use OCA\ContractManager\Service\AiExtractionService;
-use OCA\ContractManager\Service\CategoryService;
-use OCA\ContractManager\Service\ContractService;
-use OCA\ContractManager\Service\PdfTextService;
-use OCA\ContractManager\Service\PermissionService;
-use OCA\ContractManager\Service\SettingsService;
+use OCA\NcVertragswerk\Controller\CategoryController;
+use OCA\NcVertragswerk\Controller\ContractController;
+use OCA\NcVertragswerk\Controller\ExtractionController;
+use OCA\NcVertragswerk\Service\AiExtractionService;
+use OCA\NcVertragswerk\Service\CategoryService;
+use OCA\NcVertragswerk\Service\ContractService;
+use OCA\NcVertragswerk\Service\PdfTextService;
+use OCA\NcVertragswerk\Service\PermissionService;
+use OCA\NcVertragswerk\Service\SettingsService;
 use OCP\AppFramework\Http;
 use OCP\IL10N;
 use OCP\IRequest;

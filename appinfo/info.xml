@@ -2,7 +2,7 @@
 <info xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
 
-    <id>contractmanager</id>
+    <id>nc_vertragswerk</id>
     <name>VertragsWerk</name>
     <summary>Vertragsverwaltung mit Kündigungserinnerungen</summary>
     <description><![CDATA[
@@ -19,24 +19,24 @@ Verwalten Sie Ihre Verträge zentral in Nextcloud:
 Behalten Sie den Überblick über Laufzeiten, Kosten und Kündigungsfristen.
     ]]></description>
 
-    <version>1.12.0.1</version>
+    <version>2.0.0</version>
     <licence>AGPL-3.0-or-later</licence>
 
+    <author mail="felix@schepmann.de" homepage="https://github.com/fds2610/contractmanager">fds2610</author>
     <author mail="axel.deffner@cpcmomentum.com" homepage="https://github.com/cpcMomentum">Axel Deffner</author>
 
-    <namespace>ContractManager</namespace>
+    <namespace>NcVertragswerk</namespace>
 
     <category>organization</category>
     <category>office</category>
 
-    <bugs>https://github.com/cpcMomentum/contractmanager/issues</bugs>
-    <repository type="git">https://github.com/cpcMomentum/contractmanager.git</repository>
-    <donation>https://ko-fi.com/AxDe888</donation>
+    <bugs>https://github.com/fds2610/contractmanager/issues</bugs>
+    <repository type="git">https://github.com/fds2610/contractmanager.git</repository>
 
-    <screenshot>https://raw.githubusercontent.com/cpcMomentum/contractmanager/main/screenshots/screenshot-contract-list.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/cpcMomentum/contractmanager/main/screenshots/screenshot-contract-filter.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/cpcMomentum/contractmanager/main/screenshots/screenshot-contract-form.png</screenshot>
-    <screenshot>https://raw.githubusercontent.com/cpcMomentum/contractmanager/main/screenshots/screenshot-settings.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/fds2610/contractmanager/develop/screenshots/screenshot-contract-list.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/fds2610/contractmanager/develop/screenshots/screenshot-contract-filter.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/fds2610/contractmanager/develop/screenshots/screenshot-contract-form.png</screenshot>
+    <screenshot>https://raw.githubusercontent.com/fds2610/contractmanager/develop/screenshots/screenshot-settings.png</screenshot>
 
     <dependencies>
         <nextcloud min-version="33" max-version="35"/>
@@ -44,28 +44,31 @@ Behalten Sie den Überblick über Laufzeiten, Kosten und Kündigungsfristen.
     </dependencies>
 
     <background-jobs>
-        <job>OCA\ContractManager\BackgroundJob\ReminderJob</job>
-        <job>OCA\ContractManager\BackgroundJob\TrashCleanupJob</job>
-        <job>OCA\ContractManager\BackgroundJob\StatusUpdateJob</job>
-        <job>OCA\ContractManager\BackgroundJob\AutoBackupJob</job>
+        <job>OCA\NcVertragswerk\BackgroundJob\ReminderJob</job>
+        <job>OCA\NcVertragswerk\BackgroundJob\TrashCleanupJob</job>
+        <job>OCA\NcVertragswerk\BackgroundJob\StatusUpdateJob</job>
+        <job>OCA\NcVertragswerk\BackgroundJob\AutoBackupJob</job>
     </background-jobs>
 
     <commands>
-        <command>OCA\ContractManager\Command\ExportContracts</command>
-        <command>OCA\ContractManager\Command\ImportContracts</command>
+        <command>OCA\NcVertragswerk\Command\ExportContracts</command>
+        <command>OCA\NcVertragswerk\Command\ImportContracts</command>
     </commands>
 
     <repair-steps>
         <post-migration>
-            <step>OCA\ContractManager\Migration\CleanupExtraFiles</step>
-            <step>OCA\ContractManager\Migration\WhatsNewBootstrap</step>
+            <step>OCA\NcVertragswerk\Migration\CleanupExtraFiles</step>
+            <step>OCA\NcVertragswerk\Migration\WhatsNewBootstrap</step>
         </post-migration>
+        <install>
+            <step>OCA\NcVertragswerk\Migration\ImportFromContractManager</step>
+        </install>
     </repair-steps>
 
     <navigations>
         <navigation>
             <name>VertragsWerk</name>
-            <route>contractmanager.page.index</route>
+            <route>nc_vertragswerk.page.index</route>
             <icon>app.svg</icon>
             <order>10</order>
         </navigation>

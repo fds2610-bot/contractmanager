@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Service;
+namespace OCA\NcVertragswerk\Service;
 
 use OCP\IConfig;
 use OCP\IGroupManager;
-use OCA\ContractManager\AppInfo\Application;
-use OCA\ContractManager\Db\Contract;
+use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\Contract;
 
 /**
- * Service to check user permissions for ContractManager
+ * Service to check user permissions for NcVertragswerk
  *
  * Permission hierarchy:
  * - Admin: Nextcloud admin, has all permissions

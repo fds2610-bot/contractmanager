@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\ContractManager\Tests\Unit\Notification;
+namespace OCA\NcVertragswerk\Tests\Unit\Notification;
 
 use DateTime;
-use OCA\ContractManager\Db\Contract;
-use OCA\ContractManager\Db\ContractMapper;
-use OCA\ContractManager\Notification\Notifier;
+use OCA\NcVertragswerk\Db\Contract;
+use OCA\NcVertragswerk\Db\ContractMapper;
+use OCA\NcVertragswerk\Notification\Notifier;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -28,7 +28,7 @@ class NotifierTest extends TestCase {
 
 		$urlGenerator = $this->createMock(IURLGenerator::class);
 		$urlGenerator->method('imagePath')->willReturn('/img/app.svg');
-		$urlGenerator->method('linkToRouteAbsolute')->willReturn('https://cloud.example/apps/contractmanager/');
+		$urlGenerator->method('linkToRouteAbsolute')->willReturn('https://cloud.example/apps/nc_vertragswerk/');
 
 		$l = $this->createMock(IL10N::class);
 		$l->method('t')->willReturnCallback(
@@ -67,11 +67,11 @@ class NotifierTest extends TestCase {
 	public function testUnknownSubjectIsRejected(): void {
 		$this->expectException(UnknownNotificationException::class);
 
-		$this->notifier->prepare($this->notification('contractmanager', 'something_else'), 'de');
+		$this->notifier->prepare($this->notification('nc_vertragswerk', 'something_else'), 'de');
 	}
 
 	public function testUserDeletedSubjectIsParsed(): void {
-		$notification = $this->notification('contractmanager', Notifier::SUBJECT_USER_DELETED, [
+		$notification = $this->notification('nc_vertragswerk', Notifier::SUBJECT_USER_DELETED, [
 			'deletedUser' => 'alice',
 			'reassigned' => 3,
 			'needsAttention' => 2,
@@ -86,7 +86,7 @@ class NotifierTest extends TestCase {
 	}
 
 	public function testGetIdAndName(): void {
-		$this->assertSame('contractmanager', $this->notifier->getID());
+		$this->assertSame('nc_vertragswerk', $this->notifier->getID());
 		$this->assertNotSame('', $this->notifier->getName());
 	}
 
@@ -98,11 +98,11 @@ class NotifierTest extends TestCase {
 		// an absolute (http) URL so a regression to raw imagePath() fails here.
 		$urlGenerator = $this->createMock(IURLGenerator::class);
 		$urlGenerator->method('imagePath')
-			->willReturn('/custom_apps/contractmanager/img/app.svg');
+			->willReturn('/custom_apps/nc_vertragswerk/img/app.svg');
 		$urlGenerator->method('getAbsoluteURL')
 			->willReturnCallback(static fn (string $path): string => 'http://localhost' . $path);
 		$urlGenerator->method('linkToRouteAbsolute')
-			->willReturn('http://localhost/apps/contractmanager/');
+			->willReturn('http://localhost/apps/nc_vertragswerk/');
 
 		$l = $this->createMock(IL10N::class);
 		$l->method('t')->willReturnCallback(
@@ -113,7 +113,7 @@ class NotifierTest extends TestCase {
 
 		$notifier = new Notifier($urlGenerator, $l10nFactory, $this->createMock(ContractMapper::class), $this->createMock(IUserManager::class));
 
-		$notification = $this->notification('contractmanager', Notifier::SUBJECT_USER_DELETED, [
+		$notification = $this->notification('nc_vertragswerk', Notifier::SUBJECT_USER_DELETED, [
 			'deletedUser' => 'alice',
 			'reassigned' => 3,
 			'needsAttention' => 2,
@@ -133,7 +133,7 @@ class NotifierTest extends TestCase {
 		// UnknownNotificationException so the undisplayable notification is
 		// discarded cleanly instead of spamming the log every cycle.
 		$notification = $this->createMock(INotification::class);
-		$notification->method('getApp')->willReturn('contractmanager');
+		$notification->method('getApp')->willReturn('nc_vertragswerk');
 		$notification->method('getSubject')->willReturn(Notifier::SUBJECT_USER_DELETED);
 		$notification->method('getSubjectParameters')->willReturn([
 			'deletedUser' => 'alice',
@@ -161,7 +161,7 @@ class NotifierTest extends TestCase {
 	}
 
 	private function trashNotification(): INotification {
-		return $this->notification('contractmanager', Notifier::SUBJECT_CONTRACT_TRASHED, [
+		return $this->notification('nc_vertragswerk', Notifier::SUBJECT_CONTRACT_TRASHED, [
 			'deletedBy' => 'bob',
 			'deletedAt' => self::DELETED_AT,
 		]);

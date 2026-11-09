@@ -15,9 +15,9 @@ const props = defineProps<{
 
 const statusLabel = computed(() => {
 	const labels: Record<ContractStatus, string> = {
-		active: t('contractmanager', 'Laufend'),
-		cancelled: t('contractmanager', 'Gekündigt'),
-		ended: t('contractmanager', 'Beendet'),
+		active: t('nc_vertragswerk', 'Laufend'),
+		cancelled: t('nc_vertragswerk', 'Gekündigt'),
+		ended: t('nc_vertragswerk', 'Beendet'),
 	}
 	return labels[props.status] || props.status
 })

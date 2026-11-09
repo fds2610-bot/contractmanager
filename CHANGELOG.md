@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-11-09
+
+Eigenständige Weiterentwicklung durch fds2610 auf Basis von cpcMomentum/contractmanager 1.12.0. Die App wird nicht im App Store veröffentlicht.
+
+### Changed
+- **Neue App-ID `nc_vertragswerk`** (bisher `contractmanager`), PHP-Namespace `OCA\NcVertragswerk`. Der Name „VertragsWerk“ bleibt. Updates der ursprünglichen App können damit nicht mehr versehentlich eingespielt werden
+- Adressen ändern sich: App unter `/apps/nc_vertragswerk/`, occ-Befehle `nc_vertragswerk:export` / `nc_vertragswerk:import`. Abonnierte Kalender-Feeds müssen mit der neuen Adresse aus den Einstellungen neu abonniert werden; Links in älteren Erinnerungs-Mails führen ins Leere
+- **Umstieg**: Die Tabellen `oc_contractmgr_*` bleiben dieselben. Beim ersten Aktivieren übernimmt `nc_vertragswerk` die App- und Benutzereinstellungen von `contractmanager`. Die alte App vorher deaktivieren und danach nur ihren Ordner löschen, nicht `occ app:remove contractmanager` ohne `--keep-data`
+
 ### Added
 - **Vertragsspiegel als PDF**: Neuer Button „PDF“ zwischen „Filter“ und „Neuer Vertrag“. Er gibt genau die angezeigten Verträge (Kategorie, Filter, Suche und Sortierung der Liste) als PDF im Querformat in einem neuen Tab aus, gruppiert nach Kategorie. Spalten: Vertrag mit Vertragsnummer, Vertragspartner mit verknüpftem Kontakt, Höhe/Umfang (Zuständig, Personen, Versicherungsleistungen, Notizen), läuft bis, Status, Zahlungsweise und Beitrag. Kopfzeile mit Name, Stand und Seitenzahl; der Tabellenkopf wiederholt sich, Verträge werden nicht über Seiten getrennt
 
