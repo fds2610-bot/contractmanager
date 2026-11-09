@@ -7,20 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Changed
-- **Backup-Einstellungen**: Der Menüpunkt heißt jetzt „Backup“. Neben dem Zielordner öffnet „Ordner wählen“ den Nextcloud-Dateidialog, in dem sich auch neue Ordner anlegen lassen. Die Zahl der aufbewahrten Sicherungen ist einstellbar (1 bis 999, bisher fest 30) (#8)
-- **Neue Bezeichnungen**: „Vertragstyp“ heißt jetzt „Befristung“, die bisherige „Kategorie“ heißt „Vertragsart“ (Formular, Liste, Filter, Seitenleiste, Einstellungen, Vertragsspiegel). Intern und in Backups bleibt alles beim Alten (#7)
-
-### Added
-- **Kontakt direkt anlegen**: Neben der Kontaktsuche im Vertragsdialog öffnet ein grünes Plus einen Dialog für einen neuen Adressbuch-Kontakt (Name, Firma, Abteilung, Position, beliebig viele Telefonnummern, E-Mail-Adressen und Adressen mit Typ, Webseite, Geburtstag, Notiz). Der Kontakt wird im gewählten Adressbuch angelegt und dem Vertrag zugeordnet; ein leerer Vertragspartner wird mit der Firma bzw. dem Namen belegt. Neue Admin-Einstellung „Standard-Adressbuch für neu angelegte Kontakte“ (Auswahl über den Namen, sonst das erste verfügbare) (#3)
-- **Kategorie**: Neues Feld für Lebensbereiche, vorbelegt mit „persönlich“, „Wohnen“, „Fahrzeuge“ und „Handy“. Admins verwalten die Liste unter Einstellungen › Kategorien (anlegen, umbenennen, löschen mit Rückfrage; gelöschte Kategorien werden aus den Verträgen entfernt). Neue Verträge starten mit „persönlich“, bestehende bekommen beim Update „persönlich“. Filter „Kategorie“ in der Filterleiste; der Vertragsspiegel gruppiert jetzt nach Kategorie und darunter nach Vertragsart (#7)
-- **Zahlungsart**: Neues Feld „wird abgebucht“ / „überweisen“, im Vertragsspiegel unter der Zahlungsweise (#7)
-- **Kundennummer**: Neues Feld rechts neben der Vertragsnummer. Beide stehen in der Vertragsliste unter dem Namen und im Vertragsspiegel unter der Vertragsbezeichnung, mit „V:“ bzw. „K:“ davor (Tooltip mit der vollen Bezeichnung); ein leeres Feld erscheint ohne Präfix. Die Kundennummer wird in der Seitenleisten- und der Nextcloud-Suche gefunden und ist in Backup und Kontoumzug enthalten (#5)
-
-### Fixed
-- **Dezimalzeichen im Vertragsdialog**: Der Betrag steht im Bearbeiten-Dialog jetzt mit dem Dezimalzeichen der Nextcloud-Lokalisierung (z. B. „1234,50“), wie in der Übersicht. Beim Einlesen gilt bei Punkt und Komma das letzte Zeichen als Dezimaltrenner; die Kostenzeile oben im Dialog rechnet „10,50“ nicht mehr als 10 € (#6)
-- **Dokumente öffnen**: Vertragsdokumente aus Nextcloud öffnen jetzt wie externe Links in einem neuen Tab, statt die Vertragsliste im Viewer zu überdecken (#4)
-
 ## [2.0.0] - 2026-11-09
 
 Eigenständige Weiterentwicklung durch fds2610 auf Basis von cpcMomentum/contractmanager 1.12.0. Die App wird nicht im App Store veröffentlicht.
@@ -29,9 +15,19 @@ Eigenständige Weiterentwicklung durch fds2610 auf Basis von cpcMomentum/contrac
 - **Neue App-ID `nc_vertragswerk`** (bisher `contractmanager`), PHP-Namespace `OCA\NcVertragswerk`. Der Name „VertragsWerk“ bleibt. Updates der ursprünglichen App können damit nicht mehr versehentlich eingespielt werden
 - Adressen ändern sich: App unter `/apps/nc_vertragswerk/`, occ-Befehle `nc_vertragswerk:export` / `nc_vertragswerk:import`. Abonnierte Kalender-Feeds müssen mit der neuen Adresse aus den Einstellungen neu abonniert werden; Links in älteren Erinnerungs-Mails führen ins Leere
 - **Umstieg**: Die Tabellen `oc_contractmgr_*` bleiben dieselben. Beim ersten Aktivieren übernimmt `nc_vertragswerk` die App- und Benutzereinstellungen von `contractmanager`. Die alte App vorher deaktivieren und danach nur ihren Ordner löschen, nicht `occ app:remove contractmanager` ohne `--keep-data`
+- **Backup-Einstellungen**: Der Menüpunkt heißt jetzt „Backup“. Neben dem Zielordner öffnet „Ordner wählen“ den Nextcloud-Dateidialog, in dem sich auch neue Ordner anlegen lassen. Die Zahl der aufbewahrten Sicherungen ist einstellbar (1 bis 999, bisher fest 30) (#8)
+- **Neue Bezeichnungen**: „Vertragstyp“ heißt jetzt „Befristung“, die bisherige „Kategorie“ heißt „Vertragsart“ (Formular, Liste, Filter, Seitenleiste, Einstellungen, Vertragsspiegel). Intern und in Backups bleibt alles beim Alten (#7)
 
 ### Added
-- **Vertragsspiegel als PDF**: Neuer Button „PDF“ zwischen „Filter“ und „Neuer Vertrag“. Er gibt genau die angezeigten Verträge (Kategorie, Filter, Suche und Sortierung der Liste) als PDF im Querformat in einem neuen Tab aus, gruppiert nach Kategorie. Spalten: Vertrag mit Vertragsnummer, Vertragspartner mit verknüpftem Kontakt, Höhe/Umfang (Zuständig, Personen, Versicherungsleistungen, Notizen), läuft bis, Status, Zahlungsweise und Beitrag. Kopfzeile mit Name, Stand und Seitenzahl; der Tabellenkopf wiederholt sich, Verträge werden nicht über Seiten getrennt
+- **Vertragsspiegel als PDF**: Neuer Button „PDF“ zwischen „Filter“ und „Neuer Vertrag“. Er gibt genau die angezeigten Verträge (Vertragsart, Filter, Suche und Sortierung der Liste) als PDF im Querformat in einem neuen Tab aus, gruppiert nach Kategorie und darunter nach Vertragsart. Spalten: Vertrag mit Vertrags- und Kundennummer, Vertragspartner mit verknüpftem Kontakt, Höhe/Umfang (Zuständig, Personen, Versicherungsleistungen, Notizen), läuft bis, Status, Zahlungsweise und Beitrag. Kopfzeile mit Name, Stand und Seitenzahl; der Tabellenkopf wiederholt sich, Verträge werden nicht über Seiten getrennt
+- **Kontakt direkt anlegen**: Neben der Kontaktsuche im Vertragsdialog öffnet ein grünes Plus einen Dialog für einen neuen Adressbuch-Kontakt (Name, Firma, Abteilung, Position, beliebig viele Telefonnummern, E-Mail-Adressen und Adressen mit Typ, Webseite, Geburtstag, Notiz). Der Kontakt wird im gewählten Adressbuch angelegt und dem Vertrag zugeordnet; ein leerer Vertragspartner wird mit der Firma bzw. dem Namen belegt. Neue Admin-Einstellung „Standard-Adressbuch für neu angelegte Kontakte“ (Auswahl über den Namen, sonst das erste verfügbare) (#3)
+- **Kategorie**: Neues Feld für Lebensbereiche, vorbelegt mit „persönlich“, „Wohnen“, „Fahrzeuge“ und „Handy“. Admins verwalten die Liste unter Einstellungen › Kategorien (anlegen, umbenennen, löschen mit Rückfrage; gelöschte Kategorien werden aus den Verträgen entfernt). Neue Verträge starten mit „persönlich“, bestehende bekommen beim Update „persönlich“. Filter „Kategorie“ in der Filterleiste; der Vertragsspiegel gruppiert jetzt nach Kategorie und darunter nach Vertragsart (#7)
+- **Zahlungsart**: Neues Feld „wird abgebucht“ / „überweisen“, im Vertragsspiegel unter der Zahlungsweise (#7)
+- **Kundennummer**: Neues Feld rechts neben der Vertragsnummer. Beide stehen in der Vertragsliste unter dem Namen und im Vertragsspiegel unter der Vertragsbezeichnung, mit „V:“ bzw. „K:“ davor (Tooltip mit der vollen Bezeichnung); ein leeres Feld erscheint ohne Präfix. Die Kundennummer wird in der Seitenleisten- und der Nextcloud-Suche gefunden und ist in Backup und Kontoumzug enthalten (#5)
+
+### Fixed
+- **Dezimalzeichen im Vertragsdialog**: Der Betrag steht im Bearbeiten-Dialog jetzt mit dem Dezimalzeichen der Nextcloud-Lokalisierung (z. B. „1234,50“), wie in der Übersicht. Beim Einlesen gilt bei Punkt und Komma das letzte Zeichen als Dezimaltrenner; die Kostenzeile oben im Dialog rechnet „10,50“ nicht mehr als 10 € (#6)
+- **Dokumente öffnen**: Vertragsdokumente aus Nextcloud öffnen jetzt wie externe Links in einem neuen Tab, statt die Vertragsliste im Viewer zu überdecken (#4)
 
 ## [1.12.0.1] - 2026-11-07
 

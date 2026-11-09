@@ -7,11 +7,15 @@ App-ID `nc_vertragswerk`. Eigenständige Weiterentwicklung von fds2610 auf Basis
 
 ## Features
 
-- Zentrale Vertragsverwaltung
+- Zentrale Vertragsverwaltung mit Vertrags- und Kundennummer, Befristung und Zahlungsart
 - Automatische Erinnerungen vor Kündigungsfristen
-- Kategorisierung von Verträgen
+- Ordnung nach Kategorie (Lebensbereich, z. B. Wohnen, Fahrzeuge) und Vertragsart
+- Versicherungsangaben (beteiligte Personen, versicherte Leistungen)
+- Vertragspartner mit Kontakten aus dem Adressbuch verknüpfen oder direkt neu anlegen
+- Vertragsspiegel als PDF
 - Archiv für beendete Verträge
 - Integration mit Nextcloud Files für Anhänge
+- Automatische Backups in einen wählbaren Ordner
 - Export/Import der eigenen Vertragsdaten über Nextcloud [user_migration](https://github.com/nextcloud/user_migration)
 
 ## Datenexport und -import

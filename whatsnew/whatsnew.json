@@ -6,8 +6,8 @@
 				"en": "Contract overview as PDF"
 			},
 			"text": {
-				"de": "Der neue Button „PDF“ gibt die gerade angezeigten Verträge als übersichtliche Tabelle aus, nach Kategorie gruppiert, mit Vertragspartner, Umfang, Laufzeit, Status, Zahlungsweise und Beitrag.",
-				"en": "The new “PDF” button prints the contracts currently shown as a clear table, grouped by category, with partner, scope, term, status, payment interval and amount."
+				"de": "Der neue Button „PDF“ gibt die gerade angezeigten Verträge als übersichtliche Tabelle aus, nach Kategorie und Vertragsart gruppiert, mit Vertragspartner, Umfang, Laufzeit, Status, Zahlungsweise und Beitrag.",
+				"en": "The new “PDF” button prints the contracts currently shown as a clear table, grouped by category and contract type, with partner, scope, term, status, payment interval and amount."
 			},
 			"icon": "file-document",
 			"where": {
@@ -18,17 +18,65 @@
 		},
 		{
 			"title": {
-				"de": "Vertragsnummer und Versicherungsangaben",
-				"en": "Contract number and insurance details"
+				"de": "Vertrags- und Kundennummer, Versicherungsangaben",
+				"en": "Contract and customer number, insurance details"
 			},
 			"text": {
-				"de": "Jeder Vertrag kann eine Vertragsnummer bekommen. Bei Versicherungen erfassen Sie zusätzlich die beteiligten Personen und die versicherten Leistungen.",
-				"en": "Every contract can now have a contract number. For insurance contracts you can also record the persons involved and the insured benefits."
+				"de": "Jeder Vertrag kann eine Vertrags- und eine Kundennummer bekommen; beide stehen in der Liste unter dem Namen und werden in der Suche gefunden. Bei Versicherungen erfassen Sie zusätzlich die beteiligten Personen und die versicherten Leistungen.",
+				"en": "Every contract can now have a contract and a customer number; both appear in the list below the name and are found by the search. For insurance contracts you can also record the persons involved and the insured benefits."
 			},
 			"icon": "tag",
 			"where": {
 				"de": "Vertrag bearbeiten",
 				"en": "Edit contract"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Kategorien für Lebensbereiche",
+				"en": "Categories for areas of life"
+			},
+			"text": {
+				"de": "Ordnen Sie Verträge Bereichen wie „persönlich“, „Wohnen“, „Fahrzeuge“ oder „Handy“ zu und filtern Sie danach. Die bisherige „Kategorie“ heißt jetzt „Vertragsart“, der „Vertragstyp“ heißt „Befristung“. Neu ist auch die Zahlungsart: „wird abgebucht“ oder „überweisen“.",
+				"en": "Assign contracts to areas of life such as “persönlich”, “Wohnen”, “Fahrzeuge” or “Handy” and filter by them. The former “category” is now called “contract type”, and the former “contract type” is now “term”. Also new: the payment method, “direct debit” or “bank transfer”."
+			},
+			"icon": "folder",
+			"where": {
+				"de": "Vertrag bearbeiten · Filter · Einstellungen › Kategorien",
+				"en": "Edit contract · Filter · Settings › Categories"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Kontakt direkt anlegen",
+				"en": "Create a contact right away"
+			},
+			"text": {
+				"de": "Das grüne Plus neben der Kontaktsuche im Vertragsdialog legt einen neuen Adressbuch-Kontakt an und verknüpft ihn gleich mit dem Vertrag.",
+				"en": "The green plus next to the contact search in the contract dialog creates a new address book contact and links it to the contract right away."
+			},
+			"icon": "account-group",
+			"where": {
+				"de": "Vertrag bearbeiten › Kontakt",
+				"en": "Edit contract › Contact"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Backup-Ordner wählen",
+				"en": "Choose the backup folder"
+			},
+			"text": {
+				"de": "Den Zielordner für Sicherungen wählen Sie jetzt im Nextcloud-Dateidialog, und Sie legen fest, wie viele Sicherungen aufbewahrt werden.",
+				"en": "You now pick the backup target folder in the Nextcloud file dialog and decide how many backups are kept."
+			},
+			"icon": "archive",
+			"where": {
+				"de": "Einstellungen › Backup",
+				"en": "Settings › Backup"
 			},
 			"plus": false
 		}
