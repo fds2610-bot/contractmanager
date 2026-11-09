@@ -90,7 +90,6 @@ OC.L10N.register(
     "Brutto" : "Brutto",
     "Betragsangabe" : "Betragsangabe",
     "Standard für neue Verträge. Pro Vertrag kann davon abgewichen werden." : "Standard für neue Verträge. Pro Vertrag kann davon abgewichen werden.",
-    "0.00" : "0.00",
     "Währung" : "Währung",
     "Dokumente" : "Dokumente",
     "Vertragsordner" : "Vertragsordner",

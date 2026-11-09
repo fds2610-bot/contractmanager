@@ -90,7 +90,6 @@ OC.L10N.register(
     "Brutto" : "Gross",
     "Betragsangabe" : "Amount type",
     "Standard für neue Verträge. Pro Vertrag kann davon abgewichen werden." : "Default for new contracts. Can be changed per contract.",
-    "0.00" : "0.00",
     "Währung" : "Currency",
     "Dokumente" : "Documents",
     "Vertragsordner" : "Contract folder",

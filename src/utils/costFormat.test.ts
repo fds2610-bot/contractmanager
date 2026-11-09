@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { costForApi, costValidationError, isCostValid, normalizeCostInput } from './costFormat'
+import { costForApi, costForInput, costValidationError, isCostValid, normalizeCostInput } from './costFormat'
 
 describe('costValidationError (#315)', () => {
 	it('distinguishes unreadable input from an amount that is too large', () => {
@@ -132,5 +132,32 @@ describe('costForApi (#305)', () => {
 
 	it('passes unparseable input through so the backend can reject it', () => {
 		expect(costForApi('abc')).toBe('abc')
+	})
+})
+
+describe('both separators (#6)', () => {
+	it('reads the last separator as the decimal separator', () => {
+		expect(normalizeCostInput('1.234,56')).toBe('1234.56')
+		expect(normalizeCostInput('1,234.56')).toBe('1234.56')
+		expect(normalizeCostInput('1,234,567.5')).toBe('1234567.50')
+	})
+})
+
+describe('costForInput (#6)', () => {
+	it('uses the decimal separator of the locale, without grouping', () => {
+		expect(costForInput('1234.5', 'de-DE')).toBe('1234,50')
+		expect(costForInput('10.5', 'en-US')).toBe('10.50')
+		expect(costForInput('10,5', 'en-US')).toBe('10.50')
+		expect(costForInput(64.2, 'fr-FR')).toBe('64,20')
+	})
+
+	it('keeps empty and unparseable input', () => {
+		expect(costForInput('', 'de-DE')).toBe('')
+		expect(costForInput(null, 'de-DE')).toBe('')
+		expect(costForInput('abc', 'de-DE')).toBe('abc')
+	})
+
+	it('round-trips through costForApi', () => {
+		expect(costForApi(costForInput('99999999.99', 'de-DE'))).toBe('99999999.99')
 	})
 })

@@ -335,7 +335,7 @@
 								inputmode="decimal"
 								class="cm-input"
 								:disabled="readOnly"
-								:placeholder="t('nc_vertragswerk', '0.00')"
+								:placeholder="costPlaceholder"
 								@blur="normalizeCostField">
 						</label>
 						<label class="cm-field">
@@ -626,7 +626,7 @@ import { isUrl, isInternalUrl, getDisplayName, openDocumentInNewTab } from '../u
 import { linkifyText } from '../utils/linkify.js'
 import { reminderEnabledForEndDate } from '../utils/reminderForm'
 import { isEndDateApplicable, endDateForSave, effectiveEndForForm } from '../utils/contractFormRules'
-import { normalizeCostInput, costForApi, costValidationError } from '../utils/costFormat'
+import { normalizeCostInput, costForApi, costForInput, costValidationError } from '../utils/costFormat'
 import ContractService from '../services/ContractService'
 import ExtractionService from '../services/ExtractionService'
 import SettingsService from '../services/SettingsService'
@@ -855,8 +855,12 @@ export default {
 			const opt = this.contractTypeOptions.find(o => o.value === this.form.contractType)
 			return opt ? opt.label : '—'
 		},
+		costPlaceholder() {
+			return costForInput('0')
+		},
 		summaryCostLabel() {
-			const amount = parseFloat(this.form.cost)
+			const normalized = normalizeCostInput(this.form.cost)
+			const amount = normalized === '' ? NaN : Number(normalized)
 			if (!Number.isFinite(amount)) return '—'
 			return new Intl.NumberFormat(getCanonicalLocale(), { style: 'currency', currency: this.form.currency || 'EUR' }).format(amount)
 		},
@@ -1012,7 +1016,7 @@ export default {
 		// Erst beim Verlassen des Felds formatieren, nicht beim Tippen — sonst
 		// springt der Cursor waehrend der Eingabe (#305).
 		normalizeCostField() {
-			this.form.cost = normalizeCostInput(this.form.cost)
+			this.form.cost = costForInput(this.form.cost)
 		},
 		onEscape(event) {
 			// Esc in einem offenen Dropdown (NcSelect) soll nur das Dropdown
@@ -1186,7 +1190,7 @@ export default {
 				renewalPeriodUnit: renewal.unit,
 				// Normalisieren statt uebernehmen: auf SQLite liefert die
 				// DECIMAL(10,2)-Spalte bereits "10.5" statt "10.50" (#305).
-				cost: normalizeCostInput(contract.cost),
+				cost: costForInput(contract.cost),
 				currency: contract.currency || 'EUR',
 				costInterval: contract.costInterval || 'monthly',
 				contractFolder: contract.contractFolder || '',
@@ -1377,7 +1381,7 @@ export default {
 			if (data.vendor) this.form.vendor = data.vendor
 			if (data.contractType) this.form.contractType = data.contractType
 			if (data.currency) this.form.currency = data.currency
-			if (data.cost) this.form.cost = normalizeCostInput(data.cost)
+			if (data.cost) this.form.cost = costForInput(data.cost)
 			if (data.startDate) {
 				const start = parseLocalDate(data.startDate)
 				if (start && !isNaN(start.getTime())) {

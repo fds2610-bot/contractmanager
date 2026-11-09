@@ -1,3 +1,5 @@
+import { getCanonicalLocale } from '@nextcloud/l10n'
+
 /**
  * Normalising a contract amount for display and for the API (#305).
  *
@@ -41,9 +43,14 @@ export function normalizeCostInput(value: string | number | null | undefined): s
 		return ''
 	}
 
-	const canonical = raw.includes(',')
+	// Both separators: the last one is the decimal separator, the other groups
+	// thousands ("1.234,56" and "1,234.56"). A lone comma is a decimal comma,
+	// a lone dot the canonical API form.
+	const lastComma = raw.lastIndexOf(',')
+	const lastDot = raw.lastIndexOf('.')
+	const canonical = lastComma > lastDot
 		? raw.replace(/\./g, '').replace(',', '.')
-		: raw
+		: (lastComma >= 0 ? raw.replace(/,/g, '') : raw)
 
 	const amount = Number(canonical)
 	if (!Number.isFinite(amount)) {
@@ -51,6 +58,33 @@ export function normalizeCostInput(value: string | number | null | undefined): s
 	}
 
 	return amount.toFixed(2)
+}
+
+/**
+ * Decimal separator of a locale, e.g. "," for de-DE and "." for en-US.
+ *
+ * @param locale BCP 47 locale, defaults to the Nextcloud locale setting
+ */
+export function decimalSeparator(locale: string = getCanonicalLocale()): string {
+	const part = new Intl.NumberFormat(locale).formatToParts(1.5).find(p => p.type === 'decimal')
+	return part?.value ?? '.'
+}
+
+/**
+ * An amount for the input field: two decimals with the decimal separator of
+ * the Nextcloud locale and no thousands grouping, e.g. "1234,50" in German
+ * (fds2610/contractmanager#6). Unparseable input is returned unchanged, like
+ * normalizeCostInput().
+ *
+ * @param value The raw value from the field, the API or the AI extraction
+ * @param locale BCP 47 locale, defaults to the Nextcloud locale setting
+ */
+export function costForInput(value: string | number | null | undefined, locale: string = getCanonicalLocale()): string {
+	const normalized = normalizeCostInput(value)
+	if (normalized === '' || !Number.isFinite(Number(normalized))) {
+		return normalized
+	}
+	return normalized.replace('.', decimalSeparator(locale))
 }
 
 /**
