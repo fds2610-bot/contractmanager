@@ -315,3 +315,13 @@ describe('getDeadlineInfo (#252)', () => {
 		expect(info.labelKey).toBeNull()
 	})
 })
+
+describe('formatPeriod singular', () => {
+	it('uses the singular for one unit', async () => {
+		const { formatPeriod } = await import('./periodUtils.js')
+		expect(formatPeriod('1 months')).toBe('1 Monat')
+		expect(formatPeriod('1 year')).toBe('1 Jahr')
+		expect(formatPeriod('12 months')).toBe('12 Monate')
+		expect(formatPeriod('2 weeks')).toBe('2 Wochen')
+	})
+})

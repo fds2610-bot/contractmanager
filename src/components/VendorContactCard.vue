@@ -48,7 +48,7 @@ import CardAccountDetailsOutlineIcon from 'vue-material-design-icons/CardAccount
 import EmailOutlineIcon from 'vue-material-design-icons/EmailOutline.vue'
 import MapMarkerOutlineIcon from 'vue-material-design-icons/MapMarkerOutline.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import PhoneIcon from 'vue-material-design-icons/Phone.vue'
+import PhoneIcon from 'vue-material-design-icons/PhoneOutline.vue'
 
 export default {
 	name: 'VendorContactCard',

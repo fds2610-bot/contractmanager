@@ -1,4 +1,54 @@
 {
+	"2.0.1": [
+		{
+			"title": {
+				"de": "Übersichtlichere Vertragsliste",
+				"en": "Clearer contract list"
+			},
+			"text": {
+				"de": "Die Liste zeigt unter dem Datum die Restzeit („in 10 Tagen“, rot unter 14 Tagen), unter dem Betrag das Intervall („pro Monat“) und die zuständige Person als Avatar. Die Statusfarben folgen dem Nextcloud-Design, auch im dunklen und kontrastreichen Modus. „Neuer Vertrag“ steht jetzt oben in der Navigation, die Vertragsarten haben Farbpunkte.",
+				"en": "Below the date the list shows the time left (“in 10 days”, red under 14 days), below the amount the interval (“per month”) and the responsible person as an avatar. Status colours follow the Nextcloud design, also in the dark and high-contrast themes. “New contract” now sits at the top of the navigation, contract types have colour dots."
+			},
+			"icon": "file-document",
+			"where": {
+				"de": "Vertragsliste",
+				"en": "Contract list"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Details in der Seitenleiste",
+				"en": "Details in the sidebar"
+			},
+			"text": {
+				"de": "Ein Klick auf einen Vertrag öffnet rechts eine Seitenleiste mit den wichtigsten Angaben, einer Laufzeitleiste und einem Hinweis, solange die Kündigungsfrist läuft. Der Reiter „Dokumente“ zeigt das Vertragsdokument und den Inhalt des Vertragsordners, „Verlauf“ das Anlegen, die letzte Änderung und die Kündigung. Bearbeitet wird weiter im gewohnten Formular.",
+				"en": "Clicking a contract opens a sidebar on the right with the key facts, a term bar and a notice while the cancellation deadline is running. The “Documents” tab shows the contract document and the contents of the contract folder, “History” its creation, last change and cancellation. Editing still happens in the familiar form."
+			},
+			"icon": "folder",
+			"where": {
+				"de": "Vertragsliste › Vertrag anklicken",
+				"en": "Contract list › click a contract"
+			},
+			"plus": false
+		},
+		{
+			"title": {
+				"de": "Filter als Chips, klickbare Kennzahl",
+				"en": "Filters as chips, clickable key figure"
+			},
+			"text": {
+				"de": "Die Filter stehen als Chips über der Liste; aktive Filter zeigen ihren Wert und lassen sich mit × einzeln entfernen. Die Kachel „Kündigungsfrist endet“ zeigt per Klick nur diese Verträge, die neue Kachel „Nächste Frist“ öffnet den Vertrag mit der nächsten Frist. Der PDF-Button heißt jetzt „Vertragsspiegel (PDF)“.",
+				"en": "Filters sit as chips above the list; active filters show their value and can be removed one by one with ×. The “Cancellation deadline ending” tile shows only those contracts on click, the new “Next deadline” tile opens the contract with the nearest deadline. The PDF button is now called “Contract overview (PDF)”."
+			},
+			"icon": "magnify",
+			"where": {
+				"de": "Vertragsliste",
+				"en": "Contract list"
+			},
+			"plus": false
+		}
+	],
 	"2.0.0": [
 		{
 			"title": {

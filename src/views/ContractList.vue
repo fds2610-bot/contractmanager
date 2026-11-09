@@ -1,9 +1,10 @@
 <template>
 	<div class="contract-list">
 		<div class="contract-list__header">
-			<h2>{{ t('nc_vertragswerk', 'Verträge') }}</h2>
+			<h2>{{ listTitle }}</h2>
+			<span v-if="!loading" class="contract-list__count">{{ n('nc_vertragswerk', '%n Vertrag', '%n Verträge', contracts.length) }}</span>
 			<div class="contract-list__header-actions">
-				<NcActions :force-menu="true" variant="secondary" :menu-name="activeSortLabel">
+				<NcActions :force-menu="true" variant="tertiary" :menu-name="activeSortLabel">
 					<template #icon>
 						<SortAscendingIcon v-if="sortDirection === 'asc'" :size="20" />
 						<SortDescendingIcon v-else :size="20" />
@@ -18,15 +19,7 @@
 						{{ option.label }}
 					</NcActionButton>
 				</NcActions>
-				<NcButton :variant="hasActiveFilters ? 'warning' : 'secondary'"
-					@click="toggleFilters">
-					<template #icon>
-						<FilterOffIcon v-if="showFilters" :size="20" />
-						<FilterIcon v-else :size="20" />
-					</template>
-					{{ t('nc_vertragswerk', 'Filter') }}
-				</NcButton>
-				<NcButton variant="secondary"
+				<NcButton variant="tertiary"
 					:disabled="loading || contracts.length === 0 || pdfGenerating"
 					:title="t('nc_vertragswerk', 'Vertragsspiegel der angezeigten Verträge als PDF')"
 					@click="openContractMirror">
@@ -34,15 +27,127 @@
 						<NcLoadingIcon v-if="pdfGenerating" :size="20" />
 						<FilePdfBoxIcon v-else :size="20" />
 					</template>
-					{{ t('nc_vertragswerk', 'PDF') }}
-				</NcButton>
-				<NcButton v-if="canEdit" variant="primary" @click="showCreateForm = true">
-					<template #icon>
-						<PlusIcon :size="20" />
-					</template>
-					{{ t('nc_vertragswerk', 'Neuer Vertrag') }}
+					{{ t('nc_vertragswerk', 'Vertragsspiegel (PDF)') }}
 				</NcButton>
 			</div>
+		</div>
+
+		<!-- Filter als Chips (2.0.1): jeder Filter ist ein Knopf, der seine
+		     Auswahl in einem Popover öffnet; aktive Filter zeigen ihren Wert und
+		     lassen sich mit × einzeln entfernen. -->
+		<div class="contract-list__filters" role="group" :aria-label="t('nc_vertragswerk', 'Filter')">
+			<span v-for="chip in filterChips"
+				:key="chip.key"
+				class="filter-chip"
+				:class="{ 'filter-chip--active': chip.active }">
+				<NcPopover popup-role="dialog" :no-focus-trap="true">
+					<template #trigger>
+						<button type="button" class="filter-chip__button" :data-test="'filter-chip-' + chip.key">
+							{{ chip.label }}
+							<ChevronDownIcon :size="18" />
+						</button>
+					</template>
+					<div class="filter-popover">
+						<NcSelect v-if="chip.key === 'status'"
+							v-model="filterStatuses"
+							:multiple="true"
+							:options="statusOptions"
+							:placeholder="t('nc_vertragswerk', 'Status')"
+							:clearable="false"
+							:append-to-body="false"
+							label="label"
+							track-by="id"
+							:reduce="option => option.id"
+							input-id="filter-status"
+							@update:model-value="persistFilters" />
+						<NcSelect v-else-if="chip.key === 'vendor'"
+							v-model="filterVendor"
+							:options="vendorOptions"
+							:placeholder="t('nc_vertragswerk', 'Vertragspartner')"
+							:clearable="true"
+							:append-to-body="false"
+							input-id="filter-vendor"
+							@update:model-value="persistFilters" />
+						<NcSelect v-else-if="chip.key === 'responsible'"
+							v-model="filterResponsible"
+							:options="responsibleOptions"
+							:placeholder="t('nc_vertragswerk', 'Zuständig')"
+							:clearable="true"
+							:append-to-body="false"
+							input-id="filter-responsible"
+							@update:model-value="persistFilters" />
+						<NcSelect v-else-if="chip.key === 'area'"
+							v-model="filterAreaId"
+							:options="areaFilterOptions"
+							:placeholder="t('nc_vertragswerk', 'Kategorie')"
+							:clearable="true"
+							:append-to-body="false"
+							label="label"
+							track-by="id"
+							:reduce="option => option.id"
+							input-id="filter-area"
+							@update:model-value="persistFilters" />
+						<NcSelect v-else-if="chip.key === 'type'"
+							v-model="filterContractType"
+							:options="contractTypeOptions"
+							:placeholder="t('nc_vertragswerk', 'Befristung')"
+							:clearable="true"
+							:append-to-body="false"
+							label="label"
+							track-by="id"
+							:reduce="option => option.id"
+							input-id="filter-type"
+							@update:model-value="persistFilters" />
+						<NcSelect v-else-if="chip.key === 'deadline'"
+							v-model="filterDeadlineWithin"
+							:options="deadlineWithinOptions"
+							:placeholder="t('nc_vertragswerk', 'Frist / Ende in')"
+							:clearable="true"
+							:append-to-body="false"
+							label="label"
+							track-by="id"
+							:reduce="option => option.id"
+							input-id="filter-deadline-within"
+							@update:model-value="persistFilters" />
+						<NcTextField v-else-if="chip.key === 'cost'"
+							v-model="filterMinMonthlyCostText"
+							class="filter-min-cost"
+							:label="t('nc_vertragswerk', 'Monatskosten ab')"
+							inputmode="decimal"
+							:error="minMonthlyCostInvalid"
+							:helper-text="minMonthlyCostInvalid ? t('nc_vertragswerk', 'Ungültiger Betrag') : ''"
+							:show-trailing-button="filterMinMonthlyCostText !== ''"
+							trailing-button-icon="close"
+							@trailing-button-click="filterMinMonthlyCostText = ''" />
+					</div>
+				</NcPopover>
+				<button v-if="chip.active"
+					type="button"
+					class="filter-chip__clear"
+					:aria-label="t('nc_vertragswerk', 'Filter „{name}“ entfernen', { name: chip.name })"
+					:title="t('nc_vertragswerk', 'Filter „{name}“ entfernen', { name: chip.name })"
+					@click="clearFilter(chip.key)">
+					<CloseIcon :size="16" />
+				</button>
+			</span>
+			<!-- Admin-Diagnose (#299): ein Umschalter, keine Auswahl. -->
+			<span v-if="isAdmin" class="filter-chip" :class="{ 'filter-chip--active': filterOwnerMissing }">
+				<button type="button"
+					class="filter-chip__button"
+					:aria-pressed="filterOwnerMissing ? 'true' : 'false'"
+					@click="onOwnerMissingChange(!filterOwnerMissing)">
+					<CheckIcon v-if="filterOwnerMissing" :size="16" />
+					{{ t('nc_vertragswerk', 'Ohne aktiven Eigentümer') }}
+				</button>
+			</span>
+			<NcButton v-if="hasActiveFilters"
+				variant="tertiary"
+				@click="resetFilters">
+				<template #icon>
+					<FilterOffIcon :size="20" />
+				</template>
+				{{ t('nc_vertragswerk', 'Zurücksetzen') }}
+			</NcButton>
 		</div>
 
 		<div v-if="!loading && allContracts.length && kpiScopeActive" class="kpi-scope">
@@ -51,7 +156,7 @@
 		<div v-if="!loading && allContracts.length" class="contract-kpis">
 			<div class="kpi">
 				<div class="kpi__lab">
-					<FileDocumentIcon :size="15" /> {{ t('nc_vertragswerk', 'Aktive Verträge') }}
+					<FileDocumentIcon :size="16" /> {{ t('nc_vertragswerk', 'Aktive Verträge') }}
 				</div>
 				<div class="kpi__num">
 					{{ kpiActiveCount }}
@@ -62,7 +167,7 @@
 			</div>
 			<div class="kpi">
 				<div class="kpi__lab">
-					<CashMultipleIcon :size="15" /> {{ t('nc_vertragswerk', 'Monatliche Kosten') }}
+					<CashMultipleIcon :size="16" /> {{ t('nc_vertragswerk', 'Monatliche Kosten') }}
 				</div>
 				<div class="kpi__num">
 					{{ kpiMonthlyLabel }}
@@ -71,93 +176,40 @@
 					{{ kpiMonthlySub }}
 				</div>
 			</div>
-			<div class="kpi" :class="{ 'kpi--warn': kpiEndingSoon > 0 }">
-				<div class="kpi__lab">
-					<BellRingIcon :size="15" /> {{ t('nc_vertragswerk', 'Kündigungsfrist endet') }}
-				</div>
-				<div class="kpi__num">
+			<button type="button"
+				class="kpi kpi--button"
+				:class="{ 'kpi--warn': kpiEndingSoon > 0, 'kpi--pressed': endingSoonOnly }"
+				:aria-pressed="endingSoonOnly ? 'true' : 'false'"
+				data-test="kpi-ending-soon"
+				@click="toggleEndingSoonOnly">
+				<span class="kpi__lab">
+					<BellRingIcon :size="16" /> {{ t('nc_vertragswerk', 'Kündigungsfrist endet') }}
+				</span>
+				<span class="kpi__num">
 					{{ kpiEndingSoon }}
-				</div>
-				<div class="kpi__sub">
-					{{ t('nc_vertragswerk', 'innerhalb der Vorlaufzeit') }}
-				</div>
-			</div>
-		</div>
-
-		<div v-show="showFilters" class="contract-list__filters">
-			<NcSelect v-model="filterVendor"
-				:options="vendorOptions"
-				:placeholder="t('nc_vertragswerk', 'Vertragspartner')"
-				:clearable="true"
-				input-id="filter-vendor"
-				@update:model-value="persistFilters" />
-			<NcSelect v-model="filterStatuses"
-				:multiple="true"
-				:options="statusOptions"
-				:placeholder="t('nc_vertragswerk', 'Status')"
-				:clearable="false"
-				label="label"
-				track-by="id"
-				:reduce="option => option.id"
-				input-id="filter-status"
-				@update:model-value="persistFilters" />
-			<NcSelect v-model="filterAreaId"
-				:options="areaFilterOptions"
-				:placeholder="t('nc_vertragswerk', 'Kategorie')"
-				:clearable="true"
-				label="label"
-				track-by="id"
-				:reduce="option => option.id"
-				input-id="filter-area"
-				@update:model-value="persistFilters" />
-			<NcSelect v-model="filterContractType"
-				:options="contractTypeOptions"
-				:placeholder="t('nc_vertragswerk', 'Befristung')"
-				:clearable="true"
-				label="label"
-				track-by="id"
-				:reduce="option => option.id"
-				input-id="filter-type"
-				@update:model-value="persistFilters" />
-			<NcSelect v-model="filterResponsible"
-				:options="responsibleOptions"
-				:placeholder="t('nc_vertragswerk', 'Zuständig')"
-				:clearable="true"
-				input-id="filter-responsible"
-				@update:model-value="persistFilters" />
-			<NcSelect v-model="filterDeadlineWithin"
-				:options="deadlineWithinOptions"
-				:placeholder="t('nc_vertragswerk', 'Frist / Ende in')"
-				:clearable="true"
-				label="label"
-				track-by="id"
-				:reduce="option => option.id"
-				input-id="filter-deadline-within"
-				@update:model-value="persistFilters" />
-			<NcTextField v-model="filterMinMonthlyCostText"
-				class="filter-min-cost"
-				:label="t('nc_vertragswerk', 'Monatskosten ab')"
-				inputmode="decimal"
-				:error="minMonthlyCostInvalid"
-				:helper-text="minMonthlyCostInvalid ? t('nc_vertragswerk', 'Ungültiger Betrag') : ''"
-				:show-trailing-button="filterMinMonthlyCostText !== ''"
-				trailing-button-icon="close"
-				@trailing-button-click="filterMinMonthlyCostText = ''" />
-			<NcCheckboxRadioSwitch v-if="isAdmin"
-				:model-value="filterOwnerMissing"
-				type="switch"
-				class="filter-owner-missing"
-				@update:model-value="onOwnerMissingChange">
-				{{ t('nc_vertragswerk', 'Ohne aktiven Eigentümer') }}
-			</NcCheckboxRadioSwitch>
-			<NcButton v-if="hasActiveFilters"
-				variant="tertiary"
-				@click="resetFilters">
-				<template #icon>
-					<CloseIcon :size="20" />
-				</template>
-				{{ t('nc_vertragswerk', 'Zurücksetzen') }}
-			</NcButton>
+				</span>
+				<span class="kpi__sub">
+					{{ endingSoonOnly
+						? t('nc_vertragswerk', 'Filter aktiv · erneut klicken zum Aufheben')
+						: t('nc_vertragswerk', 'Klicken zeigt nur diese Verträge') }}
+				</span>
+			</button>
+			<component :is="kpiNextDeadline ? 'button' : 'div'"
+				:type="kpiNextDeadline ? 'button' : undefined"
+				class="kpi"
+				:class="{ 'kpi--button': kpiNextDeadline }"
+				data-test="kpi-next-deadline"
+				@click="kpiNextDeadline && selectContract(kpiNextDeadline.contract.id)">
+				<span class="kpi__lab">
+					<CalendarIcon :size="16" /> {{ t('nc_vertragswerk', 'Nächste Frist') }}
+				</span>
+				<span class="kpi__num">
+					{{ kpiNextDeadline ? kpiNextDeadline.label : '–' }}
+				</span>
+				<span class="kpi__sub">
+					{{ kpiNextDeadline ? kpiNextDeadline.contract.name : t('nc_vertragswerk', 'keine offene Frist') }}
+				</span>
+			</component>
 		</div>
 
 		<div v-if="loading" class="contract-list__loading">
@@ -195,17 +247,23 @@
 
 		<div v-else class="contract-list__table">
 			<div class="contract-list__thead">
+				<span class="col-avatar" aria-hidden="true" />
 				<span class="col-name">{{ t('nc_vertragswerk', 'Vertrag') }}</span>
-				<span>{{ t('nc_vertragswerk', 'Status') }}</span>
+				<span class="col-status">{{ t('nc_vertragswerk', 'Status') }}</span>
 				<span class="col-cost">{{ t('nc_vertragswerk', 'Kosten') }}</span>
-				<span>{{ t('nc_vertragswerk', 'Frist / Ende') }}</span>
-				<span aria-hidden="true" />
+				<span class="col-deadline">{{ t('nc_vertragswerk', 'Frist / Ende') }}</span>
+				<span class="col-responsible" :title="t('nc_vertragswerk', 'Zuständig')">
+					<AccountIcon :size="18" />
+				</span>
+				<span class="col-actions" aria-hidden="true" />
 			</div>
 			<div class="contract-list__items">
 				<ContractListItem v-for="contract in contracts"
 					:key="contract.id"
 					:contract="contract"
 					:default-reminder-days="defaultReminderDays"
+					:selected="contract.id === selectedContractId"
+					@select="selectContract(contract.id)"
 					@edit="handleEdit"
 					@duplicate="handleDuplicate"
 					@view="handleView"
@@ -254,18 +312,22 @@ import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcSelect from '@nextcloud/vue/components/NcSelect'
-import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
+import NcPopover from '@nextcloud/vue/components/NcPopover'
 import PlusIcon from 'vue-material-design-icons/Plus.vue'
-import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import FileDocumentIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
 import SortAscendingIcon from 'vue-material-design-icons/SortAscending.vue'
 import SortDescendingIcon from 'vue-material-design-icons/SortDescending.vue'
 import CircleSmallIcon from 'vue-material-design-icons/CircleSmall.vue'
-import FilterIcon from 'vue-material-design-icons/Filter.vue'
-import FilterOffIcon from 'vue-material-design-icons/FilterOff.vue'
+import FilterIcon from 'vue-material-design-icons/FilterOutline.vue'
+import FilterOffIcon from 'vue-material-design-icons/FilterOffOutline.vue'
+import ChevronDownIcon from 'vue-material-design-icons/ChevronDown.vue'
+import CheckIcon from 'vue-material-design-icons/Check.vue'
+import CalendarIcon from 'vue-material-design-icons/CalendarOutline.vue'
+import AccountIcon from 'vue-material-design-icons/AccountOutline.vue'
 import CloseIcon from 'vue-material-design-icons/Close.vue'
 import CashMultipleIcon from 'vue-material-design-icons/CashMultiple.vue'
-import BellRingIcon from 'vue-material-design-icons/BellRing.vue'
+import BellRingIcon from 'vue-material-design-icons/BellRingOutline.vue'
 import FilePdfBoxIcon from 'vue-material-design-icons/FilePdfBox.vue'
 import ContractListItem from '../components/ContractListItem.vue'
 import { getDeadlineInfo, getEffectiveEndDate } from '../utils/periodUtils.js'
@@ -282,6 +344,8 @@ import { getCurrentUser } from '@nextcloud/auth'
 import { buildMirrorSections } from '../utils/contractMirror'
 import { formatDate } from '../utils/dateUtils.js'
 import { showInfo, showError } from '@nextcloud/dialogs'
+import { useUiStore } from '../store/ui'
+import { daysUntil } from '../utils/listDisplay'
 
 export default {
 	name: 'ContractList',
@@ -293,8 +357,12 @@ export default {
 		NcLoadingIcon,
 		NcEmptyContent,
 		NcSelect,
-		NcCheckboxRadioSwitch,
 		NcTextField,
+		NcPopover,
+		ChevronDownIcon,
+		CheckIcon,
+		CalendarIcon,
+		AccountIcon,
 		PlusIcon,
 		FileDocumentIcon,
 		SortAscendingIcon,
@@ -346,7 +414,6 @@ export default {
 				{ key: 'cost', label: t('nc_vertragswerk', 'Kosten'), defaultDirection: 'desc' },
 				{ key: 'cancellationDeadline', label: t('nc_vertragswerk', 'Frist / Ende'), defaultDirection: 'asc' },
 			],
-			showFilters: false,
 			filterVendor: filters.vendor || null,
 			filterStatuses: filters.statuses || [],
 			filterContractType: filters.contractType || null,
@@ -361,6 +428,9 @@ export default {
 			// Normalbetrieb null Treffer liefert, darf nicht monatelang stumm
 			// weiterfiltern. Gilt nur fuer die laufende Ansicht.
 			filterOwnerMissing: false,
+			// Status selection before the „Kündigungsfrist endet" tile narrowed it
+			// to ending_soon (2.0.1); null while that tile filter is off.
+			statusesBeforeEndingSoon: null,
 			// Window the badge / filter uses for "Kündigungsfrist endet". Defaults to the
 			// constant in utils/contractStatus; gets overridden once the admin
 			// setting comes back from the user-settings endpoint.
@@ -387,6 +457,7 @@ export default {
 		}),
 		...mapState(useCategoriesStore, ['allCategories']),
 		...mapState(useAreasStore, ['allAreas']),
+		...mapState(useUiStore, ['selectedContractId', 'formRequest']),
 		areaFilterOptions() {
 			return this.allAreas.map(a => ({ id: a.id, label: a.name }))
 		},
@@ -537,6 +608,69 @@ export default {
 			}
 			return parts.join(' · ')
 		},
+		listTitle() {
+			if (this.categoryFilter === null) {
+				return t('nc_vertragswerk', 'Alle Verträge')
+			}
+			if (this.categoryFilter === 'uncategorized') {
+				return t('nc_vertragswerk', 'Ohne Vertragsart')
+			}
+			return this.allCategories.find(c => c.id === this.categoryFilter)?.name ?? t('nc_vertragswerk', 'Verträge')
+		},
+		endingSoonOnly() {
+			return this.filterStatuses.length === 1 && this.filterStatuses[0] === 'ending_soon'
+		},
+		statusFilterLabel() {
+			if (this.endingSoonOnly) {
+				return t('nc_vertragswerk', 'Kündigungsfrist endet')
+			}
+			return this.filterStatuses
+				.map(id => this.statusOptions.find(o => o.id === id)?.label)
+				.filter(Boolean)
+				.join(', ')
+		},
+		// One chip per filter (2.0.1). `name` is the filter, `label` what the
+		// chip shows: the name alone, or name and chosen value.
+		filterChips() {
+			const chip = (key, name, value) => ({
+				key,
+				name,
+				active: value !== null && value !== '' && value !== undefined,
+				label: value !== null && value !== '' && value !== undefined ? name + ': ' + value : name,
+			})
+			const optionLabel = (options, id) => options.find(o => o.id === id)?.label ?? null
+			const cost = this.filterMinMonthlyCost === null
+				? null
+				: new Intl.NumberFormat(getCanonicalLocale(), { style: 'currency', currency: 'EUR' }).format(this.filterMinMonthlyCost)
+			return [
+				chip('status', t('nc_vertragswerk', 'Status'), this.filterStatuses.length ? this.statusFilterLabel : null),
+				chip('vendor', t('nc_vertragswerk', 'Vertragspartner'), this.filterVendor),
+				chip('responsible', t('nc_vertragswerk', 'Zuständig'), this.filterResponsible),
+				chip('area', t('nc_vertragswerk', 'Kategorie'), this.filterAreaId ? optionLabel(this.areaFilterOptions, this.filterAreaId) : null),
+				chip('type', t('nc_vertragswerk', 'Befristung'), this.filterContractType ? optionLabel(this.contractTypeOptions, this.filterContractType) : null),
+				chip('deadline', t('nc_vertragswerk', 'Frist / Ende in'), this.filterDeadlineWithin ? t('nc_vertragswerk', '{days} Tagen', { days: this.filterDeadlineWithin }) : null),
+				chip('cost', t('nc_vertragswerk', 'Monatskosten ab'), cost),
+			]
+		},
+		// Earliest upcoming date in the „Frist / Ende" column among the shown
+		// contracts; the tile opens that contract in the sidebar.
+		kpiNextDeadline() {
+			let best = null
+			for (const c of this.contracts) {
+				const info = getDeadlineInfo(c)
+				if (!info.date || info.labelKey === 'cancelledTo') continue
+				const days = daysUntil(info.date)
+				if (days < 0) continue
+				if (!best || days < best.days) {
+					best = { days, date: info.date, contract: c }
+				}
+			}
+			if (!best) return null
+			return {
+				contract: best.contract,
+				label: best.date.toLocaleDateString(getCanonicalLocale(), { day: '2-digit', month: '2-digit' }),
+			}
+		},
 		contracts() {
 			let filtered = this.allContracts.filter(c => c.status !== 'archived')
 
@@ -621,6 +755,28 @@ export default {
 		},
 	},
 	watch: {
+		// „Neuer Vertrag" in the navigation and „Bearbeiten" in the sidebar
+		// ask for the form through the UI store (2.0.1).
+		formRequest(request) {
+			if (!request) return
+			if (request.kind === 'create') {
+				this.editingContract = null
+				this.showCreateForm = true
+			} else if (request.kind === 'edit' && request.contract) {
+				this.handleEdit(request.contract)
+			} else if (request.kind === 'duplicate' && request.contract) {
+				this.handleDuplicate(request.contract)
+			} else if (request.kind === 'view' && request.contract) {
+				this.handleView(request.contract)
+			}
+		},
+		// A contract that drops out of the list (filter, archive, trash) must
+		// not stay open in the sidebar.
+		contracts(list) {
+			if (this.selectedContractId !== null && !list.some(c => c.id === this.selectedContractId)) {
+				this.selectContract(null)
+			}
+		},
 		// Typing must not save on every keystroke.
 		filterMinMonthlyCost() {
 			clearTimeout(this.minMonthlyCostSaveTimer)
@@ -637,14 +793,12 @@ export default {
 		this.loadReminderWindow()
 		this.fetchCategories()
 		this.fetchAreas().catch(e => console.debug('Failed to load areas:', e))
-		if (this.hasActiveFilters) {
-			this.showFilters = true
-		}
 	},
 	methods: {
 		...mapActions(useContractsStore, ['fetchContracts', 'fetchPermissions', 'createContract', 'updateContract', 'archiveContract']),
 		...mapActions(useCategoriesStore, ['fetchCategories']),
 		...mapActions(useAreasStore, ['fetchAreas']),
+		...mapActions(useUiStore, ['selectContract', 'setReminderDays']),
 
 		async loadReminderWindow() {
 			try {
@@ -652,6 +806,7 @@ export default {
 				const days = Number(settings.reminderDays1)
 				if (Number.isFinite(days) && days > 0) {
 					this.defaultReminderDays = days
+					this.setReminderDays(days)
 				}
 			} catch (e) {
 				// Falls die Settings nicht erreichbar sind, bleibt der Default
@@ -699,6 +854,7 @@ export default {
 			// Mirror the normal list-click behaviour: editors land in the editable
 			// form (so they can act on the reminder right away), viewers get the
 			// read-only details.
+			this.selectContract(contract.id)
 			if (this.canEdit) {
 				this.handleEdit(contract)
 			} else {
@@ -907,8 +1063,33 @@ export default {
 			return { contacts, userNames }
 		},
 
-		toggleFilters() {
-			this.showFilters = !this.showFilters
+		clearFilter(key) {
+			switch (key) {
+			case 'status':
+				this.filterStatuses = []
+				this.statusesBeforeEndingSoon = null
+				break
+			case 'vendor': this.filterVendor = null; break
+			case 'responsible': this.filterResponsible = null; break
+			case 'area': this.filterAreaId = null; break
+			case 'type': this.filterContractType = null; break
+			case 'deadline': this.filterDeadlineWithin = null; break
+			case 'cost': this.filterMinMonthlyCostText = ''; return
+			}
+			this.persistFilters()
+		},
+
+		// The „Kündigungsfrist endet" tile narrows the status filter to exactly
+		// those contracts; a second click restores the previous selection.
+		toggleEndingSoonOnly() {
+			if (this.endingSoonOnly) {
+				this.filterStatuses = this.statusesBeforeEndingSoon ?? []
+				this.statusesBeforeEndingSoon = null
+			} else {
+				this.statusesBeforeEndingSoon = [...this.filterStatuses]
+				this.filterStatuses = ['ending_soon']
+			}
+			this.persistFilters()
 		},
 
 		resetFilters() {
@@ -920,6 +1101,7 @@ export default {
 			this.filterDeadlineWithin = null
 			this.filterMinMonthlyCostText = ''
 			this.filterOwnerMissing = false
+			this.statusesBeforeEndingSoon = null
 			this.persistFilters()
 		},
 
@@ -951,15 +1133,16 @@ export default {
 
 <style scoped lang="scss">
 .contract-list {
-	padding: 20px;
-	padding-left: 50px;
+	padding: 8px 20px 20px 50px;
 	height: 100%;
+	container: contract-list / inline-size;
 
 	&__header {
 		display: flex;
-		justify-content: space-between;
 		align-items: center;
-		margin-bottom: 20px;
+		gap: 12px;
+		min-height: var(--default-clickable-area, 34px);
+		margin: 4px 0 8px;
 
 		h2 {
 			margin: 0;
@@ -970,8 +1153,13 @@ export default {
 		&-actions {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 4px;
+			margin-left: auto;
 		}
+	}
+
+	&__count {
+		color: var(--color-text-maxcontrast);
 	}
 
 	&__filters {
@@ -980,25 +1168,6 @@ export default {
 		align-items: center;
 		gap: 8px;
 		margin-bottom: 16px;
-		padding: 12px;
-		background-color: var(--color-background-dark);
-		border-radius: var(--border-radius-large);
-
-		.v-select {
-			min-width: 180px;
-			max-width: 300px;
-			flex: 1;
-		}
-
-		// The selects above grow (flex: 1); without this the switch would be
-		// squeezed and its label wrapped.
-		.filter-owner-missing {
-			flex: 0 0 auto;
-		}
-
-		.filter-min-cost {
-			flex: 0 0 180px;
-		}
 	}
 
 	&__loading {
@@ -1011,23 +1180,22 @@ export default {
 	&__table {
 		background: var(--color-main-background);
 		border: 1px solid var(--color-border);
-		border-radius: var(--border-radius-large, 12px);
+		border-radius: var(--border-radius-container-large, 12px);
 		overflow: hidden;
 	}
 
 	&__thead {
 		display: grid;
-		grid-template-columns: minmax(0, 1fr) 150px 110px 120px 116px;
-		gap: 14px;
+		grid-template-columns: 32px minmax(0, 1fr) 170px 120px 130px 32px 96px;
+		gap: 12px;
 		align-items: center;
-		padding: 11px 0;
+		padding: 10px 4px 10px 12px;
 		border-bottom: 1px solid var(--color-border);
-		font-size: 12px;
-		font-weight: 600;
+		font-size: 13px;
 		color: var(--color-text-maxcontrast);
 
-		.col-name { padding-left: 18px; }
 		.col-cost { text-align: right; }
+		.col-responsible { display: flex; justify-content: center; }
 	}
 
 	&__items {
@@ -1035,11 +1203,86 @@ export default {
 	}
 }
 
+/* Filter chips (2.0.1), same look as the filters of the Files app. */
+.filter-chip {
+	display: inline-flex;
+	align-items: center;
+	height: 32px;
+	border: 1px solid var(--color-border-maxcontrast);
+	border-radius: var(--border-radius-pill, 100px);
+
+	&__button {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		height: 100%;
+		min-height: 0;
+		margin: 0;
+		padding: 0 8px 0 12px;
+		border: none;
+		border-radius: var(--border-radius-pill, 100px);
+		background: transparent;
+		color: var(--color-main-text);
+		font-weight: normal;
+		cursor: pointer;
+
+		&:hover {
+			background: var(--color-background-hover);
+		}
+	}
+
+	&__clear {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 28px;
+		height: 28px;
+		min-height: 0;
+		margin: 0 2px 0 -4px;
+		padding: 0;
+		border: none;
+		border-radius: 50%;
+		background: transparent;
+		color: inherit;
+		cursor: pointer;
+
+		&:hover {
+			background: var(--color-primary-element-light-hover, var(--color-background-hover));
+		}
+	}
+
+	&--active {
+		border-color: transparent;
+		background: var(--color-primary-element-light);
+		color: var(--color-primary-element-light-text);
+
+		.filter-chip__button {
+			color: inherit;
+			font-weight: 600;
+
+			&:hover {
+				background: var(--color-primary-element-light-hover, var(--color-background-hover));
+			}
+		}
+	}
+}
+
+.filter-popover {
+	width: 320px;
+	padding: 12px;
+
+	/* Dropdown renders inside the popover, so it needs room below. */
+	:deep(.vs__dropdown-menu) {
+		position: static;
+		max-height: 240px;
+		margin-top: 4px;
+	}
+}
+
 .kpi-scope {
 	display: flex;
 	align-items: center;
 	gap: 5px;
-	max-width: 920px;
 	margin: 0 0 8px;
 	font-size: 13px;
 	color: var(--color-text-maxcontrast);
@@ -1047,45 +1290,95 @@ export default {
 
 .contract-kpis {
 	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	grid-template-columns: repeat(4, minmax(0, 1fr));
 	gap: 12px;
 	margin-bottom: 18px;
-	max-width: 920px;
 
 	.kpi {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+		min-width: 0;
+		margin: 0;
 		background: var(--color-main-background);
 		border: 1px solid var(--color-border);
-		border-radius: var(--border-radius-large, 12px);
-		padding: 14px 16px;
+		border-radius: var(--border-radius-container-large, 12px);
+		padding: 12px 14px;
+		color: var(--color-main-text);
+		font-weight: normal;
+		text-align: left;
+	}
+
+	.kpi--button {
+		cursor: pointer;
+
+		&:hover {
+			background: var(--color-background-hover);
+		}
+	}
+
+	.kpi--pressed {
+		background: var(--color-primary-element-light);
+		border-color: var(--color-primary-element);
 	}
 
 	.kpi__lab {
 		display: flex;
 		align-items: center;
-		gap: 7px;
+		gap: 6px;
 		font-size: 13px;
-		font-weight: 600;
 		color: var(--color-text-maxcontrast);
 	}
 
 	.kpi__num {
-		font-size: 26px;
+		font-size: 22px;
 		font-weight: 700;
-		line-height: 1;
-		margin-top: 8px;
+		line-height: 1.2;
+		margin-top: 6px;
 		font-variant-numeric: tabular-nums;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
-	.kpi--warn .kpi__num { color: #9a6c25; }
+	.kpi--warn {
+		border-color: var(--color-warning);
+
+		.kpi__num { color: var(--color-warning-text); }
+	}
 
 	.kpi__sub {
-		font-size: 12.5px;
+		font-size: 13px;
 		color: var(--color-text-maxcontrast);
-		margin-top: 5px;
+		margin-top: 2px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 }
 
-@media (max-width: 768px) {
+/* Same breakpoint as ContractListItem.vue. */
+@container contract-list (max-width: 800px) {
+	.contract-list__thead {
+		grid-template-columns: 32px minmax(0, 1fr) 132px 100px 108px 28px 40px;
+		gap: 10px;
+	}
+
+	.contract-kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@container contract-list (max-width: 700px) {
+	.contract-list__thead {
+		grid-template-columns: minmax(0, 1fr) 100px 108px 40px;
+
+		.col-avatar,
+		.col-status,
+		.col-responsible {
+			display: none;
+		}
+	}
+}
+
+@container contract-list (max-width: 500px) {
 	.contract-kpis { grid-template-columns: 1fr; }
 }
 </style>

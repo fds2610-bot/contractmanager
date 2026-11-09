@@ -134,7 +134,7 @@
 
 <script>
 import NcChip from '@nextcloud/vue/components/NcChip'
-import AccountIcon from 'vue-material-design-icons/Account.vue'
+import AccountIcon from 'vue-material-design-icons/AccountOutline.vue'
 import PlusCircleIcon from 'vue-material-design-icons/PlusCircle.vue'
 import MinusCircleIcon from 'vue-material-design-icons/MinusCircle.vue'
 import ContractService from '../services/ContractService'

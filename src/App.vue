@@ -13,6 +13,15 @@
 
 		<template v-else-if="permissionsChecked">
 			<NcAppNavigation>
+				<!-- Hauptaktion oben in der Navigation, wie in Mail, Deck und Kalender (2.0.1). -->
+				<NcAppNavigationNew v-if="canEdit"
+					:text="t('nc_vertragswerk', 'Neuer Vertrag')"
+					@click="createContract">
+					<template #icon>
+						<PlusIcon :size="20" />
+					</template>
+				</NcAppNavigationNew>
+
 				<div class="nav-search">
 					<NcTextField v-model="searchQuery"
 						:label="t('nc_vertragswerk', 'Verträge durchsuchen …')"
@@ -25,96 +34,102 @@
 					</NcTextField>
 				</div>
 
-				<NcAppNavigationItem :name="t('nc_vertragswerk', 'Verträge')"
-					:class="{ active: currentView === 'contracts' && selectedCategoryId === null }"
-					@click="showAllContracts">
-					<template #icon>
-						<FileDocumentIcon :size="20" />
-					</template>
-					<template #counter>
-						<NcCounterBubble v-if="contractCount > 0" :count="contractCount" />
-					</template>
-				</NcAppNavigationItem>
+				<NcAppNavigationList>
+					<NcAppNavigationItem :name="t('nc_vertragswerk', 'Alle Verträge')"
+						:active="currentView === 'contracts' && selectedCategoryId === null"
+						@click="showAllContracts">
+						<template #icon>
+							<FileDocumentIcon :size="20" />
+						</template>
+						<template #counter>
+							<NcCounterBubble v-if="contractCount > 0" :count="contractCount" />
+						</template>
+					</NcAppNavigationItem>
 
-				<!-- Category filters. Double as drop targets: dragging a contract row
-				     onto one reassigns its category (#359). -->
-				<NcAppNavigationItem v-for="category in allCategories"
-					:key="category.id"
-					:name="category.name"
-					:class="{ active: currentView === 'contracts' && selectedCategoryId === category.id, 'nav-drop-target': dropTargetKey === category.id }"
-					class="category-item"
-					@click="filterByCategory(category.id)"
-					@dragover.prevent="dropTargetKey = category.id"
-					@dragenter.prevent="dropTargetKey = category.id"
-					@dragleave="onCategoryDragLeave(category.id, $event)"
-					@drop.prevent="onCategoryDrop(category.id, $event)">
-					<template #icon>
-						<TagIcon :size="20" />
-					</template>
-					<template #counter>
-						<NcCounterBubble v-if="getCategoryContractCount(category.id) > 0" :count="getCategoryContractCount(category.id)" />
-					</template>
-				</NcAppNavigationItem>
+					<NcAppNavigationCaption :name="t('nc_vertragswerk', 'Vertragsarten')" />
 
-				<NcAppNavigationItem v-if="uncategorizedCount > 0"
-					:name="t('nc_vertragswerk', 'Ohne Vertragsart')"
-					:class="{ active: currentView === 'contracts' && selectedCategoryId === 'uncategorized', 'nav-drop-target': dropTargetKey === 'uncategorized' }"
-					class="category-item"
-					@click="filterByCategory('uncategorized')"
-					@dragover.prevent="dropTargetKey = 'uncategorized'"
-					@dragenter.prevent="dropTargetKey = 'uncategorized'"
-					@dragleave="onCategoryDragLeave('uncategorized', $event)"
-					@drop.prevent="onCategoryDrop('uncategorized', $event)">
-					<template #icon>
-						<TagIcon :size="20" />
-					</template>
-					<template #counter>
-						<NcCounterBubble :count="uncategorizedCount" />
-					</template>
-				</NcAppNavigationItem>
+					<!-- Category filters. Double as drop targets: dragging a contract row
+					     onto one reassigns its category (#359). -->
+					<NcAppNavigationItem v-for="category in allCategories"
+						:key="category.id"
+						:name="category.name"
+						:active="currentView === 'contracts' && selectedCategoryId === category.id"
+						:class="{ 'nav-drop-target': dropTargetKey === category.id }"
+						@click="filterByCategory(category.id)"
+						@dragover.prevent="dropTargetKey = category.id"
+						@dragenter.prevent="dropTargetKey = category.id"
+						@dragleave="onCategoryDragLeave(category.id, $event)"
+						@drop.prevent="onCategoryDrop(category.id, $event)">
+						<template #icon>
+							<NcAppNavigationIconBullet :color="categoryColor(category.id)" />
+						</template>
+						<template #counter>
+							<NcCounterBubble v-if="getCategoryContractCount(category.id) > 0" :count="getCategoryContractCount(category.id)" />
+						</template>
+					</NcAppNavigationItem>
 
-				<NcAppNavigationItem :name="t('nc_vertragswerk', 'Archiv')"
-					:class="{ active: currentView === 'archive' }"
-					@click="currentView = 'archive'; selectedCategoryId = null">
-					<template #icon>
-						<ArchiveIcon :size="20" />
-					</template>
-					<template #counter>
-						<NcCounterBubble v-if="archivedCount > 0" :count="archivedCount" />
-					</template>
-				</NcAppNavigationItem>
-
-				<!-- Also shown to non-editors when something of theirs lies in the
-				     trash (#438): an owner notified about a deletion must find it. -->
-				<NcAppNavigationItem v-if="canEdit || trashedCount > 0"
-					:name="t('nc_vertragswerk', 'Papierkorb')"
-					:class="{ active: currentView === 'trash' }"
-					@click="currentView = 'trash'; selectedCategoryId = null">
-					<template #icon>
-						<DeleteIcon :size="20" />
-					</template>
-					<template #counter>
-						<NcCounterBubble v-if="trashedCount > 0" :count="trashedCount" />
-					</template>
-				</NcAppNavigationItem>
+					<NcAppNavigationItem v-if="uncategorizedCount > 0"
+						:name="t('nc_vertragswerk', 'Ohne Vertragsart')"
+						:active="currentView === 'contracts' && selectedCategoryId === 'uncategorized'"
+						:class="{ 'nav-drop-target': dropTargetKey === 'uncategorized' }"
+						@click="filterByCategory('uncategorized')"
+						@dragover.prevent="dropTargetKey = 'uncategorized'"
+						@dragenter.prevent="dropTargetKey = 'uncategorized'"
+						@dragleave="onCategoryDragLeave('uncategorized', $event)"
+						@drop.prevent="onCategoryDrop('uncategorized', $event)">
+						<template #icon>
+							<NcAppNavigationIconBullet :color="categoryColor(null)" />
+						</template>
+						<template #counter>
+							<NcCounterBubble :count="uncategorizedCount" />
+						</template>
+					</NcAppNavigationItem>
+				</NcAppNavigationList>
 
 				<template #footer>
-					<NcAppNavigationItem :name="t('nc_vertragswerk', 'Einstellungen')"
-						:class="{ active: currentView === 'settings' }"
-						@click="currentView = 'settings'; selectedCategoryId = null">
-						<template #icon>
-							<CogIcon :size="20" />
-						</template>
-					</NcAppNavigationItem>
-					<!-- Dauerhafter Zugang zu den Neuerungen (#427): oeffnet das
-					     „Was ist neu?"-Fenster im Archiv-Modus (alle bisherigen Punkte).
-					     Kein eigener View, nur ein Knopf. -->
-					<NcAppNavigationItem :name="t('nc_vertragswerk', 'Neuerungen')"
-						@click="openWhatsNew">
-						<template #icon>
-							<BullhornOutlineIcon :size="20" />
-						</template>
-					</NcAppNavigationItem>
+					<ul class="app-navigation-entry__settings">
+						<NcAppNavigationItem :name="t('nc_vertragswerk', 'Archiv')"
+							:active="currentView === 'archive'"
+							@click="openView('archive')">
+							<template #icon>
+								<ArchiveIcon :size="20" />
+							</template>
+							<template #counter>
+								<NcCounterBubble v-if="archivedCount > 0" :count="archivedCount" />
+							</template>
+						</NcAppNavigationItem>
+
+						<!-- Also shown to non-editors when something of theirs lies in the
+						     trash (#438): an owner notified about a deletion must find it. -->
+						<NcAppNavigationItem v-if="canEdit || trashedCount > 0"
+							:name="t('nc_vertragswerk', 'Papierkorb')"
+							:active="currentView === 'trash'"
+							@click="openView('trash')">
+							<template #icon>
+								<DeleteIcon :size="20" />
+							</template>
+							<template #counter>
+								<NcCounterBubble v-if="trashedCount > 0" :count="trashedCount" />
+							</template>
+						</NcAppNavigationItem>
+
+						<NcAppNavigationItem :name="t('nc_vertragswerk', 'Einstellungen')"
+							:active="currentView === 'settings'"
+							@click="openView('settings')">
+							<template #icon>
+								<CogIcon :size="20" />
+							</template>
+						</NcAppNavigationItem>
+						<!-- Dauerhafter Zugang zu den Neuerungen (#427): oeffnet das
+						     „Was ist neu?"-Fenster im Archiv-Modus (alle bisherigen Punkte).
+						     Kein eigener View, nur ein Knopf. -->
+						<NcAppNavigationItem :name="t('nc_vertragswerk', 'Neuerungen')"
+							@click="openWhatsNew">
+							<template #icon>
+								<BullhornOutlineIcon :size="20" />
+							</template>
+						</NcAppNavigationItem>
+					</ul>
 				</template>
 			</NcAppNavigation>
 
@@ -124,6 +139,11 @@
 				<TrashView v-else-if="currentView === 'trash'" />
 				<SettingsView v-else-if="currentView === 'settings'" />
 			</NcAppContent>
+
+			<!-- Vertragsdetails rechts (2.0.1): öffnet sich per Klick auf eine Zeile. -->
+			<ContractSidebar v-if="currentView === 'contracts' && selectedContract"
+				:contract="selectedContract"
+				@close="selectContract(null)" />
 
 			<!-- „Was ist neu?"-Fenster (#415): meldet sich selbst, wenn es etwas zu
 			     berichten gibt, und bleibt sonst unsichtbar. -->
@@ -136,23 +156,30 @@
 import NcContent from '@nextcloud/vue/components/NcContent'
 import NcAppNavigation from '@nextcloud/vue/components/NcAppNavigation'
 import NcAppNavigationItem from '@nextcloud/vue/components/NcAppNavigationItem'
+import NcAppNavigationNew from '@nextcloud/vue/components/NcAppNavigationNew'
+import NcAppNavigationList from '@nextcloud/vue/components/NcAppNavigationList'
+import NcAppNavigationCaption from '@nextcloud/vue/components/NcAppNavigationCaption'
+import NcAppNavigationIconBullet from '@nextcloud/vue/components/NcAppNavigationIconBullet'
 import NcAppContent from '@nextcloud/vue/components/NcAppContent'
 import NcCounterBubble from '@nextcloud/vue/components/NcCounterBubble'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcTextField from '@nextcloud/vue/components/NcTextField'
-import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
+import FileDocumentIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
+import PlusIcon from 'vue-material-design-icons/Plus.vue'
 import MagnifyIcon from 'vue-material-design-icons/Magnify.vue'
 import AccountLockOutlineIcon from 'vue-material-design-icons/AccountLockOutline.vue'
-import ArchiveIcon from 'vue-material-design-icons/Archive.vue'
+import ArchiveIcon from 'vue-material-design-icons/ArchiveOutline.vue'
 import BullhornOutlineIcon from 'vue-material-design-icons/BullhornOutline.vue'
-import CogIcon from 'vue-material-design-icons/Cog.vue'
-import TagIcon from 'vue-material-design-icons/Tag.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import CogIcon from 'vue-material-design-icons/CogOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ContractList from './views/ContractList.vue'
 import ArchiveView from './views/ArchiveView.vue'
 import TrashView from './views/TrashView.vue'
 import SettingsView from './views/SettingsView.vue'
 import WhatsNewDialog from './components/WhatsNewDialog.vue'
+import ContractSidebar from './components/ContractSidebar.vue'
+import { useUiStore } from './store/ui'
+import { categoryColor } from './utils/listDisplay'
 import { mapState, mapActions } from 'pinia'
 import { useContractsStore } from './store/contracts'
 import { useCategoriesStore } from './store/categories'
@@ -165,23 +192,28 @@ export default {
 		NcContent,
 		NcAppNavigation,
 		NcAppNavigationItem,
+		NcAppNavigationNew,
+		NcAppNavigationList,
+		NcAppNavigationCaption,
+		NcAppNavigationIconBullet,
 		NcAppContent,
 		NcCounterBubble,
 		NcEmptyContent,
 		NcTextField,
 		AccountLockOutlineIcon,
 		FileDocumentIcon,
+		PlusIcon,
 		MagnifyIcon,
 		ArchiveIcon,
 		BullhornOutlineIcon,
 		CogIcon,
-		TagIcon,
 		DeleteIcon,
 		ContractList,
 		ArchiveView,
 		TrashView,
 		SettingsView,
 		WhatsNewDialog,
+		ContractSidebar,
 	},
 	data() {
 		return {
@@ -196,6 +228,11 @@ export default {
 	computed: {
 		...mapState(useCategoriesStore, ['allCategories']),
 		...mapState(useContractsStore, ['allContracts', 'archivedContracts', 'trashedContracts', 'canEdit', 'hasRole', 'permissionsLoaded']),
+		...mapState(useUiStore, ['selectedContractId']),
+		selectedContract() {
+			if (this.selectedContractId === null) return null
+			return this.allContracts.find(c => c.id === this.selectedContractId) ?? null
+		},
 		noAccess() {
 			return this.permissionsLoaded && !this.hasRole
 		},
@@ -225,6 +262,23 @@ export default {
 	},
 	methods: {
 		...mapActions(useContractsStore, ['fetchArchivedContracts', 'fetchPermissions', 'fetchTrashedContracts', 'setContractCategory']),
+		...mapActions(useUiStore, ['selectContract', 'requestForm']),
+		categoryColor,
+		openView(view) {
+			this.currentView = view
+			this.selectedCategoryId = null
+			this.selectContract(null)
+		},
+		// „Neuer Vertrag" in the navigation (2.0.1): switch to the list if
+		// needed; ContractList opens the form once it is mounted.
+		createContract() {
+			if (this.currentView !== 'contracts') {
+				this.currentView = 'contracts'
+				this.$nextTick(() => this.requestForm('create'))
+				return
+			}
+			this.requestForm('create')
+		},
 		// dragleave fires when the cursor crosses onto a child element too; only
 		// clear the highlight when the pointer actually leaves the whole entry.
 		onCategoryDragLeave(key, event) {
@@ -281,24 +335,16 @@ export default {
 </script>
 
 <style scoped>
-.active {
-	background-color: var(--color-primary-element-light);
-}
-
-.category-item {
-	padding-left: 16px;
-}
-
 /* Highlight the category entry a contract is being dragged onto (#359). The
    class sits on the <li> (child-component root gets the parent scope); the
    clickable link inside needs :deep to be reachable from scoped styles. */
 .nav-drop-target :deep(.app-navigation-entry-link) {
 	background-color: var(--color-primary-element-light);
 	box-shadow: inset 3px 0 0 var(--color-primary-element);
-	border-radius: var(--border-radius-large, 8px);
+	border-radius: var(--border-radius-element, 8px);
 }
 
 .nav-search {
-	padding: 8px 10px;
+	padding: 0 8px 4px;
 }
 </style>

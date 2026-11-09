@@ -33,6 +33,9 @@ vi.mock('@nextcloud/vue/components/NcButton', () => ({
 vi.mock('@nextcloud/vue/components/NcDialog', () => ({
 	default: { name: 'NcDialog', template: '<div class="stub-dialog"><slot /></div>' },
 }))
+vi.mock('@nextcloud/vue/components/NcAvatar', () => ({
+	default: { name: 'NcAvatar', template: '<span class="stub-avatar" />' },
+}))
 
 const trashed = (teil: Record<string, unknown> = {}) => ({
 	id: 7,

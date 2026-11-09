@@ -11,3 +11,71 @@
         margin-bottom: 20px;
     }
 }
+
+/*
+ * Status chips (2.0.1): list, details sidebar and contract form share one
+ * look. Colours come from the Nextcloud theme variables, so the dark and
+ * high-contrast themes need no rules of their own.
+ */
+.cm-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 10px 0 8px;
+    border-radius: var(--border-radius-pill, 100px);
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &__text {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    &::before {
+        content: "";
+        flex: none;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: currentColor;
+    }
+
+    &--active,
+    &--active-fixed {
+        background: rgba(var(--color-success-rgb), 0.12);
+        color: var(--color-success-text);
+    }
+
+    &--soon {
+        background: rgba(var(--color-warning-rgb), 0.14);
+        color: var(--color-warning-text);
+    }
+
+    &--expired {
+        background: rgba(var(--color-error-rgb), 0.12);
+        color: var(--color-error-text);
+    }
+
+    &--cancelled {
+        background: rgba(var(--color-info-rgb), 0.12);
+        color: var(--color-info-text);
+    }
+
+    &--planned {
+        background: var(--color-primary-element-light);
+        color: var(--color-primary-element-light-text);
+    }
+
+    &--ended,
+    &--lock {
+        background: var(--color-background-dark);
+        color: var(--color-text-maxcontrast);
+    }
+
+    &--lock::before {
+        display: none;
+    }
+}

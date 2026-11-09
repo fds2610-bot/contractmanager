@@ -1,15 +1,23 @@
 <template>
 	<div class="contract-list-item"
-		:class="['contract-list-item--' + statusChip.cls, { 'contract-list-item--dragging': dragging }]"
+		:class="{ 'contract-list-item--dragging': dragging, 'contract-list-item--selected': selected }"
 		:draggable="isDraggable"
+		@click="onOpen"
 		@dragstart="onDragStart"
 		@dragend="dragging = false">
-		<span class="contract-list-item__accent" aria-hidden="true" />
+		<NcAvatar class="contract-list-item__avatar"
+			:display-name="contract.vendor || contract.name || '?'"
+			:is-no-user="true"
+			:disable-menu="true"
+			:disable-tooltip="true"
+			:size="32"
+			aria-hidden="true" />
 		<div class="contract-list-item__name">
 			<a class="contract-name"
 				href="#"
 				draggable="false"
-				@click.prevent="onEdit">
+				:aria-current="selected ? 'true' : undefined"
+				@click.prevent.stop="onOpen">
 				{{ contract.name }}
 			</a>
 			<div class="contract-list-item__meta">
@@ -34,15 +42,11 @@
 					<span class="sep">·</span>
 					<span>{{ t('nc_vertragswerk', 'Erstellt von') }}: {{ contract.createdBy }}</span>
 				</template>
-				<template v-if="contract.responsibleUser">
-					<span class="sep">·</span>
-					<span>{{ t('nc_vertragswerk', 'Zuständig') }}: {{ contract.responsibleUser }}</span>
-				</template>
 			</div>
 		</div>
 		<div class="contract-list-item__status">
-			<span class="cm-chip" :class="'cm-chip--' + statusChip.cls" :title="statusChip.title">
-				{{ statusChip.label }}
+			<span class="cm-chip" :class="'cm-chip--' + chip.cls" :title="chip.title || chip.label">
+				<span class="cm-chip__text">{{ chip.label }}</span>
 			</span>
 			<span v-if="contract.isPrivate" class="cm-chip cm-chip--lock" :title="t('nc_vertragswerk', 'Privater Vertrag (nur für mich sichtbar)')">
 				<LockIcon :size="14" />
@@ -51,13 +55,25 @@
 		</div>
 		<div class="contract-list-item__cost">
 			{{ contract.cost ? formatCost(contract.cost, contract.currency) : '—' }}
+			<span v-if="contract.cost && intervalLabel" class="contract-list-item__interval">{{ intervalLabel }}</span>
 		</div>
 		<div class="contract-list-item__deadline">
 			<span v-if="deadlineLabel" class="contract-list-item__deadline-label">{{ deadlineLabel }}</span>
 			<span>{{ deadlineDisplay }}</span>
+			<span v-if="deadlineRelative"
+				class="contract-list-item__deadline-rel"
+				:class="'contract-list-item__deadline-rel--' + deadlineRelative.urgency">{{ deadlineRelative.text }}</span>
 		</div>
-		<div class="contract-list-item__actions">
+		<div class="contract-list-item__responsible">
+			<NcAvatar v-if="contract.responsibleUser"
+				:user="contract.responsibleUser"
+				:size="28"
+				:hide-status="true"
+				:disable-menu="true" />
+		</div>
+		<div class="contract-list-item__actions" @click.stop>
 			<NcButton v-if="contract.contractFolder"
+				class="contract-list-item__quick"
 				variant="tertiary"
 				:title="t('nc_vertragswerk', 'Vertragsordner öffnen')"
 				@click.stop="openFolder">
@@ -66,6 +82,7 @@
 				</template>
 			</NcButton>
 			<NcButton v-if="contract.mainDocument"
+				class="contract-list-item__quick"
 				variant="tertiary"
 				:title="t('nc_vertragswerk', 'Vertragsdokument öffnen')"
 				@click.stop="openDocument">
@@ -147,20 +164,22 @@ import NcActions from '@nextcloud/vue/components/NcActions'
 import NcActionButton from '@nextcloud/vue/components/NcActionButton'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
-import ArchiveIcon from 'vue-material-design-icons/Archive.vue'
+import NcAvatar from '@nextcloud/vue/components/NcAvatar'
+import ArchiveIcon from 'vue-material-design-icons/ArchiveOutline.vue'
 import RestoreIcon from 'vue-material-design-icons/Restore.vue'
-import PencilIcon from 'vue-material-design-icons/Pencil.vue'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
-import DeleteForeverIcon from 'vue-material-design-icons/DeleteForever.vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
-import FileDocumentIcon from 'vue-material-design-icons/FileDocument.vue'
-import FolderOpenIcon from 'vue-material-design-icons/FolderOpen.vue'
+import PencilIcon from 'vue-material-design-icons/PencilOutline.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
+import DeleteForeverIcon from 'vue-material-design-icons/DeleteForeverOutline.vue'
+import LockIcon from 'vue-material-design-icons/LockOutline.vue'
+import FileDocumentIcon from 'vue-material-design-icons/FileDocumentOutline.vue'
+import FolderOpenIcon from 'vue-material-design-icons/FolderOpenOutline.vue'
 import ContentDuplicate from 'vue-material-design-icons/ContentDuplicate.vue'
 import { generateUrl } from '@nextcloud/router'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { formatDate } from '../utils/dateUtils.js'
 import { formatPeriod, getDeadlineInfo } from '../utils/periodUtils.js'
-import { isEndingSoon, isEndingSoonFixed, isExpiredFixed, isEndedCancelled, isPlanned } from '../utils/contractStatus'
+import { daysUntil, deadlineUrgency, intervalPerLabel, relativeDays, statusChip } from '../utils/listDisplay'
+import { DEFAULT_REMINDER_DAYS_1 } from '../utils/contractStatus'
 import { openDocumentInNewTab } from '../utils/documentUtils.js'
 import { numberLines } from '../utils/contractMirror'
 import { CONTRACT_DND_TYPE } from '../utils/categoryDrop'
@@ -173,6 +192,7 @@ export default {
 		NcActionButton,
 		NcButton,
 		NcDialog,
+		NcAvatar,
 		ArchiveIcon,
 		RestoreIcon,
 		PencilIcon,
@@ -202,8 +222,13 @@ export default {
 			type: Number,
 			default: undefined,
 		},
+		// Row is the one shown in the details sidebar (2.0.1).
+		selected: {
+			type: Boolean,
+			default: false,
+		},
 	},
-	emits: ['edit', 'view', 'duplicate', 'archive', 'restore', 'delete', 'deletePermanently'],
+	emits: ['edit', 'view', 'select', 'duplicate', 'archive', 'restore', 'delete', 'deletePermanently'],
 	data() {
 		return {
 			showDeleteDialog: false,
@@ -212,52 +237,15 @@ export default {
 	},
 	computed: {
 		...mapState(useContractsStore, ['isAdmin', 'canEdit']),
-		endingSoon() {
-			return isEndingSoon(this.contract, this.defaultReminderDays)
-		},
-		endingSoonFixed() {
-			return isEndingSoonFixed(this.contract, this.defaultReminderDays)
-		},
-		expiredFixed() {
-			return isExpiredFixed(this.contract)
-		},
-		endedCancelled() {
-			return isEndedCancelled(this.contract)
-		},
-		planned() {
-			return isPlanned(this.contract)
-		},
-		// Single derived status chip — replaces the former stack of badges
-		// (Status + „Kündigungsfrist endet" + „Abgelaufen") with one clear signal.
 		numbers() {
 			return numberLines(this.contract)
 		},
-		statusChip() {
-			if (this.planned) {
-				return { cls: 'planned', label: t('nc_vertragswerk', 'Geplant'), title: t('nc_vertragswerk', 'Der Vertrag beginnt erst zum Startdatum.') }
-			}
-			if (this.expiredFixed) {
-				return { cls: 'expired', label: t('nc_vertragswerk', 'Abgelaufen'), title: t('nc_vertragswerk', 'Das Enddatum ist überschritten.') }
-			}
-			if (this.endingSoon) {
-				return { cls: 'soon', label: t('nc_vertragswerk', 'Kündigungsfrist endet'), title: t('nc_vertragswerk', 'Die Kündigungsfrist läuft in Kürze ab.') }
-			}
-			if (this.endingSoonFixed) {
-				return { cls: 'soon', label: t('nc_vertragswerk', 'endet'), title: t('nc_vertragswerk', 'Der befristete Vertrag läuft in Kürze aus.') }
-			}
-			if (this.endedCancelled) {
-				return { cls: 'ended', label: t('nc_vertragswerk', 'Beendet'), title: '' }
-			}
-			if (this.contract.status === 'cancelled') {
-				return { cls: 'cancelled', label: t('nc_vertragswerk', 'Gekündigt'), title: '' }
-			}
-			if (this.contract.status === 'ended') {
-				return { cls: 'ended', label: t('nc_vertragswerk', 'Beendet'), title: '' }
-			}
-			if (this.contract.contractType === 'fixed') {
-				return { cls: 'active-fixed', label: t('nc_vertragswerk', 'Laufend'), title: t('nc_vertragswerk', 'Befristeter Vertrag, endet automatisch zum Enddatum.') }
-			}
-			return { cls: 'active', label: t('nc_vertragswerk', 'Laufend'), title: '' }
+		// Single derived status chip, shared with the details sidebar.
+		chip() {
+			return statusChip(this.contract, this.defaultReminderDays)
+		},
+		intervalLabel() {
+			return intervalPerLabel(this.contract.costInterval)
 		},
 		// Value + semantics of the "Frist / Ende" column (#252): the shown date
 		// means different things per contract, so each row carries its own label.
@@ -274,6 +262,15 @@ export default {
 				runsUntil: t('nc_vertragswerk', 'Läuft bis'),
 			}
 			return labels[this.deadlineInfo.labelKey] || null
+		},
+		// „in 10 Tagen" below the date, coloured by how pressing it is (2.0.1).
+		// Archive and trash show no urgency: nothing there needs acting on.
+		deadlineRelative() {
+			const date = this.deadlineInfo.date
+			if (!date || this.mode !== 'default') return null
+			const days = daysUntil(date)
+			const reminder = this.defaultReminderDays ?? DEFAULT_REMINDER_DAYS_1
+			return { text: relativeDays(days), urgency: deadlineUrgency(days, this.deadlineInfo.labelKey, reminder) }
 		},
 		// Archive and trash are view-only (#328) — dragging a row there must not
 		// be able to change its category, even for editors.
@@ -309,6 +306,15 @@ export default {
 			this.dragging = true
 			event.dataTransfer.setData(CONTRACT_DND_TYPE, String(this.contract.id))
 			event.dataTransfer.effectAllowed = 'move'
+		},
+		// Click on the row (2.0.1): in the contract list it opens the details
+		// sidebar; archive and trash keep opening the form as before.
+		onOpen() {
+			if (this.mode === 'default') {
+				this.$emit('select', this.contract)
+				return
+			}
+			this.onEdit()
 		},
 		onEdit() {
 			if (this.canEdit) {
@@ -352,57 +358,21 @@ export default {
 </script>
 
 <style scoped lang="scss">
-@use "sass:list";
-
-/* Status-Farbpalette (aus WorkTime/Vinarium übernommen) */
-$st: (
-	planned:   (#e6eefb, #2f5aa8),
-	active:    (#eaf5ee, #2f7d49),
-	active-fixed: (#dcefe3, #1d5c33),
-	soon:      (#fbf3e6, #9a6c25),
-	cancelled: (#fef3c7, #92400e),
-	ended:     (#efefef, #5a5a5a),
-	expired:   (#fbecea, #b03b33),
-);
-
-/* Dark-Mode-Entsprechung (#204): gleiche Farbtöne, dunkler Grund + hellerer
-   Text, damit die Chips auf dunklem Hintergrund lesbar bleiben. Bewusst eigene
-   Werte statt NC-Variablen, um die kräftige Signalwirkung zu erhalten. */
-$st-dark: (
-	planned:   (#182842, #7ba3e6),
-	active:    (#17301f, #6fbf87),
-	active-fixed: (#16281c, #63c081),
-	soon:      (#33291a, #e0b15a),
-	cancelled: (#3a2713, #e08a4a),
-	ended:     (#2b2b2b, #a8a8a8),
-	expired:   (#3a201d, #ef8177),
-);
-
-/* Chip-Hintergrund/Text im Dark-Mode. */
-@mixin chip-dark {
-	@each $name, $colors in $st-dark {
-		&--#{$name} { background: list.nth($colors, 1); color: list.nth($colors, 2); }
-	}
-}
-
-/* Akzentbalken der Listenzeile im Dark-Mode (heller Textton). */
-@mixin accent-dark {
-	@each $name, $colors in $st-dark {
-		&--#{$name} .contract-list-item__accent { background: list.nth($colors, 2); }
-	}
-}
+/* Colours come only from the Nextcloud theme variables (2.0.1), so the dark
+   and high-contrast themes work without extra rules. */
 
 /* Shared column layout — MUST match .contract-list__thead in ContractList.vue */
 .contract-list-item {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 150px 110px 120px 116px;
+	grid-template-columns: 32px minmax(0, 1fr) 170px 120px 130px 32px 96px;
 	align-items: center;
-	gap: 14px;
-	position: relative;
+	gap: 12px;
+	padding: 0 4px 0 12px;
 	background: var(--color-main-background);
-	border-bottom: 1px solid var(--color-border-light, var(--color-border));
+	border-bottom: 1px solid var(--color-border);
 	min-height: 58px;
-	transition: background-color 0.15s ease;
+	cursor: pointer;
+	transition: background-color 0.1s ease;
 
 	&:last-child { border-bottom: none; }
 
@@ -410,10 +380,15 @@ $st-dark: (
 		background: var(--color-background-hover);
 	}
 
+	&--selected,
+	&--selected:hover {
+		background: var(--color-primary-element-light);
+	}
+
 	/* grab cursor signals the row can be dragged onto a sidebar category
 	   (#359); only shown where dragging is actually enabled. */
-	&[draggable="true"]:hover {
-		cursor: grab;
+	&[draggable="true"]:active {
+		cursor: grabbing;
 	}
 
 	&--dragging {
@@ -421,58 +396,46 @@ $st-dark: (
 		cursor: grabbing;
 	}
 
-	&__accent {
-		position: absolute;
-		left: 0;
-		top: 0;
-		bottom: 0;
-		width: 3px;
-		background: transparent;
-	}
-
-	@each $name, $colors in $st {
-		&--#{$name} .contract-list-item__accent { background: list.nth($colors, 2); }
-	}
-
-	// Dark-Mode: explizit gewähltes NC-Theme oder System-Präferenz (#204).
-	body[data-theme-dark] &,
-	body[data-theme-dark-highcontrast] & {
-		@include accent-dark;
-	}
-	@media (prefers-color-scheme: dark) {
-		body[data-theme-default] & {
-			@include accent-dark;
-		}
-	}
-
 	&__name {
 		min-width: 0;
-		padding: 9px 0 9px 18px;
+		padding: 8px 0;
 	}
 
 	&__meta {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 6px;
-		margin-top: 2px;
-		font-size: 12.5px;
+		margin-top: 1px;
+		font-size: 13px;
 		color: var(--color-text-maxcontrast);
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 
-		.sep { opacity: 0.5; }
+		.sep { opacity: 0.5; margin: 0 5px; }
 	}
 
 	&__status {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 6px;
+		min-width: 0;
+
+		.cm-chip {
+			max-width: 100%;
+		}
 	}
 
 	&__cost {
-		text-align: right;
-		font-size: 15px;
-		font-weight: 700;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		font-weight: 600;
 		font-variant-numeric: tabular-nums;
 		white-space: nowrap;
+	}
+
+	&__interval {
+		font-size: 12px;
+		font-weight: 400;
+		color: var(--color-text-maxcontrast);
 	}
 
 	&__deadline {
@@ -484,9 +447,24 @@ $st-dark: (
 	}
 
 	&__deadline-label {
-		font-size: 11px;
+		font-size: 12px;
 		line-height: 1.3;
 		color: var(--color-text-maxcontrast);
+	}
+
+	&__deadline-rel {
+		font-size: 12px;
+		line-height: 1.3;
+		font-weight: 600;
+
+		&--critical { color: var(--color-error-text); }
+		&--warning { color: var(--color-warning-text); }
+		&--normal { color: var(--color-text-maxcontrast); font-weight: 400; }
+	}
+
+	&__responsible {
+		display: flex;
+		justify-content: center;
 	}
 
 	&__actions {
@@ -494,47 +472,72 @@ $st-dark: (
 		align-items: center;
 		justify-content: flex-end;
 		gap: 2px;
-		padding-right: 8px;
+		cursor: default;
 	}
+
+	/* Folder and document buttons appear on hover or keyboard focus; the
+	   „…" menu stays visible so every action remains reachable. */
+	/* Nested selector: NcButton's own rules have the same specificity. */
+	& &__quick {
+		opacity: 0;
+	}
+
+	&:hover &__quick,
+	&:focus-within &__quick,
+	&--selected &__quick {
+		opacity: 1;
+	}
+}
+
+/* Narrow list (details sidebar open, small screens): tighter columns, only
+   the „…" menu in the action column. The container is .contract-list. */
+@container contract-list (max-width: 800px) {
+	.contract-list-item {
+		grid-template-columns: 32px minmax(0, 1fr) 132px 100px 108px 28px 40px;
+		gap: 10px;
+	}
+
+	.contract-list-item .contract-list-item__quick {
+		display: none;
+	}
+}
+
+/* Very narrow list: the status moves below the name, both avatar columns
+   are dropped (vendor and responsible person are in the sidebar). */
+@container contract-list (max-width: 700px) {
+	.contract-list-item {
+		grid-template-columns: minmax(0, 1fr) 100px 108px 40px;
+		grid-template-areas:
+			"name cost deadline actions"
+			"status cost deadline actions";
+		row-gap: 0;
+	}
+
+	.contract-list-item__avatar,
+	.contract-list-item__responsible {
+		display: none;
+	}
+
+	.contract-list-item__name { grid-area: name; padding-bottom: 2px; }
+	.contract-list-item__status { grid-area: status; padding-bottom: 8px; }
+	.contract-list-item__cost { grid-area: cost; }
+	.contract-list-item__deadline { grid-area: deadline; }
+	.contract-list-item__actions { grid-area: actions; }
 }
 
 .contract-name {
-	font-size: 16px;
+	display: block;
 	font-weight: 600;
-	color: var(--color-primary-element);
+	color: var(--color-main-text);
 	text-decoration: none;
-	cursor: pointer;
-
-	&:hover { text-decoration: underline; }
-}
-
-.cm-chip {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	padding: 3px 10px;
-	border-radius: var(--border-radius, 8px);
-	font-size: 12px;
-	font-weight: 600;
 	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 
-	@each $name, $colors in $st {
-		&--#{$name} { background: list.nth($colors, 1); color: list.nth($colors, 2); }
-	}
-
-	&--lock { background: #fbf3e6; color: #9a6c25; }
-
-	// Dark-Mode: explizit gewähltes NC-Theme oder System-Präferenz (#204).
-	body[data-theme-dark] &,
-	body[data-theme-dark-highcontrast] & {
-		@include chip-dark;
-		&--lock { background: #33291a; color: #e0b15a; }
-	}
-	@media (prefers-color-scheme: dark) {
-		body[data-theme-default] & {
-			@include chip-dark;
-			&--lock { background: #33291a; color: #e0b15a; }
-		}
+	&:focus-visible {
+		outline: 2px solid var(--color-main-text);
+		outline-offset: 2px;
+		border-radius: 2px;
 	}
 }
 

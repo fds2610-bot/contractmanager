@@ -79,7 +79,7 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
-import DeleteIcon from 'vue-material-design-icons/Delete.vue'
+import DeleteIcon from 'vue-material-design-icons/TrashCanOutline.vue'
 import ContractListItem from '../components/ContractListItem.vue'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 

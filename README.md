@@ -12,6 +12,8 @@ App-ID `nc_vertragswerk`. Eigenständige Weiterentwicklung von fds2610 auf Basis
 - Ordnung nach Kategorie (Lebensbereich, z. B. Wohnen, Fahrzeuge) und Vertragsart
 - Versicherungsangaben (beteiligte Personen, versicherte Leistungen)
 - Vertragspartner mit Kontakten aus dem Adressbuch verknüpfen oder direkt neu anlegen
+- Übersichtliche Liste mit Restzeit bis zur Frist, Filter-Chips und klickbaren Kennzahlen
+- Seitenleiste mit Vertragsdetails, Laufzeitleiste, Dokumenten aus dem Vertragsordner und Verlauf
 - Vertragsspiegel als PDF
 - Archiv für beendete Verträge
 - Integration mit Nextcloud Files für Anhänge

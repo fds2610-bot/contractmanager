@@ -671,13 +671,13 @@ import { mapState } from 'pinia'
 import { useAreasStore } from '../store/areas'
 import { paymentMethodOptions } from '../utils/paymentMethod'
 import { useCategoriesStore } from '../store/categories'
-import Folder from 'vue-material-design-icons/Folder.vue'
-import File from 'vue-material-design-icons/File.vue'
+import Folder from 'vue-material-design-icons/FolderOutline.vue'
+import File from 'vue-material-design-icons/FileOutline.vue'
 import Close from 'vue-material-design-icons/Close.vue'
 import OpenInNewIcon from 'vue-material-design-icons/OpenInNew.vue'
-import LockIcon from 'vue-material-design-icons/Lock.vue'
-import LockOpenVariantIcon from 'vue-material-design-icons/LockOpenVariant.vue'
-import FileSearchIcon from 'vue-material-design-icons/FileSearch.vue'
+import LockIcon from 'vue-material-design-icons/LockOutline.vue'
+import LockOpenVariantIcon from 'vue-material-design-icons/LockOpenVariantOutline.vue'
+import FileSearchIcon from 'vue-material-design-icons/FileSearchOutline.vue'
 import { generateUrl } from '@nextcloud/router'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import { isPlanned } from '../utils/contractStatus'
@@ -1647,42 +1647,6 @@ export default {
 			color: var(--color-main-text);
 			font-variant-numeric: tabular-nums;
 			margin-top: 2px;
-		}
-	}
-}
-
-.cm-chip {
-	display: inline-flex;
-	align-items: center;
-	gap: 5px;
-	padding: 3px 10px;
-	border-radius: var(--border-radius, 8px);
-	font-size: 12px;
-	font-weight: 600;
-	white-space: nowrap;
-
-	&--planned { background: #e6eefb; color: #2f5aa8; }
-	&--active { background: #eaf5ee; color: #2f7d49; }
-	&--active-fixed { background: #dcefe3; color: #1d5c33; }
-	&--cancelled { background: #fef3c7; color: #92400e; }
-	&--ended { background: #efefef; color: #5a5a5a; }
-
-	// Dark-Mode: gleiche Farbtöne wie in der Liste (#204), dunkler Grund + heller
-	// Text. Explizit gewähltes NC-Theme oder System-Präferenz.
-	@mixin chip-dark {
-		&--planned { background: #182842; color: #7ba3e6; }
-		&--active { background: #17301f; color: #6fbf87; }
-		&--active-fixed { background: #16281c; color: #63c081; }
-		&--cancelled { background: #3a2713; color: #e08a4a; }
-		&--ended { background: #2b2b2b; color: #a8a8a8; }
-	}
-	body[data-theme-dark] &,
-	body[data-theme-dark-highcontrast] & {
-		@include chip-dark;
-	}
-	@media (prefers-color-scheme: dark) {
-		body[data-theme-default] & {
-			@include chip-dark;
 		}
 	}
 }

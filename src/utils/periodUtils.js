@@ -102,7 +102,9 @@ export function formatPeriod(periodString) {
 		years: t('nc_vertragswerk', 'Jahre'),
 	}
 
-	return `${period.value} ${units[period.unit] || period.unit}`
+	// „1 Monat", not „1 Monate": the stored unit is plural even for one.
+	const unit = period.value === 1 ? period.unit.replace(/s$/, '') : period.unit
+	return `${period.value} ${units[unit] || unit}`
 }
 
 /**

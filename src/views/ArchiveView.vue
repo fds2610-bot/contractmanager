@@ -55,7 +55,7 @@ import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcEmptyContent from '@nextcloud/vue/components/NcEmptyContent'
-import ArchiveIcon from 'vue-material-design-icons/Archive.vue'
+import ArchiveIcon from 'vue-material-design-icons/ArchiveOutline.vue'
 import ContractListItem from '../components/ContractListItem.vue'
 import ContractForm from '../components/ContractForm.vue'
 

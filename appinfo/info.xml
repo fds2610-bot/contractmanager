@@ -10,7 +10,8 @@
 
 Verwalten Sie Ihre Verträge zentral in Nextcloud:
 
-- **Vertragsübersicht** mit allen wichtigen Daten
+- **Vertragsübersicht** mit allen wichtigen Daten und Restzeit bis zur Frist
+- **Seitenleiste** mit Details, Laufzeit und Dokumenten des Vertrags
 - **Automatische Erinnerungen** vor Kündigungsfristen
 - **Kategorien und Vertragsarten** zur Organisation
 - **Kontakte** aus dem Adressbuch verknüpfen oder neu anlegen
@@ -21,7 +22,7 @@ Verwalten Sie Ihre Verträge zentral in Nextcloud:
 Behalten Sie den Überblick über Laufzeiten, Kosten und Kündigungsfristen.
     ]]></description>
 
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <licence>AGPL-3.0-or-later</licence>
 
     <author mail="felix@schepmann.de" homepage="https://github.com/fds2610/contractmanager">fds2610</author>

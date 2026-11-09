@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.1] - 2026-11-09
+
+Modernere Oberfläche nach den Nextcloud-Gestaltungsrichtlinien: nur Bausteine aus `@nextcloud/vue` und Farben aus den Theme-Variablen.
+
+### Added
+- **Seitenleiste mit Vertragsdetails**: Ein Klick auf einen Vertrag öffnet rechts eine Seitenleiste (`NcAppSidebar`) mit Status, Vertragsart, Kategorie und den wichtigsten Angaben. Eine Laufzeitleiste zeigt Beginn bzw. aktuelle Periode, heute, den Kündigungstermin und das Laufzeitende; solange die Kündigungsfrist läuft, steht oben ein Hinweis. Reiter „Dokumente“ (Vertragsdokument und Inhalt des Vertragsordners per WebDAV) und „Verlauf“ (angelegt, zuletzt geändert, Vertragsbeginn, gekündigt). „Bearbeiten“ öffnet wie bisher das Formular; Leser ohne Bearbeitungsrecht öffnen über „Alle Angaben“ die Leseansicht
+- **Filter-Chips**: Die Filter stehen als Chips über der Liste und öffnen ihre Auswahl in einem Popover. Aktive Filter zeigen ihren Wert und lassen sich mit × einzeln entfernen; der Knopf „Filter“ und die graue Filterleiste entfallen
+- **Kennzahlen**: Die Kachel „Kündigungsfrist endet“ zeigt per Klick nur diese Verträge (zweiter Klick stellt die vorherige Statusauswahl wieder her). Neue Kachel „Nächste Frist“ mit dem Vertrag, der als nächstes fällig ist; ein Klick öffnet ihn in der Seitenleiste. Die Kacheln nutzen die volle Breite
+- **Liste**: Unter dem Datum steht die Restzeit („in 10 Tagen“, rot bis 14 Tage, gelb innerhalb der Erinnerungsfrist), unter dem Betrag das Zahlungsintervall („pro Monat“). Eigene Spalte mit dem Avatar der zuständigen Person, Initialen-Avatar je Vertragspartner
+
+### Changed
+- **„Neuer Vertrag“** steht oben in der Navigation (`NcAppNavigationNew`), wie in Mail, Deck und Kalender
+- **Vertragsarten** unter einer eigenen Überschrift mit Farbpunkten statt gleicher Etiketten-Symbole; Drag-and-drop auf die Einträge bleibt. Archiv, Papierkorb, Einstellungen und Neuerungen stehen unten in der Navigation. Der Eintrag „Verträge“ heißt „Alle Verträge“
+- **Status-Chips** mit Punkt und Farben aus den Nextcloud-Variablen (`--color-success`, `--color-warning`, `--color-info`, `--color-error`) statt eigener Farbpalette mit Dark-Mode-Regeln (#204); dunkles und kontrastreiches Theme greifen automatisch. Liste, Seitenleiste und Formular teilen sich eine Definition
+- **Zeilen**: Vertragsname in Textfarbe statt als Link, ganze Zeile klickbar; Ordner- und Dokument-Knopf erscheinen beim Überfahren, das Menü „…“ bleibt sichtbar. Bei schmalem Inhalt (Seitenleiste offen) werden die Spalten enger, sehr schmal rutscht der Status unter den Namen
+- **PDF-Button** heißt „Vertragsspiegel (PDF)“ und steht neben der Sortierung
+- **Symbole** durchgehend in der Umriss-Variante, wie im Nextcloud-Kern
+
+### Fixed
+- Zeitangaben mit der Menge 1 stehen im Singular („1 Monat“ statt „1 Monate“)
+
 ## [2.0.0] - 2026-11-09
 
 Eigenständige Weiterentwicklung durch fds2610 auf Basis von cpcMomentum/contractmanager 1.12.0. Die App wird nicht im App Store veröffentlicht.
