@@ -124,15 +124,26 @@
 						</p>
 					</div>
 
-					<label class="cm-field">
-						<span>{{ t('nc_vertragswerk', 'Vertragsnummer') }}</span>
-						<input v-model="form.contractNumber"
-							class="cm-input"
-							maxlength="255"
-							data-test="contract-number"
-							:disabled="readOnly"
-							:placeholder="t('nc_vertragswerk', 'Optional, z.B. Policen- oder Kundennummer')">
-					</label>
+					<div class="cm-field-row">
+						<label class="cm-field">
+							<span>{{ t('nc_vertragswerk', 'Vertragsnummer') }}</span>
+							<input v-model="form.contractNumber"
+								class="cm-input"
+								maxlength="255"
+								data-test="contract-number"
+								:disabled="readOnly"
+								:placeholder="t('nc_vertragswerk', 'Optional, z.B. Policennummer')">
+						</label>
+						<label class="cm-field">
+							<span>{{ t('nc_vertragswerk', 'Kundennummer') }}</span>
+							<input v-model="form.customerNumber"
+								class="cm-input"
+								maxlength="255"
+								data-test="customer-number"
+								:disabled="readOnly"
+								:placeholder="t('nc_vertragswerk', 'Optional')">
+						</label>
+					</div>
 
 					<div class="cm-field-row">
 						<label class="cm-field">
@@ -1140,6 +1151,7 @@ export default {
 				customField2: '',
 				customField3: '',
 				contractNumber: '',
+				customerNumber: '',
 				insurancePersons: personsForForm(null),
 				insuranceBenefits: benefitsForForm(null),
 			}
@@ -1208,6 +1220,7 @@ export default {
 				customField2: contract.customField2 || '',
 				customField3: contract.customField3 || '',
 				contractNumber: contract.contractNumber || '',
+				customerNumber: contract.customerNumber || '',
 				insurancePersons: personsForForm(contract.insurancePersons),
 				insuranceBenefits: benefitsForForm(contract.insuranceBenefits),
 			}
@@ -1254,6 +1267,7 @@ export default {
 				customField2: this.form.customField2.trim() || null,
 				customField3: this.form.customField3.trim() || null,
 				contractNumber: this.form.contractNumber.trim() || null,
+				customerNumber: this.form.customerNumber.trim() || null,
 				// Wechselt die Kategorie weg von Versicherung, fallen die Angaben weg
 				insurancePersons: this.isInsurance ? personsForApi(this.form.insurancePersons) : null,
 				insuranceBenefits: this.isInsurance ? benefitsForApi(this.form.insuranceBenefits) : null,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildMirrorGroups, buildMirrorRow, textLines } from './contractMirror'
+import { buildMirrorGroups, buildMirrorRow, numberLines, textLines } from './contractMirror'
 import { toWinAnsi } from './contractMirrorPdf'
 import type { Contract } from '../store/contracts'
 
@@ -25,9 +25,18 @@ describe('textLines', () => {
 })
 
 describe('buildMirrorRow', () => {
-	it('puts the contract number below the name', () => {
-		expect(buildMirrorRow(contract({ contractNumber: ' 068-68 ' })).contract).toEqual(['Hausrat', 'Nr. 068-68'])
-		expect(buildMirrorRow(contract({ contractNumber: '' })).contract).toEqual(['Hausrat'])
+	it('puts contract and customer number below the name, each only when set (#5)', () => {
+		expect(buildMirrorRow(contract({ contractNumber: ' 068-68 ', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'V: 068-68', 'K: K-1'])
+		expect(buildMirrorRow(contract({ contractNumber: '', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'K: K-1'])
+		expect(buildMirrorRow(contract({ contractNumber: 'A', customerNumber: '  ' })).contract).toEqual(['Hausrat', 'V: A'])
+		expect(buildMirrorRow(contract({})).contract).toEqual(['Hausrat'])
+	})
+
+	it('gives the full names as tooltip titles (#5)', () => {
+		expect(numberLines(contract({ contractNumber: 'A', customerNumber: 'B' }))).toEqual([
+			{ text: 'V: A', title: 'Vertragsnummer' },
+			{ text: 'K: B', title: 'Kundennummer' },
+		])
 	})
 
 	it('builds the scope column in fixed order without empty lines', () => {

@@ -359,6 +359,7 @@ class ContractService {
         ?string $contractNumber = null,
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
+        ?string $customerNumber = null,
     ): Contract {
         $contract = new Contract();
         $contract->setName($name);
@@ -393,6 +394,7 @@ class ContractService {
         $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
+        $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
         $contract->setCreatedBy($userId);
         $contract->setCreatedAt(new DateTime());
         $contract->setUpdatedAt(new DateTime());
@@ -439,6 +441,7 @@ class ContractService {
         ?string $contractNumber = null,
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
+        ?string $customerNumber = null,
     ): Contract {
         try {
             $contract = $this->mapper->find($id);
@@ -478,6 +481,7 @@ class ContractService {
         $contract->setContractNumber(InsuranceData::normalizeContractNumber($contractNumber));
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
+        $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
         if ($isPrivate !== null) {
             $contract->setIsPrivate($isPrivate);
         }

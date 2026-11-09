@@ -213,6 +213,7 @@ class ContractImportService {
 			// A cut-off UID would point to nothing, so drop it instead
 			$contract->setVendorContactUid($contactUid !== null && strlen($contactUid) <= 255 ? $contactUid : null);
 			$contract->setContractNumber(InsuranceData::normalizeContractNumber($this->nullableString($c['contractNumber'] ?? null)));
+			$contract->setCustomerNumber(InsuranceData::normalizeContractNumber($this->nullableString($c['customerNumber'] ?? null)));
 			$contract->setInsurancePersons(InsuranceData::personsToJson($c['insurancePersons'] ?? null));
 			$contract->setInsuranceBenefits(InsuranceData::benefitsToJson($c['insuranceBenefits'] ?? null));
 			$contract->setCreatedAt($this->stringToDate($c['createdAt'] ?? null) ?? $this->timeFactory->getDateTime());

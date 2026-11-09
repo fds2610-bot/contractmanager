@@ -393,6 +393,7 @@ class ContractMapper extends QBMapper {
                     $qb->expr()->iLike('name', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('vendor', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('contract_number', $qb->createNamedParameter($searchPattern)),
+                    $qb->expr()->iLike('customer_number', $qb->createNamedParameter($searchPattern)),
                     $qb->expr()->iLike('responsible_user', $qb->createNamedParameter($searchPattern))
                 )
             );

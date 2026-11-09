@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Kundennummer**: Neues Feld rechts neben der Vertragsnummer. Beide stehen in der Vertragsliste unter dem Namen und im Vertragsspiegel unter der Vertragsbezeichnung, mit „V:“ bzw. „K:“ davor (Tooltip mit der vollen Bezeichnung); ein leeres Feld erscheint ohne Präfix. Die Kundennummer wird in der Seitenleisten- und der Nextcloud-Suche gefunden und ist in Backup und Kontoumzug enthalten (#5)
+
 ### Fixed
 - **Dezimalzeichen im Vertragsdialog**: Der Betrag steht im Bearbeiten-Dialog jetzt mit dem Dezimalzeichen der Nextcloud-Lokalisierung (z. B. „1234,50“), wie in der Übersicht. Beim Einlesen gilt bei Punkt und Komma das letzte Zeichen als Dezimaltrenner; die Kostenzeile oben im Dialog rechnet „10,50“ nicht mehr als 10 € (#6)
 - **Dokumente öffnen**: Vertragsdokumente aus Nextcloud öffnen jetzt wie externe Links in einem neuen Tab, statt die Vertragsliste im Viewer zu überdecken (#4)

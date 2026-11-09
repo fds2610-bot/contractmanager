@@ -410,7 +410,6 @@ OC.L10N.register(
     "Ungültiger Betrag" : "Ungültiger Betrag",
     "Frist / Ende in {days} Tagen" : "Frist / Ende in {days} Tagen",
     "Vertragsnummer" : "Vertragsnummer",
-    "Optional, z.B. Policen- oder Kundennummer" : "Optional, z.B. Policen- oder Kundennummer",
     "Personen" : "Personen",
     "Personentyp" : "Personentyp",
     "Benutzer entfernen" : "Benutzer entfernen",
@@ -431,7 +430,6 @@ OC.L10N.register(
     "Sonstige" : "Sonstige",
     "Tel. {phone}" : "Tel. {phone}",
     "Zuständig: {name}" : "Zuständig: {name}",
-    "Nr. {number}" : "Nr. {number}",
     "Vertragsspiegel" : "Vertragsspiegel",
     "Stand: {date}" : "Stand: {date}",
     "bei" : "bei",
@@ -442,6 +440,11 @@ OC.L10N.register(
     "Seite {page} von {total}" : "Seite {page} von {total}",
     "Vertragsspiegel der angezeigten Verträge als PDF" : "Vertragsspiegel der angezeigten Verträge als PDF",
     "PDF" : "PDF",
-    "PDF konnte nicht erstellt werden" : "PDF konnte nicht erstellt werden"
+    "PDF konnte nicht erstellt werden" : "PDF konnte nicht erstellt werden",
+    "Optional, z.B. Policennummer" : "Optional, z.B. Policennummer",
+    "Kundennummer" : "Kundennummer",
+    "Optional" : "Optional",
+    "V: {number}" : "V: {number}",
+    "K: {number}" : "K: {number}"
 },
 "nplurals=2; plural=(n != 1);");

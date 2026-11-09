@@ -44,6 +44,7 @@ export interface Contract {
 	customField2?: string | null
 	customField3?: string | null
 	contractNumber?: string | null
+	customerNumber?: string | null
 	insurancePersons?: InsurancePerson[]
 	insuranceBenefits?: string[]
 	archived?: boolean

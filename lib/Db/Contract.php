@@ -73,6 +73,8 @@ use OCP\AppFramework\Db\Entity;
  * @method string getAmountType()
  * @method string|null getContractNumber()
  * @method void setContractNumber(?string $contractNumber)
+ * @method string|null getCustomerNumber()
+ * @method void setCustomerNumber(?string $customerNumber)
  * @method string|null getInsurancePersons()
  * @method void setInsurancePersons(?string $insurancePersons)
  * @method string|null getInsuranceBenefits()
@@ -105,6 +107,7 @@ class Contract extends Entity implements JsonSerializable {
     protected string $vendor = '';
     protected ?string $vendorContactUid = null;
     protected ?string $contractNumber = null;
+    protected ?string $customerNumber = null;
     /** JSON list of {type, name, userId} */
     protected ?string $insurancePersons = null;
     /** JSON list of strings */
@@ -256,6 +259,7 @@ class Contract extends Entity implements JsonSerializable {
             'vendor' => $this->vendor,
             'vendorContactUid' => $this->vendorContactUid,
             'contractNumber' => $this->contractNumber,
+            'customerNumber' => $this->customerNumber,
             'insurancePersons' => InsuranceData::decode($this->insurancePersons),
             'insuranceBenefits' => InsuranceData::decode($this->insuranceBenefits),
             'status' => $this->status,

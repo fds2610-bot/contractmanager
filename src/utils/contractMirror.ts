@@ -139,13 +139,30 @@ function scopeLines(contract: Contract, userNames: Record<string, string>): stri
 	return lines
 }
 
+/**
+ * Contract and customer number with their short prefixes „V:" and „K:"
+ * (fds2610/contractmanager#5); an empty number is left out with its prefix.
+ * `title` is the full name for tooltips.
+ */
+export function numberLines(contract: Contract): Array<{ text: string, title: string }> {
+	const lines: Array<{ text: string, title: string }> = []
+	const contractNumber = (contract.contractNumber ?? '').trim()
+	const customerNumber = (contract.customerNumber ?? '').trim()
+	if (contractNumber !== '') {
+		lines.push({ text: t('nc_vertragswerk', 'V: {number}', { number: contractNumber }, undefined, PLAIN), title: t('nc_vertragswerk', 'Vertragsnummer') })
+	}
+	if (customerNumber !== '') {
+		lines.push({ text: t('nc_vertragswerk', 'K: {number}', { number: customerNumber }, undefined, PLAIN), title: t('nc_vertragswerk', 'Kundennummer') })
+	}
+	return lines
+}
+
 export function buildMirrorRow(contract: Contract, lookups: MirrorLookups = {}): MirrorRow {
-	const number = (contract.contractNumber ?? '').trim()
 	const contact = contract.vendorContactUid ? lookups.contacts?.[contract.vendorContactUid] : null
 	return {
 		contract: [
 			...textLines(contract.name),
-			...(number !== '' ? [t('nc_vertragswerk', 'Nr. {number}', { number }, undefined, PLAIN)] : []),
+			...numberLines(contract).map(n => n.text),
 		],
 		vendor: vendorLines(contract, contact),
 		scope: scopeLines(contract, lookups.userNames ?? {}),

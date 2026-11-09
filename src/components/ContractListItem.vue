@@ -14,6 +14,10 @@
 			</a>
 			<div class="contract-list-item__meta">
 				<span>{{ contract.vendor }}</span>
+				<template v-for="number in numbers" :key="number.title">
+					<span class="sep">·</span>
+					<span :title="number.title" class="contract-list-item__number">{{ number.text }}</span>
+				</template>
 				<template v-if="contract.renewalPeriod && contract.contractType === 'auto_renewal'">
 					<span class="sep">·</span>
 					<span>{{ t('nc_vertragswerk', 'Verlängerung:') }} {{ formatPeriod(contract.renewalPeriod) }}</span>
@@ -158,6 +162,7 @@ import { formatDate } from '../utils/dateUtils.js'
 import { formatPeriod, getDeadlineInfo } from '../utils/periodUtils.js'
 import { isEndingSoon, isEndingSoonFixed, isExpiredFixed, isEndedCancelled, isPlanned } from '../utils/contractStatus'
 import { openDocumentInNewTab } from '../utils/documentUtils.js'
+import { numberLines } from '../utils/contractMirror'
 import { CONTRACT_DND_TYPE } from '../utils/categoryDrop'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
@@ -224,6 +229,9 @@ export default {
 		},
 		// Single derived status chip — replaces the former stack of badges
 		// (Status + „Kündigungsfrist endet" + „Abgelaufen") with one clear signal.
+		numbers() {
+			return numberLines(this.contract)
+		},
 		statusChip() {
 			if (this.planned) {
 				return { cls: 'planned', label: t('nc_vertragswerk', 'Geplant'), title: t('nc_vertragswerk', 'Der Vertrag beginnt erst zum Startdatum.') }

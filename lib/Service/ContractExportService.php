@@ -105,6 +105,7 @@ class ContractExportService {
 				'responsibleUser' => $contract->getResponsibleUser(),
 				'vendorContactUid' => $contract->getVendorContactUid(),
 				'contractNumber' => $contract->getContractNumber(),
+				'customerNumber' => $contract->getCustomerNumber(),
 				'insurancePersons' => InsuranceData::decode($contract->getInsurancePersons()),
 				'insuranceBenefits' => InsuranceData::decode($contract->getInsuranceBenefits()),
 				'createdAt' => $this->dateToString($contract->getCreatedAt()),
