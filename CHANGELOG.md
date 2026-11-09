@@ -7,7 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Neue Bezeichnungen**: „Vertragstyp“ heißt jetzt „Befristung“, die bisherige „Kategorie“ heißt „Vertragsart“ (Formular, Liste, Filter, Seitenleiste, Einstellungen, Vertragsspiegel). Intern und in Backups bleibt alles beim Alten (#7)
+
 ### Added
+- **Kategorie**: Neues Feld für Lebensbereiche, vorbelegt mit „persönlich“, „Wohnen“, „Fahrzeuge“ und „Handy“. Admins verwalten die Liste unter Einstellungen › Kategorien (anlegen, umbenennen, löschen mit Rückfrage; gelöschte Kategorien werden aus den Verträgen entfernt). Neue Verträge starten mit „persönlich“, bestehende bekommen beim Update „persönlich“. Filter „Kategorie“ in der Filterleiste; der Vertragsspiegel gruppiert jetzt nach Kategorie und darunter nach Vertragsart (#7)
+- **Zahlungsart**: Neues Feld „wird abgebucht“ / „überweisen“, im Vertragsspiegel unter der Zahlungsweise (#7)
 - **Kundennummer**: Neues Feld rechts neben der Vertragsnummer. Beide stehen in der Vertragsliste unter dem Namen und im Vertragsspiegel unter der Vertragsbezeichnung, mit „V:“ bzw. „K:“ davor (Tooltip mit der vollen Bezeichnung); ein leeres Feld erscheint ohne Präfix. Die Kundennummer wird in der Seitenleisten- und der Nextcloud-Suche gefunden und ist in Backup und Kontoumzug enthalten (#5)
 
 ### Fixed

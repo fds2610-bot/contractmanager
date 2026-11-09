@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OCA\NcVertragswerk\Service;
 
 use OCA\NcVertragswerk\AppInfo\Application;
+use OCA\NcVertragswerk\Db\AreaMapper;
 use OCA\NcVertragswerk\Db\CategoryMapper;
 use OCA\NcVertragswerk\Db\ContractMapper;
 use OCA\NcVertragswerk\Db\ReminderOptOutMapper;
@@ -39,6 +40,7 @@ class ContractExportService {
 		private ReminderOptOutMapper $optOutMapper,
 		private IAppManager $appManager,
 		private ITimeFactory $timeFactory,
+		private AreaMapper $areaMapper,
 	) {
 	}
 
@@ -67,6 +69,11 @@ class ContractExportService {
 			} catch (DoesNotExistException) {
 				// Orphaned reference — contract keeps a null category on import.
 			}
+		}
+
+		$areaNames = [];
+		foreach ($this->areaMapper->findAll() as $area) {
+			$areaNames[$area->getId()] = $area->getName();
 		}
 
 		$contractsData = [];
@@ -106,6 +113,9 @@ class ContractExportService {
 				'vendorContactUid' => $contract->getVendorContactUid(),
 				'contractNumber' => $contract->getContractNumber(),
 				'customerNumber' => $contract->getCustomerNumber(),
+				// Kategorie by name: IDs differ between installations
+				'areaName' => $contract->getAreaId() !== null ? ($areaNames[$contract->getAreaId()] ?? null) : null,
+				'paymentMethod' => $contract->getPaymentMethod(),
 				'insurancePersons' => InsuranceData::decode($contract->getInsurancePersons()),
 				'insuranceBenefits' => InsuranceData::decode($contract->getInsuranceBenefits()),
 				'createdAt' => $this->dateToString($contract->getCreatedAt()),

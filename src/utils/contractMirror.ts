@@ -10,6 +10,8 @@ import type { Contract } from '../store/contracts'
 import type { Category } from '../store/categories'
 import type { ResolvedContact } from '../services/ContactService'
 import { personTypeOptions } from './insurance'
+import { paymentMethodLabel } from './paymentMethod'
+import type { Area } from '../store/areas'
 import { isEndedCancelled, isExpiredFixed, isPlanned } from './contractStatus'
 import { getEffectiveEndDate } from './periodUtils.js'
 import { formatDate } from './dateUtils.js'
@@ -30,13 +32,16 @@ export interface MirrorRow {
 	scope: string[]
 	endDate: string
 	status: string
-	interval: string
+	/** Payment interval, below it the payment method (#7) */
+	interval: string[]
 	amount: string
 }
 
 export interface MirrorGroup {
 	title: string
 	rows: MirrorRow[]
+	/** Second level (Vertragsart below a Kategorie, #7); rows is empty then */
+	subgroups?: MirrorGroup[]
 }
 
 export interface MirrorLookups {
@@ -168,7 +173,7 @@ export function buildMirrorRow(contract: Contract, lookups: MirrorLookups = {}):
 		scope: scopeLines(contract, lookups.userNames ?? {}),
 		endDate: endDateLabel(contract),
 		status: statusLabel(contract),
-		interval: intervalLabel(contract.costInterval),
+		interval: [intervalLabel(contract.costInterval), paymentMethodLabel(contract.paymentMethod)].filter(l => l !== ''),
 		amount: formatAmount(contract.cost, contract.currency),
 	}
 }
@@ -189,7 +194,28 @@ export function buildMirrorGroups(contracts: Contract[], categories: Category[],
 	}
 	const rest = contracts.filter(c => c.categoryId === null || c.categoryId === undefined || !known.has(c.categoryId))
 	if (rest.length) {
-		groups.push({ title: t('nc_vertragswerk', 'Ohne Kategorie'), rows: rest.map(c => buildMirrorRow(c, lookups)) })
+		groups.push({ title: t('nc_vertragswerk', 'Ohne Vertragsart'), rows: rest.map(c => buildMirrorRow(c, lookups)) })
 	}
 	return groups
+}
+
+/**
+ * Two levels (fds2610/contractmanager#7): „Kategorie" (persönlich, Wohnen, …)
+ * in the order of the admin list, below it the „Vertragsart" groups of
+ * buildMirrorGroups(). Contracts without (or with an unknown) Kategorie come
+ * last under „Ohne Kategorie".
+ */
+export function buildMirrorSections(contracts: Contract[], areas: Area[], categories: Category[], lookups: MirrorLookups = {}): MirrorGroup[] {
+	const known = new Set(areas.map(a => a.id))
+	const sections: MirrorGroup[] = []
+	const add = (title: string, members: Contract[]) => {
+		if (members.length) {
+			sections.push({ title, rows: [], subgroups: buildMirrorGroups(members, categories, lookups) })
+		}
+	}
+	for (const area of areas) {
+		add(area.name, contracts.filter(c => c.areaId === area.id))
+	}
+	add(t('nc_vertragswerk', 'Ohne Kategorie'), contracts.filter(c => c.areaId === null || c.areaId === undefined || !known.has(c.areaId)))
+	return sections
 }

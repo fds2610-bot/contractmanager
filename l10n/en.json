@@ -1,6 +1,5 @@
 {
 	"translations": {
-		"Deine Verträge samt Kategorien sowie Kündigungs- und Erinnerungseinstellungen": "Your contracts including categories, cancellation and reminder settings",
 		"Zuständig": "Responsible",
 		"Kündigen zum": "Cancel to",
 		"Tagesgenau": "To the day",
@@ -74,7 +73,6 @@
 		"Status": "Status",
 		"Startdatum": "Start date",
 		"Enddatum": "End date",
-		"Vertragstyp": "Contract type",
 		"Kündigungsfrist": "Cancellation period",
 		"Kündbar bis": "Cancellable until",
 		"Kündbar bis (berechnet)": "Cancellable until (calculated)",
@@ -110,7 +108,6 @@
 		"Vertrag \"{name}\" wirklich archivieren?": "Really archive contract \"{name}\"?",
 		"Keine Verträge": "No contracts",
 		"Kein Vertrag passt zur aktuellen Auswahl": "No contract matches the current selection",
-		"Filter, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.": "A filter, a category or the search is narrowing the list. Remove the restriction to see all contracts.",
 		"Filter zurücksetzen": "Reset filters",
 		"Erstellen Sie Ihren ersten Vertrag, um zu beginnen.": "Create your first contract to get started.",
 		"Benachrichtigungen": "Notifications",
@@ -119,14 +116,11 @@
 		"Erste Erinnerung": "First reminder",
 		"Letzte Erinnerung": "Final reminder",
 		"Kategorien verwalten": "Manage categories",
-		"Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.": "Add, edit or delete categories for contract organization.",
-		"Neue Kategorie...": "New category...",
 		"Hinzufügen": "Add",
 		"Kategorie hinzugefügt": "Category added",
 		"Fehler beim Hinzufügen der Kategorie": "Error adding category",
 		"Kategorie aktualisiert": "Category updated",
 		"Fehler beim Aktualisieren der Kategorie": "Error updating category",
-		"Kategorie \"{name}\" wirklich löschen?": "Really delete category \"{name}\"?",
 		"Kategorie gelöscht": "Category deleted",
 		"Fehler beim Löschen der Kategorie": "Error deleting category",
 		"Kategorien": "Categories",
@@ -270,8 +264,6 @@
 		"Monatliche Kosten": "Monthly cost",
 		"innerhalb der Vorlaufzeit": "within the lead time",
 		"Ohne aktiven Eigentümer": "Without an active owner",
-		"Kennzahlen für Verträge ohne Kategorie": "Key figures for contracts without a category",
-		"Kennzahlen für Kategorie „{name}“": "Key figures for category “{name}”",
 		"Kennzahlen für die gefilterte Ansicht": "Key figures for the filtered view",
 		"{auto} mit autom. Verlängerung · {rest} weitere": "{auto} with automatic renewal · {rest} more",
 		"ca. {amount}": "approx. {amount}",
@@ -323,9 +315,6 @@
 		"Provider, API-Key, URL und Modell werden zusammen gespeichert.": "Provider, API Key, URL and model are saved together.",
 		"KI-Einstellungen gespeichert": "AI settings saved",
 		"Fehler beim Speichern der KI-Einstellungen": "Error saving the AI settings",
-		"Kategorie entfernt": "Category removed",
-		"In Kategorie verschoben": "Moved to category",
-		"Fehler beim Ändern der Kategorie": "Error changing the category",
 		"Auto-Backup": "Auto-backup",
 		"Automatisches Backup": "Automatic backup",
 		"Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.": "Regularly saves your own contract data as a JSON file to a Nextcloud folder, so the current state is included in every normal Nextcloud backup.",
@@ -394,10 +383,6 @@
 		"_%n Eintrag ist unvollständig und wird übersprungen_::_%n Einträge sind unvollständig und werden übersprungen_": [
 			"%n entry is incomplete and will be skipped",
 			"%n entries are incomplete and will be skipped"
-		],
-		"_%n Kategorie wird neu angelegt_::_%n Kategorien werden neu angelegt_": [
-			"%n category will be created",
-			"%n categories will be created"
 		],
 		"_Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren._::_Bei %n Verträgen wurden verknüpfte Dokumente oder Ordner hier nicht gefunden. Die Pfade bleiben erhalten, die Dateien müssen Sie selbst nachkopieren._": [
 			"For %n contract the linked document or folder was not found here. The path is kept; copy the files over yourself.",
@@ -468,7 +453,49 @@
 		"Kundennummer": "Customer number",
 		"Optional": "Optional",
 		"V: {number}": "No. {number}",
-		"K: {number}": "Cust. {number}"
+		"K: {number}": "Cust. {number}",
+		"Ohne Vertragsart": "No contract type",
+		"Vertragsart entfernt": "Contract type removed",
+		"Zu Vertragsart verschoben": "Moved to contract type",
+		"Fehler beim Ändern der Vertragsart": "Error changing the contract type",
+		"Kategorien ordnen Verträge Lebensbereichen zu, z. B. Wohnen oder Fahrzeuge. Umbenennen gilt für alle zugeordneten Verträge.": "Categories sort contracts into areas of life, e.g. housing or vehicles. Renaming applies to all assigned contracts.",
+		"Neue Kategorie": "New category",
+		"Umbenennen": "Rename",
+		"Kategorie „{name}“ löschen?": "Delete category “{name}”?",
+		"Kategorien konnten nicht geladen werden": "Categories could not be loaded",
+		"_Kategorie „{name}“ löschen? %n Vertrag verliert dabei seine Kategorie._::_Kategorie „{name}“ löschen? %n Verträge verlieren dabei ihre Kategorie._": [
+			"Delete category “{name}”? %n contract loses its category.",
+			"Delete category “{name}”? %n contracts lose their category."
+		],
+		"Befristung": "Term",
+		"Vertragsart": "Contract type",
+		"Zahlungsart": "Payment method",
+		"Keine Vertragsart": "No contract type",
+		"wird abgebucht": "direct debit",
+		"überweisen": "bank transfer",
+		"Filter, Vertragsart, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.": "Filters, contract type, category or search narrow the list. Remove the restriction to see all contracts.",
+		"Kennzahlen für Verträge ohne Vertragsart": "Figures for contracts without contract type",
+		"Kennzahlen für Vertragsart „{name}“": "Figures for contract type “{name}”",
+		"Vertragsarten": "Contract types",
+		"Vertragsarten verwalten": "Manage contract types",
+		"Vertragsarten hinzufügen, bearbeiten oder löschen.": "Add, edit or delete contract types.",
+		"Neue Vertragsart...": "New contract type...",
+		"Vertragsarten können nur von Administratoren verwaltet werden.": "Contract types can only be managed by administrators.",
+		"Vertragsart löschen": "Delete contract type",
+		"Vertragsart \"{name}\" wirklich löschen?": "Really delete contract type \"{name}\"?",
+		"Vertragsart hinzugefügt": "Contract type added",
+		"Fehler beim Hinzufügen der Vertragsart": "Error adding the contract type",
+		"Vertragsart aktualisiert": "Contract type updated",
+		"Fehler beim Aktualisieren der Vertragsart": "Error updating the contract type",
+		"Vertragsart gelöscht": "Contract type deleted",
+		"Fehler beim Löschen der Vertragsart": "Error deleting the contract type",
+		"_%n Vertragsart wird neu angelegt_::_%n Vertragsarten werden neu angelegt_": [
+			"%n contract type will be created",
+			"%n contract types will be created"
+		],
+		"Ungültiger Name": "Invalid name",
+		"Vertragsart nicht gefunden": "Contract type not found",
+		"Deine Verträge samt Vertragsarten, Kategorien sowie Kündigungs- und Erinnerungseinstellungen": "Your contracts including contract types, categories and cancellation and reminder settings"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

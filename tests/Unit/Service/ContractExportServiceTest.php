@@ -39,6 +39,7 @@ class ContractExportServiceTest extends TestCase {
 			$this->optOutMapper,
 			$this->appManager,
 			$this->timeFactory,
+			$this->createMock(\OCA\NcVertragswerk\Db\AreaMapper::class),
 		);
 	}
 

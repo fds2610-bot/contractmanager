@@ -1,6 +1,5 @@
 {
 	"translations": {
-		"Deine Verträge samt Kategorien sowie Kündigungs- und Erinnerungseinstellungen": "Deine Verträge samt Kategorien sowie Kündigungs- und Erinnerungseinstellungen",
 		"Zuständig": "Zuständig",
 		"Kündigen zum": "Kündigen zum",
 		"Tagesgenau": "Tagesgenau",
@@ -74,7 +73,6 @@
 		"Status": "Status",
 		"Startdatum": "Startdatum",
 		"Enddatum": "Enddatum",
-		"Vertragstyp": "Vertragstyp",
 		"Kündigungsfrist": "Kündigungsfrist",
 		"Kündbar bis": "Kündbar bis",
 		"Kündbar bis (berechnet)": "Kündbar bis (berechnet)",
@@ -110,7 +108,6 @@
 		"Vertrag \"{name}\" wirklich archivieren?": "Vertrag \"{name}\" wirklich archivieren?",
 		"Keine Verträge": "Keine Verträge",
 		"Kein Vertrag passt zur aktuellen Auswahl": "Kein Vertrag passt zur aktuellen Auswahl",
-		"Filter, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.": "Filter, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.",
 		"Filter zurücksetzen": "Filter zurücksetzen",
 		"Erstellen Sie Ihren ersten Vertrag, um zu beginnen.": "Erstellen Sie Ihren ersten Vertrag, um zu beginnen.",
 		"Benachrichtigungen": "Benachrichtigungen",
@@ -119,14 +116,11 @@
 		"Erste Erinnerung": "Erste Erinnerung",
 		"Letzte Erinnerung": "Letzte Erinnerung",
 		"Kategorien verwalten": "Kategorien verwalten",
-		"Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.": "Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.",
-		"Neue Kategorie...": "Neue Kategorie...",
 		"Hinzufügen": "Hinzufügen",
 		"Kategorie hinzugefügt": "Kategorie hinzugefügt",
 		"Fehler beim Hinzufügen der Kategorie": "Fehler beim Hinzufügen der Kategorie",
 		"Kategorie aktualisiert": "Kategorie aktualisiert",
 		"Fehler beim Aktualisieren der Kategorie": "Fehler beim Aktualisieren der Kategorie",
-		"Kategorie \"{name}\" wirklich löschen?": "Kategorie \"{name}\" wirklich löschen?",
 		"Kategorie gelöscht": "Kategorie gelöscht",
 		"Fehler beim Löschen der Kategorie": "Fehler beim Löschen der Kategorie",
 		"Kategorien": "Kategorien",
@@ -270,8 +264,6 @@
 		"Monatliche Kosten": "Monatliche Kosten",
 		"innerhalb der Vorlaufzeit": "innerhalb der Vorlaufzeit",
 		"Ohne aktiven Eigentümer": "Ohne aktiven Eigentümer",
-		"Kennzahlen für Verträge ohne Kategorie": "Kennzahlen für Verträge ohne Kategorie",
-		"Kennzahlen für Kategorie „{name}“": "Kennzahlen für Kategorie „{name}“",
 		"Kennzahlen für die gefilterte Ansicht": "Kennzahlen für die gefilterte Ansicht",
 		"{auto} mit autom. Verlängerung · {rest} weitere": "{auto} mit autom. Verlängerung · {rest} weitere",
 		"ca. {amount}": "ca. {amount}",
@@ -323,9 +315,6 @@
 		"Provider, API-Key, URL und Modell werden zusammen gespeichert.": "Provider, API-Key, URL und Modell werden zusammen gespeichert.",
 		"KI-Einstellungen gespeichert": "KI-Einstellungen gespeichert",
 		"Fehler beim Speichern der KI-Einstellungen": "Fehler beim Speichern der KI-Einstellungen",
-		"Kategorie entfernt": "Kategorie entfernt",
-		"In Kategorie verschoben": "In Kategorie verschoben",
-		"Fehler beim Ändern der Kategorie": "Fehler beim Ändern der Kategorie",
 		"Auto-Backup": "Auto-Backup",
 		"Automatisches Backup": "Automatisches Backup",
 		"Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.": "Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.",
@@ -394,10 +383,6 @@
 		"_%n Eintrag ist unvollständig und wird übersprungen_::_%n Einträge sind unvollständig und werden übersprungen_": [
 			"%n Eintrag ist unvollständig und wird übersprungen",
 			"%n Einträge sind unvollständig und werden übersprungen"
-		],
-		"_%n Kategorie wird neu angelegt_::_%n Kategorien werden neu angelegt_": [
-			"%n Kategorie wird neu angelegt",
-			"%n Kategorien werden neu angelegt"
 		],
 		"_Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren._::_Bei %n Verträgen wurden verknüpfte Dokumente oder Ordner hier nicht gefunden. Die Pfade bleiben erhalten, die Dateien müssen Sie selbst nachkopieren._": [
 			"Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren.",
@@ -468,7 +453,49 @@
 		"Kundennummer": "Kundennummer",
 		"Optional": "Optional",
 		"V: {number}": "V: {number}",
-		"K: {number}": "K: {number}"
+		"K: {number}": "K: {number}",
+		"Ohne Vertragsart": "Ohne Vertragsart",
+		"Vertragsart entfernt": "Vertragsart entfernt",
+		"Zu Vertragsart verschoben": "Zu Vertragsart verschoben",
+		"Fehler beim Ändern der Vertragsart": "Fehler beim Ändern der Vertragsart",
+		"Kategorien ordnen Verträge Lebensbereichen zu, z. B. Wohnen oder Fahrzeuge. Umbenennen gilt für alle zugeordneten Verträge.": "Kategorien ordnen Verträge Lebensbereichen zu, z. B. Wohnen oder Fahrzeuge. Umbenennen gilt für alle zugeordneten Verträge.",
+		"Neue Kategorie": "Neue Kategorie",
+		"Umbenennen": "Umbenennen",
+		"Kategorie „{name}“ löschen?": "Kategorie „{name}“ löschen?",
+		"Kategorien konnten nicht geladen werden": "Kategorien konnten nicht geladen werden",
+		"_Kategorie „{name}“ löschen? %n Vertrag verliert dabei seine Kategorie._::_Kategorie „{name}“ löschen? %n Verträge verlieren dabei ihre Kategorie._": [
+			"Kategorie „{name}“ löschen? %n Vertrag verliert dabei seine Kategorie.",
+			"Kategorie „{name}“ löschen? %n Verträge verlieren dabei ihre Kategorie."
+		],
+		"Befristung": "Befristung",
+		"Vertragsart": "Vertragsart",
+		"Zahlungsart": "Zahlungsart",
+		"Keine Vertragsart": "Keine Vertragsart",
+		"wird abgebucht": "wird abgebucht",
+		"überweisen": "überweisen",
+		"Filter, Vertragsart, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.": "Filter, Vertragsart, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.",
+		"Kennzahlen für Verträge ohne Vertragsart": "Kennzahlen für Verträge ohne Vertragsart",
+		"Kennzahlen für Vertragsart „{name}“": "Kennzahlen für Vertragsart „{name}“",
+		"Vertragsarten": "Vertragsarten",
+		"Vertragsarten verwalten": "Vertragsarten verwalten",
+		"Vertragsarten hinzufügen, bearbeiten oder löschen.": "Vertragsarten hinzufügen, bearbeiten oder löschen.",
+		"Neue Vertragsart...": "Neue Vertragsart...",
+		"Vertragsarten können nur von Administratoren verwaltet werden.": "Vertragsarten können nur von Administratoren verwaltet werden.",
+		"Vertragsart löschen": "Vertragsart löschen",
+		"Vertragsart \"{name}\" wirklich löschen?": "Vertragsart \"{name}\" wirklich löschen?",
+		"Vertragsart hinzugefügt": "Vertragsart hinzugefügt",
+		"Fehler beim Hinzufügen der Vertragsart": "Fehler beim Hinzufügen der Vertragsart",
+		"Vertragsart aktualisiert": "Vertragsart aktualisiert",
+		"Fehler beim Aktualisieren der Vertragsart": "Fehler beim Aktualisieren der Vertragsart",
+		"Vertragsart gelöscht": "Vertragsart gelöscht",
+		"Fehler beim Löschen der Vertragsart": "Fehler beim Löschen der Vertragsart",
+		"_%n Vertragsart wird neu angelegt_::_%n Vertragsarten werden neu angelegt_": [
+			"%n Vertragsart wird neu angelegt",
+			"%n Vertragsarten werden neu angelegt"
+		],
+		"Ungültiger Name": "Ungültiger Name",
+		"Vertragsart nicht gefunden": "Vertragsart nicht gefunden",
+		"Deine Verträge samt Vertragsarten, Kategorien sowie Kündigungs- und Erinnerungseinstellungen": "Deine Verträge samt Vertragsarten, Kategorien sowie Kündigungs- und Erinnerungseinstellungen"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

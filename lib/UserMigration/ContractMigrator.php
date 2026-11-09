@@ -46,7 +46,7 @@ class ContractMigrator implements IMigrator {
 	}
 
 	public function getDescription(): string {
-		return $this->l10n->t('Deine Verträge samt Kategorien sowie Kündigungs- und Erinnerungseinstellungen');
+		return $this->l10n->t('Deine Verträge samt Vertragsarten, Kategorien sowie Kündigungs- und Erinnerungseinstellungen');
 	}
 
 	public function export(IUser $user, IExportDestination $exportDestination, OutputInterface $output): void {

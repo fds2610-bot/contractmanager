@@ -59,9 +59,11 @@ Behalten Sie den Überblick über Laufzeiten, Kosten und Kündigungsfristen.
         <post-migration>
             <step>OCA\NcVertragswerk\Migration\CleanupExtraFiles</step>
             <step>OCA\NcVertragswerk\Migration\WhatsNewBootstrap</step>
+            <step>OCA\NcVertragswerk\Migration\SeedAreas</step>
         </post-migration>
         <install>
             <step>OCA\NcVertragswerk\Migration\ImportFromContractManager</step>
+            <step>OCA\NcVertragswerk\Migration\SeedAreas</step>
         </install>
     </repair-steps>
 

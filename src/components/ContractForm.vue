@@ -34,7 +34,7 @@
 					</div>
 					<div class="form-summary__facts">
 						<div class="fact">
-							<span>{{ t('nc_vertragswerk', 'Vertragstyp') }}</span>
+							<span>{{ t('nc_vertragswerk', 'Befristung') }}</span>
 							<b>{{ summaryTypeLabel }}</b>
 						</div>
 						<div v-if="endDateApplicable && summaryEndDate" class="fact">
@@ -148,12 +148,29 @@
 					<div class="cm-field-row">
 						<label class="cm-field">
 							<span>{{ t('nc_vertragswerk', 'Kategorie') }}</span>
-							<select v-model="form.categoryId" class="cm-input" :disabled="readOnly">
+							<select v-model="form.areaId"
+								class="cm-input"
+								data-test="area-select"
+								:disabled="readOnly">
+								<option v-for="opt in areaOptions" :key="String(opt.value)" :value="opt.value">
+									{{ opt.label }}
+								</option>
+							</select>
+						</label>
+						<label class="cm-field">
+							<span>{{ t('nc_vertragswerk', 'Vertragsart') }}</span>
+							<select v-model="form.categoryId"
+								class="cm-input"
+								data-test="category-select"
+								:disabled="readOnly">
 								<option v-for="opt in categoryOptions" :key="String(opt.value)" :value="opt.value">
 									{{ opt.label }}
 								</option>
 							</select>
 						</label>
+					</div>
+
+					<div class="cm-field-row">
 						<label class="cm-field">
 							<span>{{ t('nc_vertragswerk', 'Status') }}</span>
 							<select v-model="form.contractStatus"
@@ -193,7 +210,7 @@
 					<h3>{{ t('nc_vertragswerk', 'Laufzeit & Kündigung') }}</h3>
 
 					<label class="cm-field">
-						<span>{{ t('nc_vertragswerk', 'Vertragstyp') + ' *' }}</span>
+						<span>{{ t('nc_vertragswerk', 'Befristung') + ' *' }}</span>
 						<select v-model="form.contractType" class="cm-input" :disabled="readOnly">
 							<option v-for="opt in contractTypeOptions" :key="opt.value" :value="opt.value">
 								{{ opt.label }}
@@ -377,6 +394,20 @@
 							<select v-model="form.amountType" class="cm-input" :disabled="readOnly">
 								<option value="netto">{{ t('nc_vertragswerk', 'Netto') }}</option>
 								<option value="brutto">{{ t('nc_vertragswerk', 'Brutto') }}</option>
+							</select>
+						</label>
+					</div>
+
+					<div class="cm-field-row">
+						<label class="cm-field">
+							<span>{{ t('nc_vertragswerk', 'Zahlungsart') }}</span>
+							<select v-model="form.paymentMethod"
+								class="cm-input"
+								data-test="payment-method"
+								:disabled="readOnly">
+								<option v-for="opt in paymentMethodOptions" :key="String(opt.value)" :value="opt.value">
+									{{ opt.label }}
+								</option>
 							</select>
 						</label>
 					</div>
@@ -619,6 +650,8 @@ import NcLoadingIcon from '@nextcloud/vue/components/NcLoadingIcon'
 import NcNoteCard from '@nextcloud/vue/components/NcNoteCard'
 import { getFilePickerBuilder, showSuccess, showError, showWarning } from '@nextcloud/dialogs'
 import { mapState } from 'pinia'
+import { useAreasStore } from '../store/areas'
+import { paymentMethodOptions } from '../utils/paymentMethod'
 import { useCategoriesStore } from '../store/categories'
 import Folder from 'vue-material-design-icons/Folder.vue'
 import File from 'vue-material-design-icons/File.vue'
@@ -716,6 +749,16 @@ export default {
 	},
 	computed: {
 		...mapState(useCategoriesStore, ['allCategories']),
+		...mapState(useAreasStore, ['allAreas', 'defaultAreaId']),
+		areaOptions() {
+			return [
+				{ value: null, label: t('nc_vertragswerk', 'Keine Kategorie') },
+				...this.allAreas.map(a => ({ value: a.id, label: a.name })),
+			]
+		},
+		paymentMethodOptions() {
+			return paymentMethodOptions()
+		},
 		isEdit() {
 			return this.contract !== null && this.contract.id != null
 		},
@@ -883,7 +926,7 @@ export default {
 		},
 		categoryOptions() {
 			return [
-				{ value: null, label: t('nc_vertragswerk', 'Keine Kategorie') },
+				{ value: null, label: t('nc_vertragswerk', 'Keine Vertragsart') },
 				...this.allCategories.map((c) => ({
 					value: c.id,
 					label: c.name,
@@ -1151,6 +1194,8 @@ export default {
 				customField2: '',
 				customField3: '',
 				contractNumber: '',
+				areaId: this.defaultAreaId,
+				paymentMethod: null,
 				customerNumber: '',
 				insurancePersons: personsForForm(null),
 				insuranceBenefits: benefitsForForm(null),
@@ -1220,6 +1265,8 @@ export default {
 				customField2: contract.customField2 || '',
 				customField3: contract.customField3 || '',
 				contractNumber: contract.contractNumber || '',
+				areaId: contract.areaId ?? null,
+				paymentMethod: contract.paymentMethod || null,
 				customerNumber: contract.customerNumber || '',
 				insurancePersons: personsForForm(contract.insurancePersons),
 				insuranceBenefits: benefitsForForm(contract.insuranceBenefits),
@@ -1267,6 +1314,8 @@ export default {
 				customField2: this.form.customField2.trim() || null,
 				customField3: this.form.customField3.trim() || null,
 				contractNumber: this.form.contractNumber.trim() || null,
+				areaId: this.form.areaId || null,
+				paymentMethod: this.form.paymentMethod || null,
 				customerNumber: this.form.customerNumber.trim() || null,
 				// Wechselt die Kategorie weg von Versicherung, fallen die Angaben weg
 				insurancePersons: this.isInsurance ? personsForApi(this.form.insurancePersons) : null,

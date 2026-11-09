@@ -57,7 +57,7 @@
 				</NcAppNavigationItem>
 
 				<NcAppNavigationItem v-if="uncategorizedCount > 0"
-					:name="t('nc_vertragswerk', 'Ohne Kategorie')"
+					:name="t('nc_vertragswerk', 'Ohne Vertragsart')"
 					:class="{ active: currentView === 'contracts' && selectedCategoryId === 'uncategorized', 'nav-drop-target': dropTargetKey === 'uncategorized' }"
 					class="category-item"
 					@click="filterByCategory('uncategorized')"
@@ -251,11 +251,11 @@ export default {
 			try {
 				await this.setContractCategory(id, targetCategoryId)
 				showSuccess(targetCategoryId === null
-					? t('nc_vertragswerk', 'Kategorie entfernt')
-					: t('nc_vertragswerk', 'In Kategorie verschoben'))
+					? t('nc_vertragswerk', 'Vertragsart entfernt')
+					: t('nc_vertragswerk', 'Zu Vertragsart verschoben'))
 			} catch (error) {
 				console.error('Failed to reassign category:', error)
-				showError(t('nc_vertragswerk', 'Fehler beim Ändern der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Ändern der Vertragsart'))
 			}
 		},
 		showAllContracts() {

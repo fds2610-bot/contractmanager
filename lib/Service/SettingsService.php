@@ -106,6 +106,7 @@ class SettingsService {
 		'deadlineWithin' => 0,
 		'minMonthlyCost' => null,
 		'ownerMissing' => false,
+		'areaId' => 0,
 	];
 
 	public function __construct(
@@ -450,7 +451,7 @@ class SettingsService {
 	/**
 	 * Get filter preferences for a user
 	 *
-	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool}
+	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool, areaId: int}
 	 */
 	public function getUserFilters(string $userId): array {
 		$json = $this->config->getUserValue(
@@ -485,7 +486,7 @@ class SettingsService {
 	}
 
 	/**
-	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool}
+	 * @return array{vendor: string, statuses: string[], contractType: string, responsible: string, deadlineWithin: int, minMonthlyCost: float|null, ownerMissing: bool, areaId: int}
 	 */
 	private function validateFilters(array $filters): array {
 		$minMonthlyCost = $filters['minMonthlyCost'] ?? null;
@@ -506,6 +507,8 @@ class SettingsService {
 				: null,
 			// "Ohne aktiven Eigentuemer" ist ein Diagnosewerkzeug und wird nie gespeichert.
 			'ownerMissing' => false,
+			// Kategorie (#7); 0 = alle
+			'areaId' => isset($filters['areaId']) && is_int($filters['areaId']) && $filters['areaId'] > 0 ? $filters['areaId'] : 0,
 		];
 	}
 

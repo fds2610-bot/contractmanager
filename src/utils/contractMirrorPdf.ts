@@ -67,13 +67,8 @@ export async function renderContractMirrorPdf(groups: MirrorGroup[], options: Mi
 	] as const
 
 	const body: unknown[] = []
-	for (const group of groups) {
-		body.push([{
-			content: text(group.title),
-			colSpan: columns.length,
-			styles: { fontStyle: 'bold', fontSize: 10, fillColor: [238, 238, 238], halign: 'left' },
-		}])
-		for (const row of group.rows) {
+	const pushRows = (rows: MirrorGroup['rows']) => {
+		for (const row of rows) {
 			body.push([
 				text(row.contract),
 				text(row.vendor),
@@ -83,6 +78,23 @@ export async function renderContractMirrorPdf(groups: MirrorGroup[], options: Mi
 				text(row.interval),
 				text(row.amount),
 			])
+		}
+	}
+	for (const group of groups) {
+		body.push([{
+			content: text(group.title),
+			colSpan: columns.length,
+			styles: { fontStyle: 'bold', fontSize: 10.5, fillColor: [225, 225, 225], halign: 'left' },
+		}])
+		pushRows(group.rows)
+		for (const sub of group.subgroups ?? []) {
+			// Second level (Vertragsart below a Kategorie, #7)
+			body.push([{
+				content: text(sub.title),
+				colSpan: columns.length,
+				styles: { fontStyle: 'bold', fontSize: 9, fillColor: [246, 246, 246], halign: 'left', cellPadding: { top: 1.4, right: 1.8, bottom: 1.4, left: 4 } },
+			}])
+			pushRows(sub.rows)
 		}
 	}
 

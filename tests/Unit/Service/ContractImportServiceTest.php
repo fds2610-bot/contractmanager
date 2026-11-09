@@ -75,6 +75,7 @@ class ContractImportServiceTest extends TestCase {
 			$this->timeFactory,
 			$this->l10n,
 			$this->permissionService,
+			$this->createMock(\OCA\NcVertragswerk\Db\AreaMapper::class),
 		);
 	}
 

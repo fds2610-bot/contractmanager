@@ -51,7 +51,7 @@ class CategoryController extends Controller {
             $category = $this->service->update($id, $name, $sortOrder);
             return new JSONResponse($category);
         } catch (NotFoundException $e) {
-            return new JSONResponse(['error' => $this->l->t('Kategorie nicht gefunden')], Http::STATUS_NOT_FOUND);
+            return new JSONResponse(['error' => $this->l->t('Vertragsart nicht gefunden')], Http::STATUS_NOT_FOUND);
         }
     }
 
@@ -63,7 +63,7 @@ class CategoryController extends Controller {
             $this->service->delete($id);
             return new JSONResponse(['success' => true]);
         } catch (NotFoundException $e) {
-            return new JSONResponse(['error' => $this->l->t('Kategorie nicht gefunden')], Http::STATUS_NOT_FOUND);
+            return new JSONResponse(['error' => $this->l->t('Vertragsart nicht gefunden')], Http::STATUS_NOT_FOUND);
         }
     }
 }

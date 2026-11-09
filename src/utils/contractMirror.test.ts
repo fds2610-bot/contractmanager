@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { buildMirrorGroups, buildMirrorRow, numberLines, textLines } from './contractMirror'
+import { buildMirrorGroups, buildMirrorRow, buildMirrorSections, numberLines, textLines } from './contractMirror'
 import { toWinAnsi } from './contractMirrorPdf'
 import type { Contract } from '../store/contracts'
 
@@ -91,7 +91,7 @@ describe('buildMirrorRow', () => {
 	it('formats the other columns', () => {
 		const row = buildMirrorRow(contract({ status: 'cancelled', cancelledTo: '2099-06-30' }))
 		expect(row.status).toBe('Gekündigt')
-		expect(row.interval).toBe('Jährlich')
+		expect(row.interval).toEqual(['Jährlich'])
 		expect(row.amount).toMatch(/165[,.]00/)
 		expect(row.endDate).toMatch(/2099/)
 		expect(row.endDate).toMatch(/30/)
@@ -111,8 +111,31 @@ describe('buildMirrorGroups', () => {
 		expect(groups.map(g => [g.title, g.rows.map(r => r.contract[0])])).toEqual([
 			['KFZ', ['C']],
 			['Haftpflicht', ['A', 'D']],
-			['Ohne Kategorie', ['B', 'E']],
+			['Ohne Vertragsart', ['B', 'E']],
 		])
+	})
+})
+
+describe('buildMirrorSections (#7)', () => {
+	it('groups by Kategorie, then by Vertragsart; without Kategorie last', () => {
+		const areas = [{ id: 10, name: 'Wohnen' }, { id: 11, name: 'Fahrzeuge' }]
+		const categories = [{ id: 1, name: 'Versicherung' }, { id: 2, name: 'Energie' }]
+		const sections = buildMirrorSections([
+			contract({ id: 1, name: 'Hausrat', areaId: 10, categoryId: 1 }),
+			contract({ id: 2, name: 'Strom', areaId: 10, categoryId: 2 }),
+			contract({ id: 3, name: 'KFZ', areaId: 11, categoryId: 1 }),
+			contract({ id: 4, name: 'Frei', areaId: null, categoryId: 2 }),
+		], areas, categories)
+		expect(sections.map(s => [s.title, s.subgroups?.map(g => [g.title, g.rows.map(r => r.contract[0])])])).toEqual([
+			['Wohnen', [['Versicherung', ['Hausrat']], ['Energie', ['Strom']]]],
+			['Fahrzeuge', [['Versicherung', ['KFZ']]]],
+			['Ohne Kategorie', [['Energie', ['Frei']]]],
+		])
+	})
+
+	it('puts the payment method below the payment interval', () => {
+		expect(buildMirrorRow(contract({ costInterval: 'monthly', paymentMethod: 'debit' })).interval).toEqual(['Monatlich', 'wird abgebucht'])
+		expect(buildMirrorRow(contract({ costInterval: 'yearly', paymentMethod: 'transfer' })).interval).toEqual(['Jährlich', 'überweisen'])
 	})
 })
 

@@ -59,7 +59,7 @@
 						class="settings-nav-item"
 						:class="{ active: activeSection === 'categories' }"
 						@click="activeSection = 'categories'">
-						<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Kategorien') }}
+						<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Vertragsarten') }}
 					</button>
 				</template>
 				<button v-else
@@ -67,7 +67,14 @@
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'categories' }"
 					@click="activeSection = 'categories'">
-					<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Kategorien') }}
+					<TagIcon :size="18" /> {{ t('nc_vertragswerk', 'Vertragsarten') }}
+				</button>
+				<button type="button"
+					class="settings-nav-item"
+					:class="{ active: activeSection === 'areas' }"
+					data-test="settings-nav-areas"
+					@click="activeSection = 'areas'">
+					<ShapeIcon :size="18" /> {{ t('nc_vertragswerk', 'Kategorien') }}
 				</button>
 			</nav>
 
@@ -638,16 +645,16 @@
 
 					<!-- Category Management (Admin only) -->
 					<div v-show="activeSection === 'categories'" class="settings-section">
-						<h3>{{ t('nc_vertragswerk', 'Kategorien verwalten') }}</h3>
+						<h3>{{ t('nc_vertragswerk', 'Vertragsarten verwalten') }}</h3>
 						<p class="settings-description">
-							{{ t('nc_vertragswerk', 'Kategorien für die Vertragsorganisation hinzufügen, bearbeiten oder löschen.') }}
+							{{ t('nc_vertragswerk', 'Vertragsarten hinzufügen, bearbeiten oder löschen.') }}
 						</p>
 
 						<div class="category-management">
 							<!-- Add new category -->
 							<div class="category-add">
 								<NcTextField v-model="newCategoryName"
-									:placeholder="t('nc_vertragswerk', 'Neue Kategorie...')"
+									:placeholder="t('nc_vertragswerk', 'Neue Vertragsart...')"
 									class="category-input"
 									@keyup.enter="addCategory" />
 								<NcButton variant="primary"
@@ -703,11 +710,14 @@
 					</div>
 				</template>
 
+				<!-- „Kategorien“ (#7), Verwaltung nur für Admins -->
+				<AreaSettings v-if="activeSection === 'areas'" :is-admin="$isAdmin" />
+
 				<!-- Categories (read-only for non-admins) -->
 				<div v-if="!$isAdmin" v-show="activeSection === 'categories'" class="settings-section">
-					<h3>{{ t('nc_vertragswerk', 'Kategorien') }}</h3>
+					<h3>{{ t('nc_vertragswerk', 'Vertragsarten') }}</h3>
 					<p class="settings-description">
-						{{ t('nc_vertragswerk', 'Kategorien können nur von Administratoren verwaltet werden.') }}
+						{{ t('nc_vertragswerk', 'Vertragsarten können nur von Administratoren verwaltet werden.') }}
 					</p>
 
 					<div class="category-list">
@@ -739,7 +749,7 @@
 					{{ n('nc_vertragswerk', '%n Eintrag ist unvollständig und wird übersprungen', '%n Einträge sind unvollständig und werden übersprungen', importPreview.invalid) }}
 				</li>
 				<li v-if="importPreview.categories > 0">
-					{{ n('nc_vertragswerk', '%n Kategorie wird neu angelegt', '%n Kategorien werden neu angelegt', importPreview.categories) }}
+					{{ n('nc_vertragswerk', '%n Vertragsart wird neu angelegt', '%n Vertragsarten werden neu angelegt', importPreview.categories) }}
 				</li>
 				<li v-if="importPreview.missingFiles > 0">
 					{{ n('nc_vertragswerk', 'Bei %n Vertrag wurde das verknüpfte Dokument oder der Ordner hier nicht gefunden. Der Pfad bleibt erhalten, die Dateien müssen Sie selbst nachkopieren.', 'Bei %n Verträgen wurden verknüpfte Dokumente oder Ordner hier nicht gefunden. Die Pfade bleiben erhalten, die Dateien müssen Sie selbst nachkopieren.', importPreview.missingFiles) }}
@@ -764,9 +774,9 @@
 		</NcDialog>
 
 		<NcDialog v-if="showDeleteCategoryDialog"
-			:name="t('nc_vertragswerk', 'Kategorie löschen')"
+			:name="t('nc_vertragswerk', 'Vertragsart löschen')"
 			@close="showDeleteCategoryDialog = false">
-			<p>{{ t('nc_vertragswerk', 'Kategorie "{name}" wirklich löschen?', { name: deletingCategory ? deletingCategory.name : '' }) }}</p>
+			<p>{{ t('nc_vertragswerk', 'Vertragsart "{name}" wirklich löschen?', { name: deletingCategory ? deletingCategory.name : '' }) }}</p>
 			<template #actions>
 				<NcButton @click="showDeleteCategoryDialog = false">
 					{{ t('nc_vertragswerk', 'Abbrechen') }}
@@ -784,6 +794,8 @@ import { mapState, mapActions } from 'pinia'
 import { getCanonicalLocale, translatePlural as n } from '@nextcloud/l10n'
 import { useCategoriesStore } from '../store/categories'
 import { useContractsStore } from '../store/contracts'
+import AreaSettings from '../components/AreaSettings.vue'
+import ShapeIcon from 'vue-material-design-icons/Shape.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
 import NcDialog from '@nextcloud/vue/components/NcDialog'
 import NcCheckboxRadioSwitch from '@nextcloud/vue/components/NcCheckboxRadioSwitch'
@@ -820,6 +832,8 @@ import '@nextcloud/dialogs/style.css'
 export default {
 	name: 'SettingsView',
 	components: {
+		AreaSettings,
+		ShapeIcon,
 		NcButton,
 		NcDialog,
 		NcCheckboxRadioSwitch,
@@ -1461,10 +1475,10 @@ export default {
 			try {
 				await this.createCategory(this.newCategoryName.trim())
 				this.newCategoryName = ''
-				showSuccess(t('nc_vertragswerk', 'Kategorie hinzugefügt'))
+				showSuccess(t('nc_vertragswerk', 'Vertragsart hinzugefügt'))
 			} catch (error) {
 				console.error('Failed to add category:', error)
-				showError(t('nc_vertragswerk', 'Fehler beim Hinzufügen der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Hinzufügen der Vertragsart'))
 			} finally {
 				this.addingCategory = false
 			}
@@ -1489,10 +1503,10 @@ export default {
 					name: this.editingCategoryName.trim(),
 				})
 				this.cancelEdit()
-				showSuccess(t('nc_vertragswerk', 'Kategorie aktualisiert'))
+				showSuccess(t('nc_vertragswerk', 'Vertragsart aktualisiert'))
 			} catch (error) {
 				console.error('Failed to update category:', error)
-				showError(t('nc_vertragswerk', 'Fehler beim Aktualisieren der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Aktualisieren der Vertragsart'))
 			}
 		},
 
@@ -1505,10 +1519,10 @@ export default {
 			if (!this.deletingCategory) return
 			try {
 				await this.deleteCategory(this.deletingCategory.id)
-				showSuccess(t('nc_vertragswerk', 'Kategorie gelöscht'))
+				showSuccess(t('nc_vertragswerk', 'Vertragsart gelöscht'))
 			} catch (error) {
 				console.error('Failed to delete category:', error)
-				showError(t('nc_vertragswerk', 'Fehler beim Löschen der Kategorie'))
+				showError(t('nc_vertragswerk', 'Fehler beim Löschen der Vertragsart'))
 			} finally {
 				this.showDeleteCategoryDialog = false
 				this.deletingCategory = null

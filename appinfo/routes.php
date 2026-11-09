@@ -39,6 +39,10 @@ return [
         ['name' => 'category#create', 'url' => '/api/categories', 'verb' => 'POST'],
         ['name' => 'category#update', 'url' => '/api/categories/{id}', 'verb' => 'PUT'],
         ['name' => 'category#destroy', 'url' => '/api/categories/{id}', 'verb' => 'DELETE'],
+        ['name' => 'area#index', 'url' => '/api/areas', 'verb' => 'GET'],
+        ['name' => 'area#create', 'url' => '/api/areas', 'verb' => 'POST'],
+        ['name' => 'area#update', 'url' => '/api/areas/{id}', 'verb' => 'PUT'],
+        ['name' => 'area#destroy', 'url' => '/api/areas/{id}', 'verb' => 'DELETE'],
 
         // User Settings API routes
         ['name' => 'settings#get', 'url' => '/api/settings', 'verb' => 'GET'],

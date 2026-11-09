@@ -55,6 +55,7 @@ class ContractMigratorTest extends TestCase {
 			$this->optOutMapper,
 			$this->appManager,
 			$this->timeFactory,
+			$this->createMock(\OCA\NcVertragswerk\Db\AreaMapper::class),
 		);
 
 		$importService = new ContractImportService(
@@ -66,6 +67,7 @@ class ContractMigratorTest extends TestCase {
 			$this->timeFactory,
 			$l10n,
 			$this->createMock(PermissionService::class),
+			$this->createMock(\OCA\NcVertragswerk\Db\AreaMapper::class),
 		);
 
 		$this->migrator = new ContractMigrator(

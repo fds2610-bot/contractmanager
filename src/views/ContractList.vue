@@ -101,9 +101,18 @@
 				:reduce="option => option.id"
 				input-id="filter-status"
 				@update:model-value="persistFilters" />
+			<NcSelect v-model="filterAreaId"
+				:options="areaFilterOptions"
+				:placeholder="t('nc_vertragswerk', 'Kategorie')"
+				:clearable="true"
+				label="label"
+				track-by="id"
+				:reduce="option => option.id"
+				input-id="filter-area"
+				@update:model-value="persistFilters" />
 			<NcSelect v-model="filterContractType"
 				:options="contractTypeOptions"
-				:placeholder="t('nc_vertragswerk', 'Vertragstyp')"
+				:placeholder="t('nc_vertragswerk', 'Befristung')"
 				:clearable="true"
 				label="label"
 				track-by="id"
@@ -162,7 +171,7 @@
 				? t('nc_vertragswerk', 'Kein Vertrag passt zur aktuellen Auswahl')
 				: t('nc_vertragswerk', 'Keine Verträge')"
 			:description="viewIsNarrowed
-				? t('nc_vertragswerk', 'Filter, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.')
+				? t('nc_vertragswerk', 'Filter, Vertragsart, Kategorie oder Suche schränken die Liste ein. Heben Sie die Einschränkung auf, um alle Verträge zu sehen.')
 				: t('nc_vertragswerk', 'Erstellen Sie Ihren ersten Vertrag, um zu beginnen.')">
 			<template #icon>
 				<FilterOffIcon v-if="viewIsNarrowed" :size="64" />
@@ -235,6 +244,7 @@
 import { mapState, mapActions } from 'pinia'
 import { useContractsStore } from '../store/contracts'
 import { useCategoriesStore } from '../store/categories'
+import { useAreasStore } from '../store/areas'
 import { loadState } from '@nextcloud/initial-state'
 import { getCanonicalLocale } from '@nextcloud/l10n'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -269,7 +279,7 @@ import SettingsService from '../services/SettingsService'
 import ContactService from '../services/ContactService'
 import ContractService from '../services/ContractService'
 import { getCurrentUser } from '@nextcloud/auth'
-import { buildMirrorGroups } from '../utils/contractMirror'
+import { buildMirrorSections } from '../utils/contractMirror'
 import { formatDate } from '../utils/dateUtils.js'
 import { showInfo, showError } from '@nextcloud/dialogs'
 
@@ -341,6 +351,7 @@ export default {
 			filterStatuses: filters.statuses || [],
 			filterContractType: filters.contractType || null,
 			filterResponsible: filters.responsible || null,
+			filterAreaId: filters.areaId || null,
 			filterDeadlineWithin: filters.deadlineWithin || null,
 			filterMinMonthlyCostText: typeof filters.minMonthlyCost === 'number' ? String(filters.minMonthlyCost) : '',
 			minMonthlyCostSaveTimer: null,
@@ -375,6 +386,10 @@ export default {
 			isAdmin: 'isAdmin',
 		}),
 		...mapState(useCategoriesStore, ['allCategories']),
+		...mapState(useAreasStore, ['allAreas']),
+		areaFilterOptions() {
+			return this.allAreas.map(a => ({ id: a.id, label: a.name }))
+		},
 		vendorOptions() {
 			const vendors = this.allContracts
 				.map(c => c.vendor)
@@ -411,6 +426,7 @@ export default {
 			if (this.filterStatuses.length > 0) return true
 			if (this.filterContractType) return true
 			if (this.filterResponsible) return true
+			if (this.filterAreaId) return true
 			if (this.filterDeadlineWithin) return true
 			if (this.filterMinMonthlyCost !== null) return true
 			if (this.filterOwnerMissing) return true
@@ -435,12 +451,12 @@ export default {
 		},
 		kpiScopeLabel() {
 			if (this.categoryFilter === 'uncategorized') {
-				return t('nc_vertragswerk', 'Kennzahlen für Verträge ohne Kategorie')
+				return t('nc_vertragswerk', 'Kennzahlen für Verträge ohne Vertragsart')
 			}
 			if (this.categoryFilter !== null) {
 				const cat = this.allCategories.find(c => c.id === this.categoryFilter)
 				if (cat) {
-					return t('nc_vertragswerk', 'Kennzahlen für Kategorie „{name}“', { name: cat.name })
+					return t('nc_vertragswerk', 'Kennzahlen für Vertragsart „{name}“', { name: cat.name })
 				}
 			}
 			return t('nc_vertragswerk', 'Kennzahlen für die gefilterte Ansicht')
@@ -580,6 +596,11 @@ export default {
 				filtered = filtered.filter(c => c.responsibleUser === this.filterResponsible)
 			}
 
+			// Kategorie (#7)
+			if (this.filterAreaId) {
+				filtered = filtered.filter(c => c.areaId === this.filterAreaId)
+			}
+
 			if (this.filterDeadlineWithin) {
 				filtered = filtered.filter(c => isDeadlineWithin(c, this.filterDeadlineWithin))
 			}
@@ -615,6 +636,7 @@ export default {
 		Promise.all([this.fetchContracts(), this.fetchPermissions()]).then(() => this.handleDeepLink())
 		this.loadReminderWindow()
 		this.fetchCategories()
+		this.fetchAreas().catch(e => console.debug('Failed to load areas:', e))
 		if (this.hasActiveFilters) {
 			this.showFilters = true
 		}
@@ -622,6 +644,7 @@ export default {
 	methods: {
 		...mapActions(useContractsStore, ['fetchContracts', 'fetchPermissions', 'createContract', 'updateContract', 'archiveContract']),
 		...mapActions(useCategoriesStore, ['fetchCategories']),
+		...mapActions(useAreasStore, ['fetchAreas']),
 
 		async loadReminderWindow() {
 			try {
@@ -830,7 +853,7 @@ export default {
 				])
 				const user = getCurrentUser()
 				const blob = await renderContractMirrorPdf(
-					buildMirrorGroups(contracts, this.allCategories, lookups),
+					buildMirrorSections(contracts, this.allAreas, this.allCategories, lookups),
 					{ userName: user?.displayName || user?.uid || '', date: formatDate(new Date()) },
 				)
 				const url = URL.createObjectURL(blob)
@@ -893,6 +916,7 @@ export default {
 			this.filterStatuses = []
 			this.filterContractType = null
 			this.filterResponsible = null
+			this.filterAreaId = null
 			this.filterDeadlineWithin = null
 			this.filterMinMonthlyCostText = ''
 			this.filterOwnerMissing = false
@@ -912,6 +936,7 @@ export default {
 						statuses: this.filterStatuses,
 						contractType: this.filterContractType || '',
 						responsible: this.filterResponsible || '',
+						areaId: this.filterAreaId || 0,
 						deadlineWithin: this.filterDeadlineWithin || 0,
 						minMonthlyCost: this.filterMinMonthlyCost,
 					},

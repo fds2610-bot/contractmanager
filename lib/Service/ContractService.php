@@ -32,6 +32,13 @@ class ContractService {
 	];
 
 	private const MAX_STRING_LENGTH = 500;
+
+	/**
+	 * Payment method („wird abgebucht" / „überweisen", #7); anything else is empty.
+	 */
+	public static function normalizePaymentMethod(mixed $value): ?string {
+		return is_string($value) && in_array($value, Contract::PAYMENT_METHODS, true) ? $value : null;
+	}
 	private const MAX_NOTES_LENGTH = 5000;
 
 	public function __construct(
@@ -360,6 +367,8 @@ class ContractService {
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
         ?string $customerNumber = null,
+        ?int $areaId = null,
+        ?string $paymentMethod = null,
     ): Contract {
         $contract = new Contract();
         $contract->setName($name);
@@ -395,6 +404,8 @@ class ContractService {
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
         $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
+        $contract->setAreaId($areaId !== null && $areaId > 0 ? $areaId : null);
+        $contract->setPaymentMethod(self::normalizePaymentMethod($paymentMethod));
         $contract->setCreatedBy($userId);
         $contract->setCreatedAt(new DateTime());
         $contract->setUpdatedAt(new DateTime());
@@ -442,6 +453,8 @@ class ContractService {
         ?array $insurancePersons = null,
         ?array $insuranceBenefits = null,
         ?string $customerNumber = null,
+        ?int $areaId = null,
+        ?string $paymentMethod = null,
     ): Contract {
         try {
             $contract = $this->mapper->find($id);
@@ -482,6 +495,8 @@ class ContractService {
         $contract->setInsurancePersons(InsuranceData::personsToJson($insurancePersons));
         $contract->setInsuranceBenefits(InsuranceData::benefitsToJson($insuranceBenefits));
         $contract->setCustomerNumber(InsuranceData::normalizeContractNumber($customerNumber));
+        $contract->setAreaId($areaId !== null && $areaId > 0 ? $areaId : null);
+        $contract->setPaymentMethod(self::normalizePaymentMethod($paymentMethod));
         if ($isPrivate !== null) {
             $contract->setIsPrivate($isPrivate);
         }
