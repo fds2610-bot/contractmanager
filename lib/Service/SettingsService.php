@@ -46,6 +46,7 @@ class SettingsService {
 
 	private const KEY_BACKUP_ENABLED = 'backup_enabled';
 	private const KEY_BACKUP_FOLDER = 'backup_folder';
+	private const KEY_BACKUP_KEEP = 'backup_keep';
 	private const KEY_BACKUP_INTERVAL = 'backup_interval';
 	// Full hour (0-23) in the user's timezone; unset = plain interval as before (#399).
 	private const KEY_BACKUP_HOUR = 'backup_hour';
@@ -68,6 +69,10 @@ class SettingsService {
 		self::BACKUP_INTERVAL_MONTHLY,
 	];
 	public const DEFAULT_BACKUP_FOLDER = '/VertragsWerk-Backup';
+	/** Snapshots kept per user (fds2610/contractmanager#8) */
+	public const DEFAULT_BACKUP_KEEP = 30;
+	public const MIN_BACKUP_KEEP = 1;
+	public const MAX_BACKUP_KEEP = 999;
 
 	private const ALLOWED_AI_PROVIDERS = ['claude', 'openai_compatible'];
 	private const DEFAULT_AI_URLS = [
@@ -576,6 +581,22 @@ class SettingsService {
 			self::KEY_BACKUP_FOLDER,
 			self::DEFAULT_BACKUP_FOLDER
 		);
+	}
+
+	/**
+	 * How many snapshots to keep; older ones are deleted after each backup.
+	 */
+	public function getUserBackupKeep(string $userId): int {
+		$value = (int)$this->config->getUserValue($userId, Application::APP_ID, self::KEY_BACKUP_KEEP, (string)self::DEFAULT_BACKUP_KEEP);
+		return $value >= self::MIN_BACKUP_KEEP && $value <= self::MAX_BACKUP_KEEP ? $value : self::DEFAULT_BACKUP_KEEP;
+	}
+
+	/**
+	 * Clamped to MIN..MAX, so a typo cannot delete all snapshots.
+	 */
+	public function setUserBackupKeep(string $userId, int $keep): void {
+		$keep = max(self::MIN_BACKUP_KEEP, min(self::MAX_BACKUP_KEEP, $keep));
+		$this->config->setUserValue($userId, Application::APP_ID, self::KEY_BACKUP_KEEP, (string)$keep);
 	}
 
 	/**

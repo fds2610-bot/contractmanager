@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Backup-Einstellungen**: Der Menüpunkt heißt jetzt „Backup“. Neben dem Zielordner öffnet „Ordner wählen“ den Nextcloud-Dateidialog, in dem sich auch neue Ordner anlegen lassen. Die Zahl der aufbewahrten Sicherungen ist einstellbar (1 bis 999, bisher fest 30) (#8)
 - **Neue Bezeichnungen**: „Vertragstyp“ heißt jetzt „Befristung“, die bisherige „Kategorie“ heißt „Vertragsart“ (Formular, Liste, Filter, Seitenleiste, Einstellungen, Vertragsspiegel). Intern und in Backups bleibt alles beim Alten (#7)
 
 ### Added

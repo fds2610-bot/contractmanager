@@ -24,8 +24,6 @@ use Psr\Log\LoggerInterface;
  */
 class AutoBackupService {
 
-	/** How many timestamped snapshots to keep per user before pruning oldest. */
-	public const RETENTION_KEEP = 30;
 
 	private const INTERVAL_SECONDS = [
 		SettingsService::BACKUP_INTERVAL_DAILY => 86400,
@@ -234,14 +232,14 @@ class AutoBackupService {
 		$filename = 'contracts-' . $localTime->format('Y-m-d-His') . '.json';
 		$folder->newFile($filename, $this->exportService->exportJson($uid));
 
-		$this->prune($folder);
+		$this->prune($folder, $this->settingsService->getUserBackupKeep($uid));
 	}
 
 	/**
-	 * Delete the oldest snapshots beyond RETENTION_KEEP. Filenames carry a sortable
+	 * Delete the oldest snapshots beyond $keep (user setting, #8). Filenames carry a sortable
 	 * timestamp, so lexical order is chronological order.
 	 */
-	private function prune(Folder $folder): void {
+	private function prune(Folder $folder, int $keep): void {
 		$snapshots = [];
 		foreach ($folder->getDirectoryListing() as $node) {
 			$name = $node->getName();
@@ -249,11 +247,11 @@ class AutoBackupService {
 				$snapshots[$name] = $node;
 			}
 		}
-		if (count($snapshots) <= self::RETENTION_KEEP) {
+		if (count($snapshots) <= $keep) {
 			return;
 		}
 		ksort($snapshots);
-		$toDelete = array_slice($snapshots, 0, count($snapshots) - self::RETENTION_KEEP, true);
+		$toDelete = array_slice($snapshots, 0, count($snapshots) - $keep, true);
 		foreach ($toDelete as $node) {
 			$node->delete();
 		}

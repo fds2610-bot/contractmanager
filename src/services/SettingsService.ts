@@ -16,6 +16,8 @@ export interface UserSettings {
 	backupInterval?: 'daily' | 'weekly' | 'monthly'
 	/** Fixed full hour 0-23 in the user's timezone; null = plain interval. Send -1 to clear. */
 	backupHour?: number | null
+	/** Snapshots kept, 1-999 (#8) */
+	backupKeep?: number
 	backupLastRun?: number
 	backupNextRun?: number
 	[key: string]: unknown

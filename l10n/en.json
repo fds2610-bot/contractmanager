@@ -315,7 +315,6 @@
 		"Provider, API-Key, URL und Modell werden zusammen gespeichert.": "Provider, API Key, URL and model are saved together.",
 		"KI-Einstellungen gespeichert": "AI settings saved",
 		"Fehler beim Speichern der KI-Einstellungen": "Error saving the AI settings",
-		"Auto-Backup": "Auto-backup",
 		"Automatisches Backup": "Automatic backup",
 		"Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.": "Regularly saves your own contract data as a JSON file to a Nextcloud folder, so the current state is included in every normal Nextcloud backup.",
 		"Automatisches Backup aktivieren": "Enable automatic backup",
@@ -323,7 +322,6 @@
 		"Intervall": "Interval",
 		"Täglich": "Daily",
 		"Wöchentlich": "Weekly",
-		"Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.": "The last 30 backups are kept; older ones are removed automatically.",
 		"Kalender-Abo": "Calendar subscription",
 		"Abonnieren Sie Ihre Vertragsfristen als schreibgeschützten Kalender in der Nextcloud-Kalender-App. Pro Vertrag erscheint ein Ganztags-Termin an der Kündigungsfrist (bzw. dem Vertragsende). Enthalten sind nur die Verträge, für die Sie Erinnerungen erhalten – so läuft der Kalender nicht über.": "Subscribe to your contract deadlines as a read-only calendar in the Nextcloud Calendar app. Each contract shows up as an all-day event on its cancellation deadline (or contract end). Only the contracts you receive reminders for are included, so the calendar does not overflow.",
 		"Abo-URL": "Subscription URL",
@@ -530,7 +528,13 @@
 		"Wird beim Anlegen eines Kontakts aus dem Vertragsformular vorausgewählt und kann dort geändert werden. Gilt für alle Benutzer über den Namen des Adressbuchs; wer keines mit diesem Namen hat, bekommt sein erstes verfügbares.": "Preselected when a contact is created from the contract form and can be changed there. Applies to all users by the name of the address book; users without one of that name get their first available one.",
 		"Erstes verfügbares Adressbuch": "First available address book",
 		"Bitte einen Namen oder eine Firma angeben": "Please enter a name or a company",
-		"In diesem Adressbuch können keine Kontakte angelegt werden": "Contacts cannot be created in this address book"
+		"In diesem Adressbuch können keine Kontakte angelegt werden": "Contacts cannot be created in this address book",
+		"Backup": "Backup",
+		"Ordner wählen": "Choose folder",
+		"Anzahl der Sicherungen, die behalten werden": "Number of backups to keep",
+		"Nach jeder Sicherung werden ältere Sicherungen über diese Anzahl hinaus automatisch entfernt (1 bis 999).": "After each backup, older backups beyond this number are removed automatically (1 to 999).",
+		"Zielordner für Sicherungen wählen": "Choose target folder for backups",
+		"Bitte eine Zahl von 1 bis 999 eingeben": "Please enter a number from 1 to 999"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

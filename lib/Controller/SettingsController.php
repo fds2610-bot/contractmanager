@@ -64,6 +64,7 @@ class SettingsController extends Controller {
 			'defaultAmountType' => $this->settingsService->getUserDefaultAmountType($this->userId),
 			'backupEnabled' => $this->settingsService->getUserBackupEnabled($this->userId),
 			'backupFolder' => $this->settingsService->getUserBackupFolder($this->userId),
+			'backupKeep' => $this->settingsService->getUserBackupKeep($this->userId),
 			'backupInterval' => $backupInterval,
 			'backupHour' => $this->settingsService->getUserBackupHour($this->userId),
 			// Actual time of the last snapshot (0 = never) and the next scheduled
@@ -99,6 +100,7 @@ class SettingsController extends Controller {
 		?string $defaultAmountType = null,
 		?bool $backupEnabled = null,
 		?string $backupFolder = null,
+		?int $backupKeep = null,
 		?string $backupInterval = null,
 		// -1 clears the fixed hour: Nextcloud turns a JSON null into the
 		// parameter default, so null cannot mean "remove" here (#399).
@@ -142,6 +144,9 @@ class SettingsController extends Controller {
 		if ($backupFolder !== null) {
 			$this->settingsService->setUserBackupFolder($this->userId, $backupFolder);
 		}
+		if ($backupKeep !== null) {
+			$this->settingsService->setUserBackupKeep($this->userId, $backupKeep);
+		}
 		if ($backupInterval !== null) {
 			$this->settingsService->setUserBackupInterval($this->userId, $backupInterval);
 		}
@@ -163,6 +168,7 @@ class SettingsController extends Controller {
 			'defaultAmountType' => $this->settingsService->getUserDefaultAmountType($this->userId),
 			'backupEnabled' => $this->settingsService->getUserBackupEnabled($this->userId),
 			'backupFolder' => $this->settingsService->getUserBackupFolder($this->userId),
+			'backupKeep' => $this->settingsService->getUserBackupKeep($this->userId),
 			'backupInterval' => $updatedInterval,
 			'backupHour' => $this->settingsService->getUserBackupHour($this->userId),
 			// Changing the interval or hour moves the next scheduled run; return it so the

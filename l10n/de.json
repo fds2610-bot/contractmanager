@@ -315,7 +315,6 @@
 		"Provider, API-Key, URL und Modell werden zusammen gespeichert.": "Provider, API-Key, URL und Modell werden zusammen gespeichert.",
 		"KI-Einstellungen gespeichert": "KI-Einstellungen gespeichert",
 		"Fehler beim Speichern der KI-Einstellungen": "Fehler beim Speichern der KI-Einstellungen",
-		"Auto-Backup": "Auto-Backup",
 		"Automatisches Backup": "Automatisches Backup",
 		"Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.": "Sichert Ihre eigenen Vertragsdaten regelmäßig als JSON-Datei in einen Nextcloud-Ordner, damit der Stand in jedem normalen Nextcloud-Backup landet.",
 		"Automatisches Backup aktivieren": "Automatisches Backup aktivieren",
@@ -323,7 +322,6 @@
 		"Intervall": "Intervall",
 		"Täglich": "Täglich",
 		"Wöchentlich": "Wöchentlich",
-		"Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.": "Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.",
 		"Kalender-Abo": "Kalender-Abo",
 		"Abonnieren Sie Ihre Vertragsfristen als schreibgeschützten Kalender in der Nextcloud-Kalender-App. Pro Vertrag erscheint ein Ganztags-Termin an der Kündigungsfrist (bzw. dem Vertragsende). Enthalten sind nur die Verträge, für die Sie Erinnerungen erhalten – so läuft der Kalender nicht über.": "Abonnieren Sie Ihre Vertragsfristen als schreibgeschützten Kalender in der Nextcloud-Kalender-App. Pro Vertrag erscheint ein Ganztags-Termin an der Kündigungsfrist (bzw. dem Vertragsende). Enthalten sind nur die Verträge, für die Sie Erinnerungen erhalten – so läuft der Kalender nicht über.",
 		"Abo-URL": "Abo-URL",
@@ -530,7 +528,13 @@
 		"Wird beim Anlegen eines Kontakts aus dem Vertragsformular vorausgewählt und kann dort geändert werden. Gilt für alle Benutzer über den Namen des Adressbuchs; wer keines mit diesem Namen hat, bekommt sein erstes verfügbares.": "Wird beim Anlegen eines Kontakts aus dem Vertragsformular vorausgewählt und kann dort geändert werden. Gilt für alle Benutzer über den Namen des Adressbuchs; wer keines mit diesem Namen hat, bekommt sein erstes verfügbares.",
 		"Erstes verfügbares Adressbuch": "Erstes verfügbares Adressbuch",
 		"Bitte einen Namen oder eine Firma angeben": "Bitte einen Namen oder eine Firma angeben",
-		"In diesem Adressbuch können keine Kontakte angelegt werden": "In diesem Adressbuch können keine Kontakte angelegt werden"
+		"In diesem Adressbuch können keine Kontakte angelegt werden": "In diesem Adressbuch können keine Kontakte angelegt werden",
+		"Backup": "Backup",
+		"Ordner wählen": "Ordner wählen",
+		"Anzahl der Sicherungen, die behalten werden": "Anzahl der Sicherungen, die behalten werden",
+		"Nach jeder Sicherung werden ältere Sicherungen über diese Anzahl hinaus automatisch entfernt (1 bis 999).": "Nach jeder Sicherung werden ältere Sicherungen über diese Anzahl hinaus automatisch entfernt (1 bis 999).",
+		"Zielordner für Sicherungen wählen": "Zielordner für Sicherungen wählen",
+		"Bitte eine Zahl von 1 bis 999 eingeben": "Bitte eine Zahl von 1 bis 999 eingeben"
 	},
 	"pluralForm": "nplurals=2; plural=(n != 1);"
 }

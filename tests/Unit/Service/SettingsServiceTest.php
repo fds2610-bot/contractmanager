@@ -602,6 +602,27 @@ class SettingsServiceTest extends TestCase {
 		$this->assertSame('/VertragsWerk-Backup', $this->service->getUserBackupFolder('u'));
 	}
 
+	public function testGetUserBackupKeepFallsBackOnInvalidValues(): void {
+		$this->config->method('getUserValue')->willReturnOnConsecutiveCalls('12', '0', 'abc', '5000');
+
+		$this->assertSame(12, $this->service->getUserBackupKeep('u'));
+		$this->assertSame(30, $this->service->getUserBackupKeep('u'));
+		$this->assertSame(30, $this->service->getUserBackupKeep('u'));
+		$this->assertSame(30, $this->service->getUserBackupKeep('u'));
+	}
+
+	public function testSetUserBackupKeepIsClamped(): void {
+		$stored = [];
+		$this->config->method('setUserValue')->willReturnCallback(function ($u, $app, $key, $value) use (&$stored) {
+			$stored[] = [$key, $value];
+		});
+
+		$this->service->setUserBackupKeep('u', 0);
+		$this->service->setUserBackupKeep('u', 7);
+		$this->service->setUserBackupKeep('u', 100000);
+		$this->assertSame([['backup_keep', '1'], ['backup_keep', '7'], ['backup_keep', '999']], $stored);
+	}
+
 	public function testSetUserBackupFolderBlankResetsToDefault(): void {
 		$this->config->expects($this->once())
 			->method('setUserValue')

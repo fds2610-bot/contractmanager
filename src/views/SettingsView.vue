@@ -25,7 +25,7 @@
 					class="settings-nav-item"
 					:class="{ active: activeSection === 'backup' }"
 					@click="activeSection = 'backup'">
-					<BackupRestoreIcon :size="18" /> {{ t('nc_vertragswerk', 'Auto-Backup') }}
+					<BackupRestoreIcon :size="18" /> {{ t('nc_vertragswerk', 'Backup') }}
 				</button>
 				<button type="button"
 					class="settings-nav-item"
@@ -209,11 +209,24 @@
 					</div>
 					<template v-if="backupEnabled">
 						<div class="settings-item">
-							<label class="settings-label">{{ t('nc_vertragswerk', 'Zielordner') }}</label>
-							<input v-model="backupFolder"
-								class="settings-input"
-								placeholder="/VertragsWerk-Backup"
-								@blur="onBackupFolderChange">
+							<label class="settings-label" for="backup-folder">{{ t('nc_vertragswerk', 'Zielordner') }}</label>
+							<div class="backup-folder-row">
+								<input id="backup-folder"
+									v-model="backupFolder"
+									class="settings-input"
+									placeholder="/VertragsWerk-Backup"
+									data-test="backup-folder"
+									@blur="onBackupFolderChange">
+								<!-- Nextcloud-Dateidialog, dort lassen sich auch Ordner anlegen (#8) -->
+								<NcButton variant="secondary"
+									data-test="backup-folder-pick"
+									@click="pickBackupFolder">
+									<template #icon>
+										<FolderOpenIcon :size="20" />
+									</template>
+									{{ t('nc_vertragswerk', 'Ordner wählen') }}
+								</NcButton>
+							</div>
 						</div>
 						<div class="settings-item">
 							<label class="settings-label">{{ t('nc_vertragswerk', 'Intervall') }}</label>
@@ -234,9 +247,21 @@
 								</option>
 							</select>
 						</div>
-						<p class="settings-description">
-							{{ t('nc_vertragswerk', 'Es werden die letzten 30 Sicherungen behalten; ältere werden automatisch entfernt.') }}
-						</p>
+						<div class="settings-item">
+							<label class="settings-label" for="backup-keep">{{ t('nc_vertragswerk', 'Anzahl der Sicherungen, die behalten werden') }}</label>
+							<input id="backup-keep"
+								v-model.number="backupKeep"
+								type="number"
+								min="1"
+								max="999"
+								step="1"
+								class="settings-input settings-input--number"
+								data-test="backup-keep"
+								@change="onBackupKeepChange">
+							<p class="settings-description">
+								{{ t('nc_vertragswerk', 'Nach jeder Sicherung werden ältere Sicherungen über diese Anzahl hinaus automatisch entfernt (1 bis 999).') }}
+							</p>
+						</div>
 						<div class="settings-item">
 							<label class="settings-label">{{ t('nc_vertragswerk', 'Zuletzt gesichert') }}</label>
 							<span class="settings-value">{{ lastBackupText }}</span>
@@ -815,6 +840,7 @@ import { getCanonicalLocale, translatePlural as n } from '@nextcloud/l10n'
 import { useCategoriesStore } from '../store/categories'
 import { useContractsStore } from '../store/contracts'
 import ContactService from '../services/ContactService'
+import FolderOpenIcon from 'vue-material-design-icons/FolderOpen.vue'
 import AreaSettings from '../components/AreaSettings.vue'
 import ShapeIcon from 'vue-material-design-icons/Shape.vue'
 import NcButton from '@nextcloud/vue/components/NcButton'
@@ -847,13 +873,14 @@ import ContractService from '../services/ContractService'
 import ImportService from '../services/ImportService'
 import { isAiActive } from '../utils/aiSettings'
 import { resolveCustomFieldEnabled, customFieldEnabledKey } from '../utils/customFields'
-import { getFilePickerBuilder, showSuccess, showError } from '@nextcloud/dialogs'
+import { FilePickerType, getFilePickerBuilder, showSuccess, showError } from '@nextcloud/dialogs'
 import '@nextcloud/dialogs/style.css'
 
 export default {
 	name: 'SettingsView',
 	components: {
 		AreaSettings,
+		FolderOpenIcon,
 		ShapeIcon,
 		NcButton,
 		NcDialog,
@@ -904,6 +931,7 @@ export default {
 			backupInterval: 'weekly',
 			// '' = no fixed hour; select values are strings.
 			backupHour: '',
+			backupKeep: 30,
 			savedBackupHour: '',
 			backupLastRun: 0,
 			backupNextRun: 0,
@@ -1108,6 +1136,7 @@ export default {
 				this.defaultAmountType = settings.defaultAmountType || 'netto'
 				this.backupEnabled = settings.backupEnabled === true
 				this.backupFolder = settings.backupFolder || '/VertragsWerk-Backup'
+				this.backupKeep = typeof settings.backupKeep === 'number' ? settings.backupKeep : 30
 				this.backupInterval = settings.backupInterval || 'weekly'
 				this.backupHour = typeof settings.backupHour === 'number' ? String(settings.backupHour) : ''
 				this.savedBackupHour = this.backupHour
@@ -1158,6 +1187,45 @@ export default {
 				console.error('Failed to save backup enabled:', error)
 				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 				this.backupEnabled = previous
+			}
+		},
+
+		async pickBackupFolder() {
+			let path
+			try {
+				path = await getFilePickerBuilder(t('nc_vertragswerk', 'Zielordner für Sicherungen wählen'))
+					.setMultiSelect(false)
+					.setType(FilePickerType.Choose)
+					.allowDirectories()
+					.setMimeTypeFilter(['httpd/unix-directory'])
+					// Im übergeordneten Ordner starten: der Zielordner selbst existiert
+					// vor der ersten Sicherung oft noch nicht.
+					.startAt(this.backupFolder.substring(0, this.backupFolder.lastIndexOf('/')) || '/')
+					.build()
+					.pick()
+			} catch (e) {
+				// Abgebrochen
+				return
+			}
+			if (path) {
+				this.backupFolder = path
+				await this.onBackupFolderChange()
+			}
+		},
+
+		async onBackupKeepChange() {
+			const keep = Math.round(Number(this.backupKeep))
+			if (!Number.isFinite(keep) || keep < 1 || keep > 999) {
+				showError(t('nc_vertragswerk', 'Bitte eine Zahl von 1 bis 999 eingeben'))
+				return
+			}
+			try {
+				const updated = await SettingsService.updateUserSettings({ backupKeep: keep })
+				this.backupKeep = updated.backupKeep ?? keep
+				showSuccess(t('nc_vertragswerk', 'Einstellung gespeichert'))
+			} catch (error) {
+				console.error('Failed to save backup retention:', error)
+				showError(t('nc_vertragswerk', 'Fehler beim Speichern'))
 			}
 		},
 
@@ -1798,6 +1866,16 @@ export default {
 
 .settings-input {
 	max-width: 400px;
+
+	&--number { max-width: 120px; }
+}
+
+.backup-folder-row {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+
+	.settings-input { flex: 1 1 auto; }
 }
 
 .calendar-feed-row {
