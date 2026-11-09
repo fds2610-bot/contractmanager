@@ -137,8 +137,6 @@
 </template>
 
 <script>
-import axios from '@nextcloud/axios'
-import { getCurrentUser } from '@nextcloud/auth'
 import { mapState, mapActions } from 'pinia'
 import { useContractsStore } from '../store/contracts'
 import NcActions from '@nextcloud/vue/components/NcActions'
@@ -159,7 +157,7 @@ import { getCanonicalLocale } from '@nextcloud/l10n'
 import { formatDate } from '../utils/dateUtils.js'
 import { formatPeriod, getDeadlineInfo } from '../utils/periodUtils.js'
 import { isEndingSoon, isEndingSoonFixed, isExpiredFixed, isEndedCancelled, isPlanned } from '../utils/contractStatus'
-import { isUrl } from '../utils/documentUtils.js'
+import { openDocumentInNewTab } from '../utils/documentUtils.js'
 import { CONTRACT_DND_TYPE } from '../utils/categoryDrop'
 import { showSuccess, showError } from '@nextcloud/dialogs'
 
@@ -338,46 +336,8 @@ export default {
 			})
 			window.open(filesUrl, '_blank', 'noopener,noreferrer')
 		},
-		async openDocument() {
-			if (!this.contract.mainDocument) return
-			// URL (intern oder extern): direkt oeffnen
-			if (isUrl(this.contract.mainDocument)) {
-				window.open(this.contract.mainDocument, '_blank', 'noopener,noreferrer')
-				return
-			}
-			// Legacy-Pfad: Versuch 1 - Nextcloud Viewer Overlay (kein neuer Tab)
-			if (window.OCA?.Viewer?.open) {
-				OCA.Viewer.open({ path: this.contract.mainDocument })
-				return
-			}
-			// Legacy-Pfad: Versuch 2 - File-ID per WebDAV holen und /f/{id} oeffnen
-			try {
-				const user = getCurrentUser()?.uid
-				const davPath = `/remote.php/dav/files/${user}${this.contract.mainDocument}`
-				const response = await axios({
-					method: 'PROPFIND',
-					url: davPath,
-					headers: { Depth: '0' },
-					data: `<?xml version="1.0"?>
-						<d:propfind xmlns:d="DAV:" xmlns:oc="http://owncloud.org/ns">
-							<d:prop><oc:fileid/></d:prop>
-						</d:propfind>`,
-				})
-				const parser = new DOMParser()
-				const xml = parser.parseFromString(response.data, 'application/xml')
-				const fileidNode = xml.getElementsByTagNameNS('http://owncloud.org/ns', 'fileid')[0]
-				if (fileidNode?.textContent) {
-					window.open(generateUrl('/f/{fileId}', { fileId: fileidNode.textContent }), '_blank', 'noopener,noreferrer')
-					return
-				}
-			} catch (e) {
-				console.warn('[VertragsWerk] Could not resolve file ID:', e)
-			}
-			// Versuch 3: Datei in Files-App anzeigen (scrollto)
-			const path = this.contract.mainDocument
-			const parentDir = path.substring(0, path.lastIndexOf('/')) || '/'
-			const fileName = path.substring(path.lastIndexOf('/') + 1)
-			window.open(generateUrl('/apps/files/?dir={dir}&scrollto={file}', { dir: parentDir, file: fileName }), '_blank', 'noopener,noreferrer')
+		openDocument() {
+			openDocumentInNewTab(this.contract.mainDocument)
 		},
 	},
 }

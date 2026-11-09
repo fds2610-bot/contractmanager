@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+- **Dokumente öffnen**: Vertragsdokumente aus Nextcloud öffnen jetzt wie externe Links in einem neuen Tab, statt die Vertragsliste im Viewer zu überdecken (#4)
+
 ## [2.0.0] - 2026-11-09
 
 Eigenständige Weiterentwicklung durch fds2610 auf Basis von cpcMomentum/contractmanager 1.12.0. Die App wird nicht im App Store veröffentlicht.
