@@ -1,4 +1,22 @@
 {
+	"2.0.2": [
+		{
+			"title": {
+				"de": "Vertragsspiegel mit ausgeschriebenen Nummern",
+				"en": "Contract overview with spelled-out numbers"
+			},
+			"text": {
+				"de": "Im PDF-Vertragsspiegel stehen unter dem Vertragsnamen jetzt „Vertrag: …“ und darunter „Kunde: …“ statt der Kürzel „V:“ und „K:“. Die Angabe „Zuständig“ entfällt im PDF.",
+				"en": "In the PDF contract overview the contract name is now followed by “Contract: …” and below it “Customer: …” instead of the short forms “No.” and “Cust.”. The responsible person is no longer printed."
+			},
+			"icon": "file-document",
+			"where": {
+				"de": "Vertragsliste › Vertragsspiegel (PDF)",
+				"en": "Contract list › Contract overview (PDF)"
+			},
+			"plus": false
+		}
+	],
 	"2.0.1": [
 		{
 			"title": {

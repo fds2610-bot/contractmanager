@@ -24,11 +24,11 @@ import { formatDate } from './dateUtils.js'
 export const PLAIN = { escape: false, sanitize: false }
 
 export interface MirrorRow {
-	/** Contract name, plus the contract number below it when there is one. */
+	/** Contract name, below it „Vertrag:" and „Kunde:" with the numbers when set. */
 	contract: string[]
 	/** Contract partner, then the linked address book contact. */
 	vendor: string[]
-	/** Responsible user → persons → insurance benefits → notes. */
+	/** Persons → insurance benefits → notes (no responsible user, #11). */
 	scope: string[]
 	endDate: string
 	status: string
@@ -47,8 +47,6 @@ export interface MirrorGroup {
 export interface MirrorLookups {
 	/** Address book contacts by UID; missing or null = not resolvable. */
 	contacts?: Record<string, ResolvedContact | null>
-	/** Display names by Nextcloud user ID; missing = fall back to the ID. */
-	userNames?: Record<string, string>
 }
 
 /** Non-empty, trimmed lines of a free text; blank lines are dropped. */
@@ -124,12 +122,8 @@ function vendorLines(contract: Contract, contact: ResolvedContact | null | undef
 	return lines
 }
 
-function scopeLines(contract: Contract, userNames: Record<string, string>): string[] {
+function scopeLines(contract: Contract): string[] {
 	const lines: string[] = []
-	const responsible = (contract.responsibleUser ?? '').trim()
-	if (responsible !== '') {
-		lines.push(t('nc_vertragswerk', 'Zuständig: {name}', { name: userNames[responsible] || responsible }, undefined, PLAIN))
-	}
 	const typeLabels = new Map<string, string>(personTypeOptions().map(o => [o.value, o.label]))
 	for (const person of contract.insurancePersons ?? []) {
 		const name = (person?.name ?? '').trim()
@@ -162,15 +156,33 @@ export function numberLines(contract: Contract): Array<{ text: string, title: st
 	return lines
 }
 
+/**
+ * The numbers for the PDF, spelled out (fds2610/contractmanager#11): the
+ * contract number as „Vertrag:", the customer number below it as „Kunde:";
+ * an empty number is left out with its label.
+ */
+export function mirrorNumberLines(contract: Contract): string[] {
+	const lines: string[] = []
+	const contractNumber = (contract.contractNumber ?? '').trim()
+	const customerNumber = (contract.customerNumber ?? '').trim()
+	if (contractNumber !== '') {
+		lines.push(t('nc_vertragswerk', 'Vertrag: {number}', { number: contractNumber }, undefined, PLAIN))
+	}
+	if (customerNumber !== '') {
+		lines.push(t('nc_vertragswerk', 'Kunde: {number}', { number: customerNumber }, undefined, PLAIN))
+	}
+	return lines
+}
+
 export function buildMirrorRow(contract: Contract, lookups: MirrorLookups = {}): MirrorRow {
 	const contact = contract.vendorContactUid ? lookups.contacts?.[contract.vendorContactUid] : null
 	return {
 		contract: [
 			...textLines(contract.name),
-			...numberLines(contract).map(n => n.text),
+			...mirrorNumberLines(contract),
 		],
 		vendor: vendorLines(contract, contact),
-		scope: scopeLines(contract, lookups.userNames ?? {}),
+		scope: scopeLines(contract),
 		endDate: endDateLabel(contract),
 		status: statusLabel(contract),
 		interval: [intervalLabel(contract.costInterval), paymentMethodLabel(contract.paymentMethod)].filter(l => l !== ''),
