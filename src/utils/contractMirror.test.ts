@@ -25,10 +25,10 @@ describe('textLines', () => {
 })
 
 describe('buildMirrorRow', () => {
-	it('puts contract and customer number below the name, each only when set (#5)', () => {
-		expect(buildMirrorRow(contract({ contractNumber: ' 068-68 ', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'V: 068-68', 'K: K-1'])
-		expect(buildMirrorRow(contract({ contractNumber: '', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'K: K-1'])
-		expect(buildMirrorRow(contract({ contractNumber: 'A', customerNumber: '  ' })).contract).toEqual(['Hausrat', 'V: A'])
+	it('puts contract and customer number below the name, spelled out, each only when set (#5, #11)', () => {
+		expect(buildMirrorRow(contract({ contractNumber: ' 068-68 ', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'Vertrag: 068-68', 'Kunde: K-1'])
+		expect(buildMirrorRow(contract({ contractNumber: '', customerNumber: 'K-1' })).contract).toEqual(['Hausrat', 'Kunde: K-1'])
+		expect(buildMirrorRow(contract({ contractNumber: 'A', customerNumber: '  ' })).contract).toEqual(['Hausrat', 'Vertrag: A'])
 		expect(buildMirrorRow(contract({})).contract).toEqual(['Hausrat'])
 	})
 
@@ -39,7 +39,7 @@ describe('buildMirrorRow', () => {
 		])
 	})
 
-	it('builds the scope column in fixed order without empty lines', () => {
+	it('builds the scope column in fixed order without empty lines and without the responsible user (#11)', () => {
 		const row = buildMirrorRow(contract({
 			responsibleUser: 'max',
 			insurancePersons: [
@@ -48,9 +48,8 @@ describe('buildMirrorRow', () => {
 			],
 			insuranceBenefits: ['Feuer', ''],
 			notes: 'Zeile 1\n\n\nZeile 2',
-		}), { userNames: { max: 'Max Muster' } })
+		}))
 		expect(row.scope).toEqual([
-			'Zuständig: Max Muster',
 			'Versicherungsnehmer: Max Muster',
 			'Feuer',
 			'Zeile 1',
@@ -58,8 +57,8 @@ describe('buildMirrorRow', () => {
 		])
 	})
 
-	it('falls back to the user ID and leaves the scope empty when nothing is set', () => {
-		expect(buildMirrorRow(contract({ responsibleUser: 'jdoe' })).scope).toEqual(['Zuständig: jdoe'])
+	it('leaves the scope empty when nothing is set', () => {
+		expect(buildMirrorRow(contract({ responsibleUser: 'jdoe' })).scope).toEqual([])
 		expect(buildMirrorRow(contract({})).scope).toEqual([])
 	})
 
@@ -85,7 +84,7 @@ describe('buildMirrorRow', () => {
 	})
 
 	it('keeps an ampersand in placeholders unescaped', () => {
-		expect(buildMirrorRow(contract({ responsibleUser: 'a&b' })).scope).toEqual(['Zuständig: a&b'])
+		expect(buildMirrorRow(contract({ contractNumber: 'a&b' })).contract).toEqual(['Hausrat', 'Vertrag: a&b'])
 	})
 
 	it('formats the other columns', () => {

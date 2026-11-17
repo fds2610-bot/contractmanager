@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.0.2] - 2026-11-17
+
+### Changed
+- **Vertragsspiegel (PDF)**: Unter dem Vertragsnamen stehen die Nummern ausgeschrieben als „Vertrag: …“ und darunter „Kunde: …“ statt „V:“ und „K:“ (#11). In der Vertragsliste bleiben die Kürzel
+- **Vertragsspiegel (PDF)**: Die Zeile „Zuständig: …“ in der Spalte „Höhe / Umfang“ entfällt (#11)
+
 ## [2.0.1] - 2026-11-09
 
 Modernere Oberfläche nach den Nextcloud-Gestaltungsrichtlinien: nur Bausteine aus `@nextcloud/vue` und Farben aus den Theme-Variablen.

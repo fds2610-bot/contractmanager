@@ -339,7 +339,6 @@ import { DEADLINE_WITHIN_OPTIONS, hasMonthlyCostAtLeast, isDeadlineWithin } from
 import ContractForm from '../components/ContractForm.vue'
 import SettingsService from '../services/SettingsService'
 import ContactService from '../services/ContactService'
-import ContractService from '../services/ContractService'
 import { getCurrentUser } from '@nextcloud/auth'
 import { buildMirrorSections } from '../utils/contractMirror'
 import { formatDate } from '../utils/dateUtils.js'
@@ -1032,35 +1031,19 @@ export default {
 			}
 		},
 
-		// Linked address book contacts and the display names of the responsible
-		// users. Both are optional: whatever cannot be resolved falls back to the
-		// stored value (partner name, user ID).
+		// Linked address book contacts. Optional: a contact that cannot be
+		// resolved falls back to the stored partner name.
 		async loadMirrorLookups(contracts) {
 			const contactUids = [...new Set(contracts.map(c => c.vendorContactUid).filter(Boolean))]
-			const userIds = [...new Set(contracts.map(c => (c.responsibleUser || '').trim()).filter(Boolean))]
 			const contacts = {}
-			const userNames = {}
-			await Promise.all([
-				...contactUids.map(async uid => {
-					try {
-						contacts[uid] = await ContactService.resolve(uid)
-					} catch (e) {
-						contacts[uid] = null
-					}
-				}),
-				// The user search is only open to editors; viewers see the user ID.
-				...(this.canEdit
-					? userIds.map(async uid => {
-						try {
-							const match = (await ContractService.searchUsers(uid)).find(u => u.uid === uid)
-							if (match) userNames[uid] = match.displayName
-						} catch (e) {
-							// keep the user ID
-						}
-					})
-					: []),
-			])
-			return { contacts, userNames }
+			await Promise.all(contactUids.map(async uid => {
+				try {
+					contacts[uid] = await ContactService.resolve(uid)
+				} catch (e) {
+					contacts[uid] = null
+				}
+			}))
+			return { contacts }
 		},
 
 		clearFilter(key) {
